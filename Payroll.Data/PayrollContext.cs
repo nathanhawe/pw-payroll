@@ -21,8 +21,15 @@ namespace Payroll.Data
         public DbSet<CrewBossWage> CrewBossWages { get; set; }
         public DbSet<CrewBossPayLine> CrewBossPayLines { get; set; }
         public DbSet<RanchPayLine> RanchPayLines { get; set; }
+        public DbSet<PaidSickLeave> PaidSickLeaves { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            SeedMinimumWage(modelBuilder);
+            SeedCrewBossWage(modelBuilder);
+        }
+
+        protected void SeedMinimumWage(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MinimumWage>().HasData(
                 CreateMinimumWage(1, new DateTime(2010, 1, 1), 8),
@@ -35,6 +42,10 @@ namespace Payroll.Data
                 CreateMinimumWage(8, new DateTime(2021, 1, 1), 14),
                 CreateMinimumWage(9, new DateTime(2022, 1, 1), 15));
 
+        }
+
+        protected void SeedCrewBossWage(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<CrewBossWage>().HasData(
                 CreateCrewBossWage(1, new DateTime(2019, 12, 2), 36, 24.5M),
                 CreateCrewBossWage(2, new DateTime(2019, 12, 2), 35, 24),
