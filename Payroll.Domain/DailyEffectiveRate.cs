@@ -7,6 +7,7 @@ namespace Payroll.Domain
     public class DailyEffectiveRate
     {
         public string EmployeeId { get; set; }
+        public DateTime WeekEndDate { get; set; }
         public DateTime ShiftDate { get; set; }
         public decimal TotalHours { get; set; }
         public decimal NonProductiveTime { get; set; }
