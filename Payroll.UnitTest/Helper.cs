@@ -186,5 +186,28 @@ namespace Payroll.UnitTest
                 HoursUsed = hoursUsed
             };
         }
+
+        public static CrewLaborWage MockCrewLaborWage(
+            int id = 0,
+            DateTime? dateCreated = null,
+            DateTime? dateModified = null,
+            bool isDeleted = false,
+            DateTime? effectiveDate = null,
+            decimal wage = 0)
+        {
+            dateCreated ??= DateTime.Now;
+            dateModified ??= DateTime.Now;
+            effectiveDate ??= new DateTime(2000, 1, 1);
+
+            return new CrewLaborWage
+            {
+                Id = id,
+                DateCreated = dateCreated.Value,
+                DateModified = dateModified.Value,
+                IsDeleted = isDeleted,
+                EffectiveDate = effectiveDate.Value,
+                Wage = wage
+            };
+        }
     }
 }

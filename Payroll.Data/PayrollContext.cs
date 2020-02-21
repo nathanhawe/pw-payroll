@@ -16,17 +16,21 @@ namespace Payroll.Data
 
         }
 
+        private DateTime DefaultDate { get; set; } = new DateTime(2000, 1, 1);
+
         public DbSet<Batch> Batches { get; set; }
         public DbSet<MinimumWage> MinimumWages { get; set; }
         public DbSet<CrewBossWage> CrewBossWages { get; set; }
         public DbSet<CrewBossPayLine> CrewBossPayLines { get; set; }
         public DbSet<RanchPayLine> RanchPayLines { get; set; }
         public DbSet<PaidSickLeave> PaidSickLeaves { get; set; }
+        public DbSet<CrewLaborWage> CrewLaborWages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             SeedMinimumWage(modelBuilder);
             SeedCrewBossWage(modelBuilder);
+            SeedCrewLaborWage(modelBuilder);
         }
 
         protected void SeedMinimumWage(ModelBuilder modelBuilder)
@@ -72,12 +76,19 @@ namespace Payroll.Data
                 CreateCrewBossWage(23, new DateTime(2019, 12, 2), 0, 16));
         }
 
+        private void SeedCrewLaborWage(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CrewLaborWage>().HasData(
+                CreateCrewLaborWage(1, new DateTime(2000, 1, 1), 13),
+                CreateCrewLaborWage(2, new DateTime(2020, 1, 21), 14));
+        }
+
         protected MinimumWage CreateMinimumWage(int id, DateTime effectiveDate, decimal wage)
         {
             return new MinimumWage
             {
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now,
+                DateCreated = DefaultDate,
+                DateModified = DefaultDate,
                 Id = id,
                 EffectiveDate = effectiveDate,
                 Wage = wage
@@ -88,11 +99,23 @@ namespace Payroll.Data
         {
             return new CrewBossWage
             {
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now,
+                DateCreated = DefaultDate,
+                DateModified = DefaultDate,
                 EffectiveDate = effectiveDate,
                 Id = id,
                 WorkerCountThreshold = workerCountThreshold,
+                Wage = wage
+            };
+        }
+
+        protected CrewLaborWage CreateCrewLaborWage(int id, DateTime effectiveDate, decimal wage)
+        {
+            return new CrewLaborWage
+            {
+                DateCreated = DefaultDate,
+                DateModified = DefaultDate,
+                Id = id,
+                EffectiveDate = effectiveDate,
                 Wage = wage
             };
         }
