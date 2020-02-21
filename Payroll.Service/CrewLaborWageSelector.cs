@@ -1,11 +1,12 @@
 ﻿using Payroll.Data;
+using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Payroll.Service
 {
-    public class CrewLaborWageSelector
+    public class CrewLaborWageSelector : ICrewLaborWageSelector
     {
         private PayrollContext _context;
         public CrewLaborWageSelector(PayrollContext context)
