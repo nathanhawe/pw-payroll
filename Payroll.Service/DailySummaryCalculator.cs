@@ -7,15 +7,15 @@ using System.Text;
 namespace Payroll.Service
 {
     
-    public class DailyEffectiveRateCalculator
+    public class DailySummaryCalculator
     {
         private readonly PayrollContext _context;
-        public DailyEffectiveRateCalculator(PayrollContext context)
+        public DailySummaryCalculator(PayrollContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public List<DailyEffectiveRate> GetDailyEffectiveRates(int batchId)
+        public List<DailySummary> GetDailySummaries(int batchId)
         {
             throw new NotImplementedException();
         }

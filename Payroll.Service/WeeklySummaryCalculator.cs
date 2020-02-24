@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Payroll.Service
 {
-    public class WeeklyEffectiveRateCalculator
+    public class WeeklySummaryCalculator
     {
-        public List<WeeklyEffectiveRate> GetWeeklyEffectiveRates(List<DailyEffectiveRate> dailyEffectiveRates)
+        public List<WeeklySummary> GetWeeklySummary(List<DailySummary> dailyEffectiveRates)
         {
             throw new NotImplementedException();
         }

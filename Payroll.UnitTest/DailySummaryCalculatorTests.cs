@@ -11,7 +11,7 @@ using System.Linq;
 namespace Payroll.UnitTest
 {
     [TestClass]
-    public class DailyEffectiveRateCalculatorTests
+    public class DailySummaryCalculatorTests
     {
 
         [TestMethod]
@@ -68,8 +68,8 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
 
-            var dailyEffectiveRateCalculator = new DailyEffectiveRateCalculator(context);
-            var rates = dailyEffectiveRateCalculator.GetDailyEffectiveRates(batch.Id);
+            var dailySummaryCalculator = new DailySummaryCalculator(context);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
 
             Assert.AreEqual(6, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10).Count());
@@ -108,8 +108,8 @@ namespace Payroll.UnitTest
 
             context.SaveChanges();
 
-            var dailyEffectiveRateCalculator = new DailyEffectiveRateCalculator(context);
-            var rates = dailyEffectiveRateCalculator.GetDailyEffectiveRates(batch.Id);
+            var dailySummaryCalculator = new DailySummaryCalculator(context);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
 
             Assert.AreEqual(6, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 35.2M).Count());
@@ -161,8 +161,8 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
 
-            var dailyEffectiveRateCalculator = new DailyEffectiveRateCalculator(context);
-            var rates = dailyEffectiveRateCalculator.GetDailyEffectiveRates(batch.Id);
+            var dailySummaryCalculator = new DailySummaryCalculator(context);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
 
             Assert.AreEqual(3, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 10).Count());
@@ -193,8 +193,8 @@ namespace Payroll.UnitTest
 
             context.SaveChanges();
 
-            var dailyEffectiveRateCalculator = new DailyEffectiveRateCalculator(context);
-            var rates = dailyEffectiveRateCalculator.GetDailyEffectiveRates(batch.Id);
+            var dailySummaryCalculator = new DailySummaryCalculator(context);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
 
             Assert.AreEqual(2, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 35.2M).Count());
@@ -225,8 +225,8 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
 
-            var dailyEffectiveRateCalculator = new DailyEffectiveRateCalculator(context);
-            var rates = dailyEffectiveRateCalculator.GetDailyEffectiveRates(batch.Id);
+            var dailySummaryCalculator = new DailySummaryCalculator(context);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
 
             Assert.AreEqual(3, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "CrewBoss1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 265 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 26.5M).Count());
