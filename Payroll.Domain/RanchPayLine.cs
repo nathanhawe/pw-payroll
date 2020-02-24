@@ -23,7 +23,10 @@ namespace Payroll.Domain
 		public decimal GrossFromHours { get; set; }
 		public decimal GrossFromPieces { get; set; }
 		public decimal OtherGross { get; set; }
+		public decimal TotalGross { get; set; }
 		public bool AlternativeWorkWeek { get; set; }
 		public bool FiveEight { get; set; }
+		public decimal HourlyRateOverride { get; set; }
+		public decimal EmployeeHourlyRate { get; set; }
 	}
 }
