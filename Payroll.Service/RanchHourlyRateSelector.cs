@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Payroll.Service
 {
-    public class RanchHourlyRateSelector
+    public class RanchHourlyRateSelector : IRanchHourlyRateSelector
     {
         private ICrewLaborWageSelector _crewLaborWageSelector;
         public RanchHourlyRateSelector(ICrewLaborWageSelector crewLaborWageSelector)
