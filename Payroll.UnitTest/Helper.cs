@@ -209,5 +209,28 @@ namespace Payroll.UnitTest
                 Wage = wage
             };
         }
+
+        public static MinimumWage MockMinimumWage(
+            int id = 0,
+            DateTime? dateCreated = null,
+            DateTime? dateModified = null,
+            bool isDeleted = false,
+            decimal wage = 0,
+            DateTime? effectiveDate = null)
+        {
+            dateCreated ??= DateTime.Now;
+            dateModified ??= DateTime.Now;
+            effectiveDate ??= DateTime.Now;
+
+            return new MinimumWage
+            {
+                Id = id,
+                DateCreated = dateCreated.Value,
+                DateModified = dateModified.Value,
+                IsDeleted = isDeleted,
+                Wage = wage,
+                EffectiveDate = effectiveDate.Value
+            };
+        }
     }
 }
