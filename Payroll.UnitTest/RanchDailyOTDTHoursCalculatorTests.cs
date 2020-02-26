@@ -9,7 +9,7 @@ using System.Text;
 namespace Payroll.UnitTest
 {
     [TestClass]
-    public class DailyOverTimeHoursCalculatorTests
+    public class RanchDailyOTDTHoursCalculatorTests
     {
         private RanchDailyOTDTHoursCalculator _ranchDailyOTDTHoursCalculator = new RanchDailyOTDTHoursCalculator();
 
