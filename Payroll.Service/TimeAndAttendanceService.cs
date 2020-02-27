@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Payroll.Domain;
+using Payroll.Domain.Constants;
+using Payroll.Service.Interface;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Payroll.Service
@@ -9,9 +13,69 @@ namespace Payroll.Service
     /// </summary>
     public class TimeAndAttendanceService
     {
+        private Data.PayrollContext _context;
+
+        private CrewBossPayService _crewBossPayService;
+        private PaidSickLeaveService _paidSickLeaveService;
+        private GrossFromHoursCalculator _grossFromHoursCalculator;
+        private GrossFromPiecesCalculator _grossFromPiecesCalculator;
+        private TotalGrossCalculator _totalGrossCalculator;
+        private DailySummaryCalculator _dailySummaryCalculator;
+        private WeeklySummaryCalculator _weeklySummaryCalculator;
+        private IDailyOTDTHoursCalculator _dailyOverTimeHoursCalculator;
+        private IWeeklyOTHoursCalculator _weeklyOverTimeHoursCalculator;
+        private RanchMinimumMakeUpCalculator _minimumMakeUpCalculator;
+
+        public TimeAndAttendanceService(CrewBossPayService crewBossPayService, PaidSickLeaveService paidSickLeaveService)
+        {
+            _crewBossPayService = crewBossPayService ?? throw new ArgumentNullException(nameof(crewBossPayService));
+            _paidSickLeaveService = paidSickLeaveService ?? throw new ArgumentNullException(nameof(paidSickLeaveService));
+
+        }
         public void PerformCalculations(int batchId, string company)
         {
-            // Perform Gross calculations on all paylines in the batch. 
+            /* Download Quick Base data */
+
+            /* Crew Boss Calculations */
+            var crewBossPayLines = _crewBossPayService.CalculateCrewBossPay(batchId);
+            
+            // Add crew boss pay lines to database.
+            _context.AddRange(crewBossPayLines);
+            _context.SaveChanges();
+
+
+            /* Gross Calculations */
+            // Hourly
+            var hourlyLines = _context.RanchPayLines.Where(x => x.BatchId == batchId &&
+                (
+                    x.PayType == PayType.Regular
+                    || x.PayType == PayType.HourlyPlusPieces
+                    || x.PayType == PayType.SpecialAdjustment
+                    || x.PayType == PayType.ReportingPay
+                    || x.PayType == PayType.CompTime
+                    || x.PayType == PayType.Vacation
+                    || x.PayType == PayType.Holiday))
+                .ToList();
+            _grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
+            _context.UpdateRange(hourlyLines);
+            _context.SaveChanges();
+
+            // Pieces
+            var pieceLines = _context.RanchPayLines.Where(x => x.BatchId == batchId &&
+                (
+                    x.PayType == PayType.Pieces
+                    || x.PayType == PayType.HourlyPlusPieces))
+                .ToList();
+            _grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
+            _context.UpdateRange(pieceLines);
+            _context.SaveChanges();
+
+            // Total
+            var payLines = _context.RanchPayLines.Where(x => x.BatchId == batchId).ToList();
+            _totalGrossCalculator.CalculateTotalGross(payLines);
+            _context.UpdateRange(payLines);
+            _context.SaveChanges();
+
             /*
                 In Quick Base the final value of pay line is in the [Total Gross] field which is a formula field:
                     If([Pay Type]="41.1-Adjustment" and [41.1 Approval]=false,0,[Gross from Hours]+[Gross from Pieces]+[Other Gross])
@@ -99,27 +163,84 @@ namespace Payroll.Service
 
             /* PSL Requires hours and gross for regular, piece, and CB pay types; also requires hours on Sick Leave pay types*/
             // Perform PSL calculations
+            var startDate = _context.RanchPayLines.Where(x => x.BatchId == batchId).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
+            var endDate = _context.RanchPayLines.Where(x => x.BatchId == batchId).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
+
+            _paidSickLeaveService.UpdateTracking(batchId, company);
+            _paidSickLeaveService.CalculateNinetyDay(batchId, startDate, endDate);
+
             // Update PSL usage
+            _paidSickLeaveService.UpdateUsage(batchId, company);
 
-            /* OT Hours */
-            /* DT Hours */
+            // Set PSL rate and recalculate gross.
+
+
+
+            /* OT/DT/Seventh Day Hours */
+            // Daily summaries group all of the ranch pay lines by Employee, Week End Date, Shift Date, Alternative Work Week, and Minimum Wage.
+            // Additionally it selects the last of Crew and last of FiveEight sorting - I believe - on the Quick Base Record ID.
+            // This needs to be double checked before going to production and the actual rules for the calculation should be confirmed.
+            // The effective daily rate is not used in ranches but is used in plants for the purposes of minimum make up.
+            var dailySummaries = _dailySummaryCalculator.GetDailySummaries(batchId);
+
+            // Calculate OT/DT/7th Day Hours
+            // This uses the information in the daily summary to correctly calculate how many hours are over time and double time if any.
+            _dailyOverTimeHoursCalculator.SetDailyOTDTHours(dailySummaries);
+
+            // Create Weekly Summaries groups all of the daily summaries by Employee, Week End Date, and Minimum Wage and summarizes the
+            // different types of hours for the week.  This information is used to figure out the effective hourly rate and create minimum
+            // assurance lines.
+            var weeklySummaries = _weeklySummaryCalculator.GetWeeklySummary(dailySummaries);
+
+            // Minimum Make Up is made by comparing the effective rate against minimum wage.  If minimum wage is greater than the effective rate, the difference
+            // should be used to create a minimum make up line and the higher of the two rates is used for OT, DT, etc.  When a week has multiple minimum wages, the
+            // the effective rate calculated against the higher minimum wage should be used as the weekly effective rate.
+            var minimumMakeUps = _minimumMakeUpCalculator.GetMinimumMakeUps(weeklySummaries);
+
             /* WOT Hours */
+            var weeklyOt = _weeklyOverTimeHoursCalculator.GetWeeklyOTHours(weeklySummaries);
 
-            /* OT Gross (Requires effective daily rate) */
-            /* DT Gross (Requires effective daily rate) */
+            /* OT/DT Gross (Requires effective weekly rate) */
+            var overTimeRecords = dailySummaries.Where(x => x.OverTimeHours > 0).Select(x => new RanchPayLine
+            {
+                EmployeeId = x.EmployeeId,
+                WeekEndDate = x.WeekEndDate,
+                ShiftDate = x.ShiftDate,
+                PayType = PayType.OverTime,
+                HoursWorked = x.OverTimeHours,
+                //HourlyRateOverride = Math.Max(x.EffectiveHourlyRate, x.MinimumWage)
+            }).ToList();
+            _grossFromHoursCalculator.CalculateGrossFromHours(overTimeRecords);
+            _totalGrossCalculator.CalculateTotalGross(overTimeRecords);
+
+            var doubleTimeRecords = dailySummaries.Where(x => x.DoubleTimeHours > 0).Select(x => new RanchPayLine
+            {
+                EmployeeId = x.EmployeeId,
+                WeekEndDate = x.WeekEndDate,
+                ShiftDate = x.ShiftDate,
+                PayType = PayType.DoubleTime,
+                HoursWorked = x.DoubleTimeHours,
+                //HourlyRateOverride = Math.Max(x.EffectiveHourlyRate, x.MinimumWage)
+            }).ToList();
+            _grossFromHoursCalculator.CalculateGrossFromHours(doubleTimeRecords);
+            _totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
+
             /* WOT Gross (Requires effective weekly rate) */
-
-            /* Seventh Day Pay (Requires effective weekly rate) */
+            var weeklyOverTimeRecords = weeklyOt.Where(x => x.OverTimeHours > 0).Select(x => new RanchPayLine
+            {
+                EmployeeId = x.EmployeeId,
+                WeekEndDate = x.WeekEndDate,
+                ShiftDate = x.WeekEndDate,
+                PayType = PayType.WeeklyOverTime,
+                HoursWorked = x.OverTimeHours
+            }).ToList();
+            _grossFromHoursCalculator.CalculateGrossFromHours(weeklyOverTimeRecords);
+            _totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 
             /* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
 
+
             /* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-
-
-
-
-
-
         }
     }
 }
