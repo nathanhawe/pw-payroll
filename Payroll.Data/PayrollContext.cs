@@ -25,6 +25,7 @@ namespace Payroll.Data
         public DbSet<RanchPayLine> RanchPayLines { get; set; }
         public DbSet<PaidSickLeave> PaidSickLeaves { get; set; }
         public DbSet<CrewLaborWage> CrewLaborWages { get; set; }
+        public DbSet<RanchAdjustmentLine> RanchAdjustmentLines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
