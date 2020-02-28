@@ -14,5 +14,13 @@ namespace Payroll.Service
             //    payLine.TotalGross = payLine.GrossFromHours + payLine.GrossFromPieces + payLine.OtherGross;
             //}
         }
+
+        public void CalculateTotalGross(List<RanchAdjustmentLine> ranchAdjustmentLines)
+        {
+            //foreach (var adjustmentLine in ranchAdjustmentLines)
+            //{
+            //    adjustmentLine.TotalGross = adjustmentLine.GrossFromHours + adjustmentLine.GrossFromPieces + adjustmentLine.OtherGross;
+            //}
+        }
     }
 }

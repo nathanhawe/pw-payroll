@@ -23,5 +23,10 @@ namespace Payroll.Service
         {
             throw new NotImplementedException();
         }
+
+        public List<DailySummary> GetDailySummariesFromAdjustments(int batchid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace Payroll.UnitTest
         }
 
         [TestMethod]
-        public void GrossFromPiecesIsProduct()
+        public void RanchPayLine_GrossFromPiecesIsProduct()
         {
             var tests = new List<GrossFromPiecesTest>
             {
@@ -38,6 +38,34 @@ namespace Payroll.UnitTest
             var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
 
             var testPayLines = tests.Select(x => Helper.MockRanchPayLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
+
+            grossFromPiecesCalculator.CalculateGrossFromPieces(testPayLines);
+
+            foreach (var test in tests)
+            {
+                Assert.AreEqual(1, testPayLines.Where(x => x.Id == test.Id && x.GrossFromPieces == test.ExpectedGrossFromPieces).Count());
+            }
+        }
+
+        [TestMethod]
+        public void RanchAdjustmentPayLine_GrossFromPiecesIsProduct()
+        {
+            var tests = new List<GrossFromPiecesTest>
+            {
+                new GrossFromPiecesTest { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTest { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTest { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTest { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
+                new GrossFromPiecesTest { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
+                new GrossFromPiecesTest { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
+                new GrossFromPiecesTest { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
+                new GrossFromPiecesTest { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
+
+            };
+
+            var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
+
+            var testPayLines = tests.Select(x => Helper.MockRanchAdjustmentLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
 
             grossFromPiecesCalculator.CalculateGrossFromPieces(testPayLines);
 

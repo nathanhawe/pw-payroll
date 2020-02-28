@@ -22,5 +22,22 @@ namespace Payroll.Service
             //    payLine.GrossFromHours = Math.Round(payLine.HoursWorked * hourlyRate, 2, MidpointRounding.ToPositiveInfinity);
             //}
         }
+
+        public void CalculateGrossFromHours(List<RanchAdjustmentLine> ranchAdjustmentLines)
+        {
+            //decimal hourlyRate;
+            //foreach (var adjustmentLine in ranchAdjustmentLines)
+            //{
+            //    if (adjustmentLine.UseOldHourlyRate)
+            //    {
+            //        hourlyRate = adjustmentLine.OldHourlyRate;
+            //    }
+            //    else
+            //    {
+            //        hourlyRate = _ranchHourlyRateSelector.GetRanchHourlyRate(adjustmentLine.PayType, adjustmentLine.Crew, adjustmentLine.LaborCode, adjustmentLine.EmployeeHourlyRate, 0);
+            //    }
+            //    adjustmentLine.GrossFromHours = Math.Round(adjustmentLine.HoursWorked * hourlyRate, 2, MidpointRounding.ToPositiveInfinity);
+            //}
+        }
     }
 }
