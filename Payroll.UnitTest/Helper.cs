@@ -32,7 +32,9 @@ namespace Payroll.UnitTest
             decimal grossFromPieces = 0,
             decimal otherGross = 0,
             bool alternativeWorkWeek = false,
-            bool fiveEight = false)
+            bool fiveEight = false,
+            decimal totalGross = 0,
+            int lastCrew = 0)
         {
             dateCreated ??= DateTime.Now;
             dateModified ??= DateTime.Now;
@@ -51,6 +53,7 @@ namespace Payroll.UnitTest
                 WeekEndDate = weekEndDate.Value,
                 ShiftDate = shiftDate.Value,
                 Crew = crew,
+                LastCrew = lastCrew,
                 EmployeeId = employeeId,
                 LaborCode = laborCode,
                 BlockId = blockId,
@@ -64,6 +67,7 @@ namespace Payroll.UnitTest
                 GrossFromHours = grossFromHours,
                 GrossFromPieces = grossFromPieces,
                 OtherGross = otherGross,
+                TotalGross = totalGross,
                 AlternativeWorkWeek = alternativeWorkWeek,
                 FiveEight = fiveEight
             };

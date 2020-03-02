@@ -10,6 +10,7 @@ namespace Payroll.Domain
 		public DateTime WeekEndDate { get; set; }
 		public DateTime ShiftDate { get; set; }
 		public int Crew { get; set; }
+		public int LastCrew { get; set; }
 		public string EmployeeId { get; set; }
 		public int LaborCode { get; set; }
 		public int BlockId { get; set; }
