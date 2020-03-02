@@ -27,7 +27,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_SelectsMinimumWageForShiftDate()
         {
-            var dbName = "SelectsMinimumWageForShiftDate";
+            var dbName = "RanchPayLine_SelectsMinimumWageForShiftDate";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -77,7 +77,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_UsesLastOfCrewSortedByRecordId()
         {
-            var dbName = "UsesLastOfCrewSortedByRecordId";
+            var dbName = "RanchPayLine_UsesLastOfCrewSortedByRecordId";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -143,7 +143,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_UsesLastOfFiveEightSortedByRecordId()
         {
-            var dbName = "UsesLastOfFiveEightSortedByRecordId";
+            var dbName = "RanchPayLine_UsesLastOfFiveEightSortedByRecordId";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -209,7 +209,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_GroupsByEmployee()
         {
-            var dbName = "GroupsByEmployee";
+            var dbName = "RanchPayLine_GroupsByEmployee";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -239,7 +239,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_GroupsByWeekEnding()
         {
-            var dbName = "GroupsByWeekEnding";
+            var dbName = "RanchPayLine_GroupsByWeekEnding";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -269,7 +269,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_GroupsByShiftDate()
         {
-            var dbName = "GroupsByShiftDate";
+            var dbName = "RanchPayLine_GroupsByShiftDate";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -306,7 +306,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_GroupsByAlternativeWorkWeek()
         {
-            var dbName = "GroupsByAlternativeWorkWeek";
+            var dbName = "RanchPayLine_GroupsByAlternativeWorkWeek";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -337,7 +337,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_Regular()
         {
-            var dbName = "Regular";
+            var dbName = "RanchPayLine_Regular";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -403,7 +403,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_Pieces()
         {
-            var dbName = "Pieces";
+            var dbName = "RanchPayLine_Pieces";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -444,7 +444,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_RegularNonProductiveTime()
         {
-            var dbName = "RegularNonProductiveTime";
+            var dbName = "RanchPayLine_RegularNonProductiveTime";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -493,7 +493,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_PiecesNonProductiveTime()
         {
-            var dbName = "PiecesNonProductiveTime";
+            var dbName = "RanchPayLine_PiecesNonProductiveTime";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -524,7 +524,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchPayLine_CrewBoss()
         {
-            var dbName = "CrewBoss";
+            var dbName = "RanchPayLine_CrewBoss";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -561,7 +561,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_SelectsMinimumWageForShiftDate()
         {
-            var dbName = "SelectsMinimumWageForShiftDate";
+            var dbName = "RanchAdjustmentLine_SelectsMinimumWageForShiftDate";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -611,7 +611,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_UsesLastOfCrewSortedByRecordId()
         {
-            var dbName = "UsesLastOfCrewSortedByRecordId";
+            var dbName = "RanchAdjustmentLine_UsesLastOfCrewSortedByRecordId";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -677,7 +677,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_UsesLastOfFiveEightSortedByRecordId()
         {
-            var dbName = "UsesLastOfFiveEightSortedByRecordId";
+            var dbName = "RanchAdjustmentLine_UsesLastOfFiveEightSortedByRecordId";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -743,7 +743,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_GroupsByEmployee()
         {
-            var dbName = "GroupsByEmployee";
+            var dbName = "RanchAdjustmentLine_GroupsByEmployee";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -773,7 +773,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_GroupsByWeekEnding()
         {
-            var dbName = "GroupsByWeekEnding";
+            var dbName = "RanchAdjustmentLine_GroupsByWeekEnding";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -803,7 +803,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_GroupsByShiftDate()
         {
-            var dbName = "GroupsByShiftDate";
+            var dbName = "RanchAdjustmentLine_GroupsByShiftDate";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -840,7 +840,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_GroupsByAlternativeWorkWeek()
         {
-            var dbName = "GroupsByAlternativeWorkWeek";
+            var dbName = "RanchAdjustmentLine_GroupsByAlternativeWorkWeek";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -871,7 +871,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_Regular()
         {
-            var dbName = "Regular";
+            var dbName = "RanchAdjustmentLine_Regular";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -937,7 +937,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_Pieces()
         {
-            var dbName = "Pieces";
+            var dbName = "RanchAdjustmentLine_Pieces";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -978,7 +978,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_RegularNonProductiveTime()
         {
-            var dbName = "RegularNonProductiveTime";
+            var dbName = "RanchAdjustmentLine_RegularNonProductiveTime";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -1027,7 +1027,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_PiecesNonProductiveTime()
         {
-            var dbName = "PiecesNonProductiveTime";
+            var dbName = "RanchAdjustmentLine_PiecesNonProductiveTime";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
@@ -1058,7 +1058,7 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentLine_CrewBoss()
         {
-            var dbName = "CrewBoss";
+            var dbName = "RanchAdjustmentLine_CrewBoss";
             var options = new DbContextOptionsBuilder<PayrollContext>()
                 .UseInMemoryDatabase(databaseName: dbName)
                 .Options;

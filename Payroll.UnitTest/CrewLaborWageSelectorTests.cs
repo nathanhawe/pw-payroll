@@ -37,7 +37,7 @@ namespace Payroll.UnitTest
             context.Add(Helper.MockCrewLaborWage(id: 8, effectiveDate: new DateTime(2020, 2, 23), wage: 16));
             context.SaveChanges();
 
-            if (context.CrewLaborWages.Count() != 7) Assert.Inconclusive("Unexpected number of CrewLaborWages.");
+            if (context.CrewLaborWages.Count() != 8) Assert.Inconclusive("Unexpected number of CrewLaborWages.");
 
             var wageSelector = new CrewLaborWageSelector(context);
 
@@ -77,7 +77,7 @@ namespace Payroll.UnitTest
             context.Add(Helper.MockCrewLaborWage(id: 8, effectiveDate: new DateTime(2020, 2, 23), wage: 16, isDeleted: true));
             context.SaveChanges();
 
-            if (context.CrewLaborWages.Count() != 7) Assert.Inconclusive("Unexpected number of CrewLaborWages.");
+            if (context.CrewLaborWages.Count() != 8) Assert.Inconclusive("Unexpected number of CrewLaborWages.");
 
             var wageSelector = new CrewLaborWageSelector(context);
 
