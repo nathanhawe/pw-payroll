@@ -7,6 +7,6 @@ namespace Payroll.Service.Interface
 {
     public interface IRanchHourlyRateSelector
     {
-        public decimal GetRanchHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride);
+        public decimal GetHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride);
     }
 }

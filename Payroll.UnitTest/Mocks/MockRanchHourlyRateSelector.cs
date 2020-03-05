@@ -14,10 +14,9 @@ namespace Payroll.UnitTest.Mocks
             Rate = rate;
         }
 
-        public decimal GetRanchHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride)
+        public decimal GetHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride)
         {
             return Rate;
         }
-
     }
 }

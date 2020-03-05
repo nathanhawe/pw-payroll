@@ -35,7 +35,7 @@ namespace Payroll.UnitTest
             decimal employeeHourlyRate = 14,
             decimal hourlyRateOverride = 0)
         {
-            return _ranchHourlyRateSelector.GetRanchHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride);
+            return _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride);
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Payroll.UnitTest
             var employeeHourly = 15;
             var hourlyOverride = 42;
 
-            var hourlyRate = _ranchHourlyRateSelector.GetRanchHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
+            var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
             Assert.AreEqual(hourlyOverride, hourlyRate);
         }
 
@@ -62,12 +62,12 @@ namespace Payroll.UnitTest
             var hourlyOverride = 42;
 
             // Labor code 116 rate is currently set to 12 dollars but hourly rate override will ensure it is 42
-            var hourlyRate = _ranchHourlyRateSelector.GetRanchHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
+            var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
             Assert.AreEqual(hourlyOverride, hourlyRate);
 
             // Crew 100 should receive the regular crew labor rate of 15 but hourly rate override will ensure it is 42
             laborCode = -1;
-            hourlyRate = _ranchHourlyRateSelector.GetRanchHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
+            hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
             Assert.AreEqual(hourlyOverride, hourlyRate);
         }
 

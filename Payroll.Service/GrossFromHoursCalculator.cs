@@ -1,4 +1,5 @@
 ﻿using Payroll.Domain;
+using Payroll.Domain.Constants;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,12 @@ namespace Payroll.Service
     public class GrossFromHoursCalculator
     {
         private IRanchHourlyRateSelector _ranchHourlyRateSelector;
-        public GrossFromHoursCalculator(IRanchHourlyRateSelector ranchHourlyRateSelector)
+        private IPlantHourlyRateSelector _plantHourlyRateSelector;
+
+        public GrossFromHoursCalculator(IRanchHourlyRateSelector ranchHourlyRateSelector, IPlantHourlyRateSelector plantHourlyRateSelector)
         {
             _ranchHourlyRateSelector = ranchHourlyRateSelector ?? throw new ArgumentNullException(nameof(ranchHourlyRateSelector));
+            _plantHourlyRateSelector = plantHourlyRateSelector ?? throw new ArgumentNullException(nameof(plantHourlyRateSelector));
         }
         public void CalculateGrossFromHours(List<RanchPayLine> ranchPayLines)
         {
@@ -19,6 +23,18 @@ namespace Payroll.Service
             //foreach(var payLine in ranchPayLines)
             //{
             //    hourlyRate = _ranchHourlyRateSelector.GetRanchHourlyRate(payLine.PayType, payLine.Crew, payLine.LaborCode, payLine.EmployeeHourlyRate, payLine.HourlyRateOverride);
+            //    payLine.GrossFromHours = Math.Round(payLine.HoursWorked * hourlyRate, 2, MidpointRounding.ToPositiveInfinity);
+            //}
+        }
+
+        public void CalculateGrossFromHours(List<PlantPayLine> plantPayLines)
+        {
+            //decimal hourlyRate;
+            //Plant plant;
+            //foreach (var payLine in plantPayLines)
+            //{
+            //    plant = Enum.IsDefined(typeof(Plant), payLine.Plant) ? (Plant)payLine.Plant : Plant.Unknown;
+            //    hourlyRate = _plantHourlyRateSelector.GetHourlyRate(payLine.PayType, payLine.LaborCode, payLine.EmployeeHourlyRate, payLine.HourlyRateOverride, payLine.IsH2A, plant);
             //    payLine.GrossFromHours = Math.Round(payLine.HoursWorked * hourlyRate, 2, MidpointRounding.ToPositiveInfinity);
             //}
         }
@@ -39,5 +55,7 @@ namespace Payroll.Service
             //    adjustmentLine.GrossFromHours = Math.Round(adjustmentLine.HoursWorked * hourlyRate, 2, MidpointRounding.ToPositiveInfinity);
             //}
         }
+
+        
     }
 }

@@ -17,16 +17,23 @@ namespace Payroll.Domain
 		public decimal HoursWorked { get; set; }
 		public string PayType { get; set; }
 		public decimal Pieces { get; set; }
-		public decimal PieceRate { get; set; }
 		public decimal HourlyRate { get; set; }
 		public decimal OtDtWotRate { get; set; }
 		public decimal OtDtWotHours { get; set; }
 		public decimal GrossFromHours { get; set; }
 		public decimal GrossFromPieces { get; set; }
 		public decimal OtherGross { get; set; }
+		public decimal GrossFromIncentive { get; set; }
 		public decimal TotalGross { get; set; }
 		public bool AlternativeWorkWeek { get; set; }
 		public decimal HourlyRateOverride { get; set; }
 		public decimal EmployeeHourlyRate { get; set; }
+		public bool IsH2A { get; set; }
+		public bool IsIncentiveDisqualified { get; set; }
+		public bool HasNonPrimaViolation { get; set; }
+		public bool UseIncreasedRate { get; set; }
+		public decimal NonPrimaRate { get; set; }
+		public decimal PrimaRate { get; set; }
+		public decimal IncreasedRate { get; set; }
 	}
 }

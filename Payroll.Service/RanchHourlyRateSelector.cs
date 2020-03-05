@@ -13,7 +13,7 @@ namespace Payroll.Service
             _crewLaborWageSelector = crewLaborWageSelector ?? throw new ArgumentNullException(nameof(crewLaborWageSelector));
         }
 
-        public decimal GetRanchHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride)
+        public decimal GetHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride)
         {
             throw new NotImplementedException();
         }

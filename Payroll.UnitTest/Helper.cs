@@ -324,7 +324,6 @@ namespace Payroll.UnitTest
             decimal hoursWorked = 0,
             string payType = "1-Regular",
             decimal pieces = 0,
-            decimal pieceRate = 0,
             decimal hourlyRate = 0,
             decimal otDtWotRate = 0,
             decimal otDtWotHours = 0,
@@ -332,7 +331,14 @@ namespace Payroll.UnitTest
             decimal grossFromPieces = 0,
             decimal otherGross = 0,
             bool alternativeWorkWeek = false,
-            decimal totalGross = 0)
+            decimal totalGross = 0,
+            decimal increasedRate = 0,
+            decimal nonPrimaRate = 0,
+            decimal primaRate = 0,
+            bool isIncentiveDisqualified = false,
+            bool hasNonPrimaViolation = false,
+            bool useIncreasedRate = false
+            )
         {
             dateCreated ??= DateTime.Now;
             dateModified ??= DateTime.Now;
@@ -356,7 +362,6 @@ namespace Payroll.UnitTest
                 HoursWorked = hoursWorked,
                 PayType = payType,
                 Pieces = pieces,
-                PieceRate = pieceRate,
                 HourlyRate = hourlyRate,
                 OtDtWotRate = otDtWotRate,
                 OtDtWotHours = otDtWotHours,
@@ -364,7 +369,13 @@ namespace Payroll.UnitTest
                 GrossFromPieces = grossFromPieces,
                 OtherGross = otherGross,
                 TotalGross = totalGross,
-                AlternativeWorkWeek = alternativeWorkWeek
+                AlternativeWorkWeek = alternativeWorkWeek,
+                IncreasedRate = increasedRate,
+                PrimaRate = primaRate,
+                NonPrimaRate = nonPrimaRate,
+                IsIncentiveDisqualified = isIncentiveDisqualified,
+                HasNonPrimaViolation = hasNonPrimaViolation,
+                UseIncreasedRate = useIncreasedRate
             };
         }
 

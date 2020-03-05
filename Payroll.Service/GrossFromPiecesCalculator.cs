@@ -15,6 +15,14 @@ namespace Payroll.Service
             //}
         }
 
+        public void CalculateGrossFromPieces(List<PlantPayLine> plantPayLines)
+        {
+            //foreach (var payLine in plantPayLines)
+            //{
+            //    payLine.GrossFromPieces = Math.Round(payLine.Pieces * payLine.NonPrimaRate, 2, MidpointRounding.ToPositiveInfinity);
+            //}
+        }
+
         public void CalculateGrossFromPieces(List<RanchAdjustmentLine> ranchAdjustmentLines)
         {
             //foreach (var adjustmentLine in ranchAdjustmentLines)
