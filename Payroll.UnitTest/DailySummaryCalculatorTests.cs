@@ -66,7 +66,7 @@ namespace Payroll.UnitTest
 
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(3, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.MinimumWage == 8.5M).Count());
@@ -129,7 +129,7 @@ namespace Payroll.UnitTest
 
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(6, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.Crew == 1).Count());
@@ -195,7 +195,7 @@ namespace Payroll.UnitTest
 
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(6, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.FiveEight == false).Count());
@@ -229,7 +229,7 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(2, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1").Count());
@@ -259,7 +259,7 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(2, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17)).Count());
@@ -294,7 +294,7 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(4, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17)).Count());
@@ -326,7 +326,7 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(3, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.AlternativeWorkWeek == false).Count());
@@ -389,7 +389,7 @@ namespace Payroll.UnitTest
 
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(6, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10).Count());
@@ -429,7 +429,7 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(6, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 35.2M).Count());
@@ -482,12 +482,12 @@ namespace Payroll.UnitTest
 
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(3, rates.Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 10).Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 10).Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == .1M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 95 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 107.5M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 109 && x.NonProductiveTime == .1M && x.EffectiveHourlyRate == 10).Count());
         }
 
         [TestMethod]
@@ -514,11 +514,11 @@ namespace Payroll.UnitTest
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(2, rates.Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 35.2M).Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 27.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 37.05M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 27.70M).Count());
         }
 
         [TestMethod]
@@ -546,7 +546,7 @@ namespace Payroll.UnitTest
 
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
-            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
             Assert.AreEqual(3, rates.Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "CrewBoss1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 265 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 26.5M).Count());
@@ -1019,9 +1019,9 @@ namespace Payroll.UnitTest
             var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id);
 
             Assert.AreEqual(3, rates.Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 10).Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 10).Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == .1M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 95 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 107.5M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 109 && x.NonProductiveTime == .1M && x.EffectiveHourlyRate == 10).Count());
         }
 
         [TestMethod]
@@ -1051,8 +1051,8 @@ namespace Payroll.UnitTest
             var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id);
 
             Assert.AreEqual(2, rates.Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 35.2M).Count());
-            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 27.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 37.05M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 27.70M).Count());
         }
 
         [TestMethod]
@@ -1086,6 +1086,482 @@ namespace Payroll.UnitTest
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "CrewBoss1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 265 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 26.5M).Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "CrewBoss1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 291.5M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 26.5M).Count());
             Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "CrewBoss1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 382 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 38.2M).Count());
+        }
+
+        #endregion
+
+        #region Plant Pay Line Tests
+
+        [TestMethod]
+        public void PlantPayLine_SelectsMinimumWageForShiftDate()
+        {
+            var dbName = "PlantPayLine_SelectsMinimumWageForShiftDate";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Setup mock minimum wages
+            _mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 17), 8.5M);
+            _mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 18), 8.75M);
+            _mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), 9M);
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17));
+            context.SaveChanges();
+
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(3, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.MinimumWage == 8.5M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.MinimumWage == 8.75M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.MinimumWage == 9M).Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_UsesLastOfPlantSortedByRecordId()
+        {
+            var dbName = "PlantPayLine_UsesLastOfPlantSortedByRecordId";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, plant: (int)Plant.Reedley));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, plant: (int)Plant.Reedley));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, plant: (int)Plant.Kerman));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, plant: (int)Plant.Sanger));
+
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, plant: (int)Plant.Office));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, plant: (int)Plant.Office));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, plant: (int)Plant.Cutler));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, plant: (int)Plant.Unknown));
+
+            context.SaveChanges();
+
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(6, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.Crew == (int)Plant.Reedley).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.Crew == (int)Plant.Kerman).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.Crew == (int)Plant.Sanger).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.Crew == (int)Plant.Office).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.Crew == (int)Plant.Cutler).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.Crew == (int)Plant.Unknown).Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_GroupsByEmployee()
+        {
+            var dbName = "PlantPayLine_GroupsByEmployee";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.SaveChanges();
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(2, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1").Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2").Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_GroupsByWeekEnding()
+        {
+            var dbName = "PlantPayLine_GroupsByWeekEnding";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.SaveChanges();
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(2, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17)).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 3, 1) && x.ShiftDate == new DateTime(2020, 2, 17)).Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_GroupsByShiftDate()
+        {
+            var dbName = "PlantPayLine_GroupsByShiftDate";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.SaveChanges();
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(4, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17)).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18)).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17)).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18)).Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_GroupsByAlternativeWorkWeek()
+        {
+            var dbName = "PlantPayLine_GroupsByAlternativeWorkWeek";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
+            context.SaveChanges();
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(3, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.AlternativeWorkWeek == false).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.AlternativeWorkWeek == false).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.AlternativeWorkWeek == true).Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_Regular()
+        {
+            var dbName = "PlantPayLine_Regular";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+
+            context.SaveChanges();
+
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(6, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 150 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_Pieces()
+        {
+            var dbName = "PlantPayLine_Pieces";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+
+            context.SaveChanges();
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(6, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 35.2M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 27.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 240.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 24.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 9 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 39.11M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 9 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 30.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 9 && x.TotalGross == 240.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 26.67M).Count());
+
+        }
+
+        [TestMethod]
+        public void PlantPayLine_Pieces_WithIncentive()
+        {
+            var dbName = "PlantPayLine_Pieces_WithIncentive";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 42.42M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
+
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 37.37M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
+
+            context.SaveChanges();
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(6, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 394.42M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 39.44M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 27.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 240.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 24.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 9 && x.TotalGross == 389.37M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 43.26M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 9 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 30.01M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 9 && x.TotalGross == 240.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 26.67M).Count());
+
+        }
+
+        [TestMethod]
+        public void PlantPayLine_RegularNonProductiveTime()
+        {
+            var dbName = "PlantPayLine_RegularNonProductiveTime";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+
+            // Mock ranch pay lines
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+
+            context.SaveChanges();
+
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(3, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 95 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 107.5M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 10).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 109 && x.NonProductiveTime == .1M && x.EffectiveHourlyRate == 10).Count());
+        }
+
+        [TestMethod]
+        public void PlantPayLine_PiecesNonProductiveTime()
+        {
+            var dbName = "PlantPayLine_PiecesNonProductiveTime";
+            var options = new DbContextOptionsBuilder<PayrollContext>()
+                .UseInMemoryDatabase(databaseName: dbName)
+                .Options;
+
+            using var context = new PayrollContext(options);
+            context.Database.EnsureCreated();
+
+            // Mock a new batch
+            var batch = Helper.MockBatch(id: 1);
+            context.Add(batch);
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+
+
+            context.SaveChanges();
+
+            var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
+            var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+            Assert.AreEqual(2, rates.Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 367 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 38.63M).Count());
+            Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 285.05M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 29.24M).Count());
         }
 
         #endregion

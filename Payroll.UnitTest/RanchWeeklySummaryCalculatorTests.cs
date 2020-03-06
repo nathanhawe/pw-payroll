@@ -10,7 +10,7 @@ using System.Linq;
 namespace Payroll.UnitTest
 {
     [TestClass]
-    public class WeeklySummaryCalculatorTests
+    public class RanchWeeklySummaryCalculatorTests
     {
         [TestMethod]
         public void CorrectlySumTotalHours()
@@ -25,7 +25,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 13M, OverTimeHours = 2, DoubleTimeHours = 1},
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(1, weeklySummary.Count());
@@ -45,7 +45,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 13M, TotalGross = 195, OverTimeHours = 2, DoubleTimeHours = 1},
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(1, weeklySummary.Count());
@@ -65,7 +65,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 13M, OverTimeHours = 2, DoubleTimeHours = 1},
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(1, weeklySummary.Count());
@@ -85,7 +85,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 14M, OverTimeHours = 2, DoubleTimeHours = 2 },
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(1, weeklySummary.Count());
@@ -97,27 +97,27 @@ namespace Payroll.UnitTest
         {
             var dailySummary = new List<DailySummary>
             {
-                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M },
-                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 9M, TotalGross = 135M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M },
-                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 8M, TotalGross = 120M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M },
-                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 11M, TotalGross = 165M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, OverTimeHours = 1 },
-                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 12M, TotalGross = 180M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, OverTimeHours = 2 },
-                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M },
+                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 10M, TotalGross = 146.25M, NonProductiveTime = .25M, EffectiveHourlyRate = 15M },
+                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 9M, TotalGross = 131.25M, NonProductiveTime = .25M, EffectiveHourlyRate = 15M },
+                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 8M, TotalGross = 116.25M, NonProductiveTime = .25M, EffectiveHourlyRate = 15M },
+                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 11M, TotalGross = 161.25M, NonProductiveTime = .25M, EffectiveHourlyRate = 15M, OverTimeHours = 1 },
+                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 12M, TotalGross = 172.5M, NonProductiveTime = .5M, EffectiveHourlyRate = 15M, OverTimeHours = 2 },
+                new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 142.5M, NonProductiveTime = .5M, EffectiveHourlyRate = 15M },
 
-                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 10M, TotalGross = 167M, NonProductiveTime = 0M, EffectiveHourlyRate = 16.7M },
-                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 10M, TotalGross = 167M, NonProductiveTime = 0M, EffectiveHourlyRate = 16.7M },
-                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 10M, TotalGross = 167M, NonProductiveTime = 0M, EffectiveHourlyRate = 16.7M },
-                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M },
-                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M },
-                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M }
+                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 10M, TotalGross = 162.83M, NonProductiveTime = .25M, EffectiveHourlyRate = 16.7M },
+                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 10M, TotalGross = 162.83M, NonProductiveTime = .25M, EffectiveHourlyRate = 16.7M },
+                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 10M, TotalGross = 162.83M, NonProductiveTime = .25M, EffectiveHourlyRate = 16.7M },
+                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 10M, TotalGross = 146.25M, NonProductiveTime = .25M, EffectiveHourlyRate = 15M },
+                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 10M, TotalGross = 142.5M, NonProductiveTime = .5M, EffectiveHourlyRate = 15M },
+                new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 142.5M, NonProductiveTime = .5M, EffectiveHourlyRate = 15M }
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(2, weeklySummary.Count());
-            Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15M));
-            Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15.85M));
+            Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 870M && x.EffectiveHourlyRate == 15M));
+            Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 919.73M && x.EffectiveHourlyRate == 15.86M));
         }
 
         [TestMethod]
@@ -140,7 +140,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 3, 1), ShiftDate = new DateTime(2020, 2, 29), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M }
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(2, weeklySummary.Count());
@@ -162,7 +162,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 8.75M },
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(2, weeklySummary.Count());
@@ -189,7 +189,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), Crew = 1},
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(2, weeklySummary.Count());
@@ -216,7 +216,7 @@ namespace Payroll.UnitTest
                 new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), FiveEight = false},
             };
 
-            var weeklySummaryCalculator = new WeeklySummaryCalculator();
+            var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
             var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
             Assert.AreEqual(1, weeklySummary.Count());

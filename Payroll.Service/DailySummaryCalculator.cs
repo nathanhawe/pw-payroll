@@ -19,7 +19,7 @@ namespace Payroll.Service
             _minimumWageService = minimumWageService ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public List<DailySummary> GetDailySummaries(int batchId)
+        public List<DailySummary> GetDailySummaries(int batchId, string company)
         {
             throw new NotImplementedException();
         }

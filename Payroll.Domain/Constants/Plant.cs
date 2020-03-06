@@ -10,6 +10,7 @@ namespace Payroll.Domain.Constants
         Reedley = 2,
         Kerman = 3,
         Sanger = 4,
+        Office = 7,
         Cutler = 11
     }
 }

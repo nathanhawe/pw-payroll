@@ -1,13 +1,14 @@
 ﻿using Payroll.Domain;
+using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Payroll.Service
 {
-    public class WeeklySummaryCalculator
+    public class PlantDailyOTDTHoursCalculator : IDailyOTDTHoursCalculator
     {
-        public List<WeeklySummary> GetWeeklySummary(List<DailySummary> dailyEffectiveRates)
+        public void SetDailyOTDTHours(List<DailySummary> dailySummaries)
         {
             throw new NotImplementedException();
         }
