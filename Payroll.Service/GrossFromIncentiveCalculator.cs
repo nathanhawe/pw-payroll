@@ -43,6 +43,7 @@ namespace Payroll.Service
 
 			//	payLine.GrossFromIncentive = Math.Round(payLine.GrossFromIncentive, 2, MidpointRounding.ToPositiveInfinity);
 			//}
+			throw new NotImplementedException();
 		}
 
 		private void HourlyIncentive(PlantPayLine payLine)

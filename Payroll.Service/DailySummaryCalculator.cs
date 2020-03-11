@@ -24,7 +24,7 @@ namespace Payroll.Service
             throw new NotImplementedException();
         }
 
-        public List<DailySummary> GetDailySummariesFromAdjustments(int batchid)
+        public List<DailySummary> GetDailySummariesFromAdjustments(int batchid, string company)
         {
             throw new NotImplementedException();
         }

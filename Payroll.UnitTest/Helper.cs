@@ -381,6 +381,76 @@ namespace Payroll.UnitTest
             };
         }
 
+        public static PlantAdjustmentLine MockPlantAdjustmentLine(
+            int id = 0,
+            DateTime? dateCreated = null,
+            DateTime? dateModified = null,
+            bool isDeleted = false,
+            int batchId = 0,
+            int layoffId = 0,
+            int quickBaseRecordId = 0,
+            DateTime? weekEndDate = null,
+            DateTime? shiftDate = null,
+            int plant = 0,
+            string employeeId = "TEST",
+            int laborCode = 0,
+            decimal hoursWorked = 0,
+            string payType = "1-Regular",
+            decimal pieces = 0,
+            decimal pieceRate = 0,
+            decimal hourlyRate = 0,
+            decimal otDtWotRate = 0,
+            decimal otDtWotHours = 0,
+            decimal grossFromHours = 0,
+            decimal grossFromPieces = 0,
+            decimal otherGross = 0,
+            decimal grossFromIncentive = 0,
+            bool alternativeWorkWeek = false,
+            decimal totalGross = 0,
+            DateTime? weekEndOfAdjustmentPaid = null,
+            bool isOriginal = false,
+            decimal oldHourlyRate = 0,
+            bool useOldHourlyRate = false
+            )
+        {
+            dateCreated ??= DateTime.Now;
+            dateModified ??= DateTime.Now;
+            weekEndDate ??= new DateTime(2020, 1, 5);
+            shiftDate ??= new DateTime(2020, 1, 5);
+            weekEndOfAdjustmentPaid ??= new DateTime(2020, 1, 12);
 
+            return new PlantAdjustmentLine
+            {
+                Id = id,
+                DateCreated = dateCreated.Value,
+                DateModified = dateModified.Value,
+                IsDeleted = isDeleted,
+                BatchId = batchId,
+                LayoffId = layoffId,
+                QuickBaseRecordId = quickBaseRecordId,
+                WeekEndDate = weekEndDate.Value,
+                ShiftDate = shiftDate.Value,
+                Plant = plant,
+                EmployeeId = employeeId,
+                LaborCode = laborCode,
+                HoursWorked = hoursWorked,
+                PayType = payType,
+                Pieces = pieces,
+                PieceRate = pieceRate,
+                HourlyRate = hourlyRate,
+                OtDtWotRate = otDtWotRate,
+                OtDtWotHours = otDtWotHours,
+                GrossFromHours = grossFromHours,
+                GrossFromPieces = grossFromPieces,
+                OtherGross = otherGross,
+                GrossFromIncentive = grossFromIncentive,
+                TotalGross = totalGross,
+                AlternativeWorkWeek = alternativeWorkWeek           ,
+                WeekEndOfAdjustmentPaid = weekEndOfAdjustmentPaid.Value,
+                IsOriginal = isOriginal,
+                OldHourlyRate = oldHourlyRate,
+                UseOldHourlyRate = useOldHourlyRate
+            };
+        }
     }
 }

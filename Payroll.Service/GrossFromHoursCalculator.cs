@@ -56,6 +56,26 @@ namespace Payroll.Service
             //}
         }
 
-        
+        public void CalculateGrossFromHours(List<PlantAdjustmentLine> plantAdjustmentLines)
+        {
+            //decimal hourlyRate;
+            //Plant plant;
+
+            //foreach (var adjustmentLine in plantAdjustmentLines)
+            //{
+            //    if (adjustmentLine.UseOldHourlyRate)
+            //    {
+            //        hourlyRate = adjustmentLine.OldHourlyRate;
+            //    }
+            //    else
+            //    {
+            //        plant = Enum.IsDefined(typeof(Plant), adjustmentLine.Plant) ? (Plant)adjustmentLine.Plant : Plant.Unknown;
+            //        hourlyRate = _plantHourlyRateSelector.GetHourlyRate(adjustmentLine.PayType, adjustmentLine.LaborCode, adjustmentLine.EmployeeHourlyRate, 0, adjustmentLine.IsH2A, plant, adjustmentLine.ShiftDate);
+            //    }
+            //    adjustmentLine.GrossFromHours = Math.Round(adjustmentLine.HoursWorked * hourlyRate, 2, MidpointRounding.ToPositiveInfinity);
+            //}
+        }
+
+
     }
 }

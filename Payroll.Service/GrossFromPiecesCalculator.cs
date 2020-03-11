@@ -30,5 +30,13 @@ namespace Payroll.Service
             //    adjustmentLine.GrossFromPieces = Math.Round(adjustmentLine.Pieces * adjustmentLine.PieceRate, 2, MidpointRounding.ToPositiveInfinity);
             //}
         }
+
+        public void CalculateGrossFromPieces(List<PlantAdjustmentLine> plantAdjustmentLines)
+        {
+            //foreach (var adjustmentLine in plantAdjustmentLines)
+            //{
+            //    adjustmentLine.GrossFromPieces = Math.Round(adjustmentLine.Pieces * adjustmentLine.PieceRate, 2, MidpointRounding.ToPositiveInfinity);
+            //}
+        }
     }
 }
