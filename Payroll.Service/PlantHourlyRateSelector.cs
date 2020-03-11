@@ -14,7 +14,7 @@ namespace Payroll.Service
             _minimumWageService = minimumWageService ?? throw new ArgumentNullException(nameof(minimumWageService));
         }
 
-        public decimal GetHourlyRate(string payType, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, bool isH2A, Domain.Constants.Plant plant)
+        public decimal GetHourlyRate(string payType, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, bool isH2A, Domain.Constants.Plant plant, DateTime shiftDate)
         {
             throw new NotImplementedException();
         }
