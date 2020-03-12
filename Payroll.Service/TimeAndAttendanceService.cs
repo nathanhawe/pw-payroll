@@ -31,6 +31,7 @@ namespace Payroll.Service
         private RanchMinimumMakeUpCalculator _ranchMinimumMakeUpCalculator;
         private PlantMinimumMakeUpCalculator _plantMinimumMakeUpCalculator;
         private RanchSummaryService _ranchSummaryService;
+        private PlantSummaryService _plantSummaryService;
 
         public TimeAndAttendanceService(CrewBossPayService crewBossPayService, PaidSickLeaveService paidSickLeaveService)
         {
@@ -293,9 +294,9 @@ namespace Payroll.Service
             CalculatePlantAdjustments(batchId, company);
 
             /* Create Summaries */
-            //var summaries = _plantSummaryService.CreateSummariesForBatch(batchId);
-            //_context.Add(summaries);
-            //_context.SaveChanges();
+            var summaries = _plantSummaryService.CreateSummariesForBatch(batchId);
+            _context.Add(summaries);
+            _context.SaveChanges();
 
             /* Update records to Quick Base */
             // Ranch Payroll Records

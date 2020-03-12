@@ -29,6 +29,7 @@ namespace Payroll.Data
         public DbSet<RanchSummary> RanchSummaries { get; set; }
         public DbSet<PlantPayLine> PlantPayLines { get; set; }
         public DbSet<PlantAdjustmentLine> PlantAdjustmentLines { get; set; }
+        public DbSet<PlantSummary> PlantSummaries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
