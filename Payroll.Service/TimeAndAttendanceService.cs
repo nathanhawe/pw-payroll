@@ -170,7 +170,7 @@ namespace Payroll.Service
             var endDate = _context.PlantPayLines.Where(x => x.BatchId == batchId).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
 
             _paidSickLeaveService.UpdateTracking(batchId, company);
-            _paidSickLeaveService.CalculateNinetyDay(batchId, startDate, endDate);
+            _paidSickLeaveService.CalculateNinetyDay(batchId, company, startDate, endDate);
 
             // Update PSL usage
             _paidSickLeaveService.UpdateUsage(batchId, company);
@@ -615,7 +615,7 @@ namespace Payroll.Service
             var endDate = _context.RanchPayLines.Where(x => x.BatchId == batchId).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
 
             _paidSickLeaveService.UpdateTracking(batchId, company);
-            _paidSickLeaveService.CalculateNinetyDay(batchId, startDate, endDate);
+            _paidSickLeaveService.CalculateNinetyDay(batchId, company, startDate, endDate);
 
             // Update PSL usage
             _paidSickLeaveService.UpdateUsage(batchId, company);
