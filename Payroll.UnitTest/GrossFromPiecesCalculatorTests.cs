@@ -12,31 +12,25 @@ namespace Payroll.UnitTest
     [TestClass]
     public class GrossFromPiecesCalculatorTests
     {
-        private class GrossFromPiecesTest
-        {
-            public int Id { get; set; }
-            public decimal Pieces { get; set; }
-            public decimal PieceRate { get; set; }
-            public decimal ExpectedGrossFromPieces { get; set; }
-        }
-
+        private readonly RoundingService _roundingService = new RoundingService();
+        
         [TestMethod]
         public void RanchPayLine_GrossFromPiecesIsProduct()
         {
-            var tests = new List<GrossFromPiecesTest>
+            var tests = new List<GrossFromPiecesTestCase>
             {
-                new GrossFromPiecesTest { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
-                new GrossFromPiecesTest { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
-                new GrossFromPiecesTest { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
-                new GrossFromPiecesTest { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
-                new GrossFromPiecesTest { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
+                new GrossFromPiecesTestCase { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
+                new GrossFromPiecesTestCase { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
+                new GrossFromPiecesTestCase { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
+                new GrossFromPiecesTestCase { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
+                new GrossFromPiecesTestCase { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
 
             };
 
-            var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
+            var grossFromPiecesCalculator = new GrossFromPiecesCalculator(_roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchPayLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
 
@@ -51,20 +45,20 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void RanchAdjustmentPayLine_GrossFromPiecesIsProduct()
         {
-            var tests = new List<GrossFromPiecesTest>
+            var tests = new List<GrossFromPiecesTestCase>
             {
-                new GrossFromPiecesTest { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
-                new GrossFromPiecesTest { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
-                new GrossFromPiecesTest { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
-                new GrossFromPiecesTest { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
-                new GrossFromPiecesTest { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
+                new GrossFromPiecesTestCase { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
+                new GrossFromPiecesTestCase { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
+                new GrossFromPiecesTestCase { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
+                new GrossFromPiecesTestCase { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
+                new GrossFromPiecesTestCase { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
 
             };
 
-            var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
+            var grossFromPiecesCalculator = new GrossFromPiecesCalculator(_roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
 
@@ -79,20 +73,20 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void PlantPayLine_GrossFromPiecesIsProductOfNonPrimaRate()
         {
-            var tests = new List<GrossFromPiecesTest>
+            var tests = new List<GrossFromPiecesTestCase>
             {
-                new GrossFromPiecesTest { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
-                new GrossFromPiecesTest { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
-                new GrossFromPiecesTest { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
-                new GrossFromPiecesTest { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
-                new GrossFromPiecesTest { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
+                new GrossFromPiecesTestCase { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
+                new GrossFromPiecesTestCase { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
+                new GrossFromPiecesTestCase { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
+                new GrossFromPiecesTestCase { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
+                new GrossFromPiecesTestCase { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
 
             };
 
-            var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
+            var grossFromPiecesCalculator = new GrossFromPiecesCalculator(_roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockPlantPayLine(id: x.Id, pieces: x.Pieces, nonPrimaRate: x.PieceRate)).ToList();
 
@@ -107,20 +101,20 @@ namespace Payroll.UnitTest
         [TestMethod]
         public void PlantAdjustmentLine_GrossFromPiecesIsProductOfPieceRate()
         {
-            var tests = new List<GrossFromPiecesTest>
+            var tests = new List<GrossFromPiecesTestCase>
             {
-                new GrossFromPiecesTest { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
-                new GrossFromPiecesTest { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
-                new GrossFromPiecesTest { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
-                new GrossFromPiecesTest { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
-                new GrossFromPiecesTest { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
-                new GrossFromPiecesTest { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
+                new GrossFromPiecesTestCase { Id = 1, Pieces = 0, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 2, Pieces = 100, PieceRate = 0, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 3, Pieces = 0, PieceRate = .31M, ExpectedGrossFromPieces = 0 },
+                new GrossFromPiecesTestCase { Id = 4, Pieces = 100, PieceRate = .31M, ExpectedGrossFromPieces = 31 },
+                new GrossFromPiecesTestCase { Id = 5, Pieces = 500, PieceRate = .31111M, ExpectedGrossFromPieces = 155.56M },
+                new GrossFromPiecesTestCase { Id = 6, Pieces = 100, PieceRate = .31114M, ExpectedGrossFromPieces = 31.11M },
+                new GrossFromPiecesTestCase { Id = 7, Pieces = 100, PieceRate = .31116M, ExpectedGrossFromPieces = 31.12M },
+                new GrossFromPiecesTestCase { Id = 8, Pieces = 100, PieceRate = .31115M, ExpectedGrossFromPieces = 31.12M }
 
             };
 
-            var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
+            var grossFromPiecesCalculator = new GrossFromPiecesCalculator(_roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
 
