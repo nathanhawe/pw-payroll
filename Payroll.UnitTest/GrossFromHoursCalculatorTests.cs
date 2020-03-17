@@ -14,6 +14,7 @@ namespace Payroll.UnitTest
     {
         private readonly Mocks.MockRanchHourlyRateSelector _mockRanchHourlyRateSelector = new Mocks.MockRanchHourlyRateSelector(10);
         private readonly Mocks.MockPlantHourlyRateSelector _mockPlantHourlyRateSelector = new Mocks.MockPlantHourlyRateSelector(10);
+        private readonly RoundingService _roundingService = new RoundingService();
         
         #region Ranch Pay Line Tests
 
@@ -29,7 +30,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 9.99M, ExpectedGrossFromHours = 99.9M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -53,7 +54,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11144M, ExpectedGrossFromHours = 101.11M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -77,7 +78,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11156M, ExpectedGrossFromHours = 101.12M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -100,7 +101,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 4, HoursWorked = 10.111449M, ExpectedGrossFromHours = 101.12M },
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -128,7 +129,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 9.99M, ExpectedGrossFromHours = 99.90M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -152,7 +153,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11144M, ExpectedGrossFromHours = 101.11M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -176,7 +177,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11156M, ExpectedGrossFromHours = 101.12M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -199,7 +200,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 4, HoursWorked = 10.111449M, ExpectedGrossFromHours = 101.12M },
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -223,7 +224,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, UseOldHourlyRate = true, OldHourlyRate = 20, HoursWorked = 9.999M, ExpectedGrossFromHours = 199.98M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked, useOldHourlyRate: x.UseOldHourlyRate, oldHourlyRate: x.OldHourlyRate)).ToList();
 
@@ -253,7 +254,7 @@ namespace Payroll.UnitTest
 
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockPlantPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -277,7 +278,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11144M, ExpectedGrossFromHours = 101.11M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockPlantPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -301,7 +302,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11156M, ExpectedGrossFromHours = 101.12M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockPlantPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -324,7 +325,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 4, HoursWorked = 10.111449M, ExpectedGrossFromHours = 101.12M },
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testPayLines = tests.Select(x => EntityMocker.MockPlantPayLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -354,7 +355,7 @@ namespace Payroll.UnitTest
 
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testAdjustmentLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -378,7 +379,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11144M, ExpectedGrossFromHours = 101.11M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testAdjustmentLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -402,7 +403,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, HoursWorked = 10.11156M, ExpectedGrossFromHours = 101.12M }
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testAdjustmentLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -425,7 +426,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 4, HoursWorked = 10.111449M, ExpectedGrossFromHours = 101.12M },
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testAdjustmentLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked)).ToList();
 
@@ -448,7 +449,7 @@ namespace Payroll.UnitTest
                 new GrossFromHoursTestCase { Id = 5, UseOldHourlyRate = true, OldHourlyRate = 20, HoursWorked = 9.999M, ExpectedGrossFromHours = 199.98M}
             };
 
-            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector);
+            var grossFromHoursCalculator = new GrossFromHoursCalculator(_mockRanchHourlyRateSelector, _mockPlantHourlyRateSelector, _roundingService);
 
             var testAdjustmentLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, hoursWorked: x.HoursWorked, useOldHourlyRate: x.UseOldHourlyRate, oldHourlyRate: x.OldHourlyRate)).ToList();
 

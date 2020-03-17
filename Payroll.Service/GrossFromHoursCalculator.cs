@@ -14,11 +14,16 @@ namespace Payroll.Service
 	{
 		private readonly IRanchHourlyRateSelector _ranchHourlyRateSelector;
 		private readonly IPlantHourlyRateSelector _plantHourlyRateSelector;
+		private readonly IRoundingService _roundingService;
 
-		public GrossFromHoursCalculator(IRanchHourlyRateSelector ranchHourlyRateSelector, IPlantHourlyRateSelector plantHourlyRateSelector)
+		public GrossFromHoursCalculator(
+			IRanchHourlyRateSelector ranchHourlyRateSelector, 
+			IPlantHourlyRateSelector plantHourlyRateSelector,
+			IRoundingService roundingService)
 		{
 			_ranchHourlyRateSelector = ranchHourlyRateSelector ?? throw new ArgumentNullException(nameof(ranchHourlyRateSelector));
 			_plantHourlyRateSelector = plantHourlyRateSelector ?? throw new ArgumentNullException(nameof(plantHourlyRateSelector));
+			_roundingService = roundingService ?? throw new ArgumentNullException(nameof(roundingService));
 		}
 
 		/// <summary>
@@ -37,7 +42,7 @@ namespace Payroll.Service
 					payLine.EmployeeHourlyRate,
 					payLine.HourlyRateOverride);
 
-				payLine.GrossFromHours = Round(payLine.HoursWorked * hourlyRate, 2);
+				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 			}
 		}
 
@@ -62,7 +67,7 @@ namespace Payroll.Service
 					plant,
 					payLine.ShiftDate);
 
-				payLine.GrossFromHours = Round(payLine.HoursWorked * hourlyRate, 2);
+				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 			}
 		}
 
@@ -89,7 +94,7 @@ namespace Payroll.Service
 						0);
 				}
 
-				adjustmentLine.GrossFromHours = Round(adjustmentLine.HoursWorked * hourlyRate, 2);
+				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);
 			}
 		}
 
@@ -122,24 +127,8 @@ namespace Payroll.Service
 						adjustmentLine.ShiftDate);
 				}
 
-				adjustmentLine.GrossFromHours = Round(adjustmentLine.HoursWorked * hourlyRate, 2);
+				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);
 			}
-		}
-
-		/// <summary>
-		/// Rounds the provided value to the decimal places specified.  This method ensures
-		/// that rounding is performed accurately for six decimal places.
-		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="decimalPlaces"></param>
-		/// <returns></returns>
-		private decimal Round(decimal value, int decimalPlaces)
-		{
-			for(int i = 6; i > decimalPlaces; i--)
-			{
-				value = Math.Round(value, i, MidpointRounding.AwayFromZero);
-			}
-			return Math.Round(value, decimalPlaces, MidpointRounding.AwayFromZero);
 		}
 
 		/// <summary>
