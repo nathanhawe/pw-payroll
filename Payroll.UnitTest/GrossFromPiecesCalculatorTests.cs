@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Payroll.UnitTest.Helpers;
 
 namespace Payroll.UnitTest
 {
@@ -37,7 +38,7 @@ namespace Payroll.UnitTest
 
             var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockRanchPayLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockRanchPayLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
 
             grossFromPiecesCalculator.CalculateGrossFromPieces(testPayLines);
 
@@ -65,7 +66,7 @@ namespace Payroll.UnitTest
 
             var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockRanchAdjustmentLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
 
             grossFromPiecesCalculator.CalculateGrossFromPieces(testPayLines);
 
@@ -93,7 +94,7 @@ namespace Payroll.UnitTest
 
             var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockPlantPayLine(id: x.Id, pieces: x.Pieces, nonPrimaRate: x.PieceRate)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockPlantPayLine(id: x.Id, pieces: x.Pieces, nonPrimaRate: x.PieceRate)).ToList();
 
             grossFromPiecesCalculator.CalculateGrossFromPieces(testPayLines);
 
@@ -121,7 +122,7 @@ namespace Payroll.UnitTest
 
             var grossFromPiecesCalculator = new GrossFromPiecesCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockPlantAdjustmentLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, pieces: x.Pieces, pieceRate: x.PieceRate)).ToList();
 
             grossFromPiecesCalculator.CalculateGrossFromPieces(testPayLines);
 

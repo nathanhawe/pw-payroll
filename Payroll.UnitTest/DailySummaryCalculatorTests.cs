@@ -8,6 +8,7 @@ using System.Text;
 using Payroll.Domain.Constants;
 using System.Linq;
 using Payroll.UnitTest.Mocks;
+using Payroll.UnitTest.Helpers;
 
 namespace Payroll.UnitTest
 {
@@ -41,27 +42,27 @@ namespace Payroll.UnitTest
             _mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), 9M);
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
             context.SaveChanges();
 
 
@@ -86,44 +87,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
 
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, crew: 4));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, crew: 4));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, crew: 5));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, crew: 6));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, crew: 4));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, crew: 4));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, crew: 5));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, crew: 6));
 
             context.SaveChanges();
 
@@ -152,44 +153,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, fiveEight: true));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, fiveEight: true));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, fiveEight: true));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, fiveEight: true));
 
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, fiveEight: true));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, fiveEight: true));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, fiveEight: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, fiveEight: true));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, fiveEight: true));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, fiveEight: true));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, fiveEight: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, fiveEight: true));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, fiveEight: false));
 
             context.SaveChanges();
 
@@ -218,14 +219,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -248,14 +249,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -278,19 +279,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -315,14 +316,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -346,44 +347,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
             context.SaveChanges();
 
@@ -412,19 +413,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
             context.SaveChanges();
 
@@ -453,30 +454,30 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
 
             context.SaveChanges();
 
@@ -502,13 +503,13 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
 
             context.SaveChanges();
@@ -533,14 +534,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 0, otherGross: 265, payType: PayType.CBHourlyTrees));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 0, grossFromPieces: 0, otherGross: 291.5M, payType: PayType.CBHourlyTrees));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 4, grossFromHours: 0, grossFromPieces: 0, otherGross: 82, payType: PayType.CBHourlyTrees));
-            context.Add(Helper.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6, grossFromHours: 0, grossFromPieces: 0, otherGross: 300, payType: PayType.CBCommission));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 0, otherGross: 265, payType: PayType.CBHourlyTrees));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 0, grossFromPieces: 0, otherGross: 291.5M, payType: PayType.CBHourlyTrees));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 4, grossFromHours: 0, grossFromPieces: 0, otherGross: 82, payType: PayType.CBHourlyTrees));
+            context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6, grossFromHours: 0, grossFromPieces: 0, otherGross: 300, payType: PayType.CBCommission));
 
             context.SaveChanges();
 
@@ -575,27 +576,27 @@ namespace Payroll.UnitTest
             _mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), 9M);
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
             context.SaveChanges();
 
 
@@ -620,44 +621,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 1));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 1));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 2));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3));
 
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, crew: 4));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, crew: 4));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, crew: 5));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, crew: 6));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, crew: 4));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, crew: 4));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, crew: 5));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, crew: 6));
 
             context.SaveChanges();
 
@@ -686,44 +687,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, fiveEight: true));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, fiveEight: true));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, fiveEight: true));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, fiveEight: true));
 
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, fiveEight: true));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, fiveEight: true));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, fiveEight: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, fiveEight: true));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, fiveEight: true));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, fiveEight: true));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, fiveEight: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, fiveEight: true));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, fiveEight: false));
 
             context.SaveChanges();
 
@@ -752,14 +753,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -782,14 +783,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -812,19 +813,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -849,14 +850,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -880,44 +881,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
             context.SaveChanges();
 
@@ -946,19 +947,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
             context.SaveChanges();
 
@@ -987,30 +988,30 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
 
             context.SaveChanges();
 
@@ -1036,13 +1037,13 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
 
             context.SaveChanges();
@@ -1067,14 +1068,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 0, otherGross: 265, payType: PayType.CBHourlyTrees));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 0, grossFromPieces: 0, otherGross: 291.5M, payType: PayType.CBHourlyTrees));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 4, grossFromHours: 0, grossFromPieces: 0, otherGross: 82, payType: PayType.CBHourlyTrees));
-            context.Add(Helper.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6, grossFromHours: 0, grossFromPieces: 0, otherGross: 300, payType: PayType.CBCommission));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 0, otherGross: 265, payType: PayType.CBHourlyTrees));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 0, grossFromPieces: 0, otherGross: 291.5M, payType: PayType.CBHourlyTrees));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 4, grossFromHours: 0, grossFromPieces: 0, otherGross: 82, payType: PayType.CBHourlyTrees));
+            context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "CrewBoss1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6, grossFromHours: 0, grossFromPieces: 0, otherGross: 300, payType: PayType.CBCommission));
 
             context.SaveChanges();
 
@@ -1109,27 +1110,27 @@ namespace Payroll.UnitTest
             _mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), 9M);
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17));
             context.SaveChanges();
 
 
@@ -1154,44 +1155,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, plant: (int)Plant.Reedley));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, plant: (int)Plant.Reedley));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, plant: (int)Plant.Sanger));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, plant: (int)Plant.Reedley));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, plant: (int)Plant.Reedley));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, plant: (int)Plant.Sanger));
 
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, plant: (int)Plant.Office));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, plant: (int)Plant.Office));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, plant: (int)Plant.Unknown));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, plant: (int)Plant.Office));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, plant: (int)Plant.Office));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, plant: (int)Plant.Unknown));
 
             context.SaveChanges();
 
@@ -1220,14 +1221,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1250,14 +1251,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1280,19 +1281,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1317,14 +1318,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1348,44 +1349,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
             context.SaveChanges();
 
@@ -1414,19 +1415,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
             context.SaveChanges();
 
@@ -1455,19 +1456,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 42.42M, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 42.42M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
 
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 37.37M, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 37.37M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
 
             context.SaveChanges();
 
@@ -1496,30 +1497,30 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
 
             context.SaveChanges();
 
@@ -1545,13 +1546,13 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
 
             context.SaveChanges();
@@ -1585,27 +1586,27 @@ namespace Payroll.UnitTest
             _mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), 9M);
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17));
             context.SaveChanges();
 
 
@@ -1630,44 +1631,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, plant: (int)Plant.Reedley));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, plant: (int)Plant.Reedley));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, plant: (int)Plant.Kerman));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, plant: (int)Plant.Sanger));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, plant: (int)Plant.Reedley));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, plant: (int)Plant.Reedley));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, plant: (int)Plant.Kerman));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, plant: (int)Plant.Sanger));
 
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, plant: (int)Plant.Office));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, plant: (int)Plant.Office));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, plant: (int)Plant.Cutler));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, plant: (int)Plant.Unknown));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 18, plant: (int)Plant.Office));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 19, plant: (int)Plant.Office));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 20, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 21, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 22, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 23, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 24, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 25, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 26, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 27, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 28, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 29, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 30, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 31, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 32, plant: (int)Plant.Cutler));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 33, plant: (int)Plant.Unknown));
 
             context.SaveChanges();
 
@@ -1696,14 +1697,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1726,14 +1727,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1756,19 +1757,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1793,14 +1794,14 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: false));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
             context.SaveChanges();
 
             var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService);
@@ -1824,44 +1825,44 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
             context.SaveChanges();
 
@@ -1890,19 +1891,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, payType: PayType.HourlyPlusPieces));
 
             context.SaveChanges();
 
@@ -1931,19 +1932,19 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 42.42M, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 42.42M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
 
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 37.37M, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 37.37M, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 0, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 0, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 0M, grossFromPieces: 140, grossFromIncentive: 100.05M, otherGross: 0, payType: PayType.Pieces));
 
             context.SaveChanges();
 
@@ -1972,30 +1973,30 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock ranch pay lines
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 4.5M, grossFromHours: 45, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 10.75M, grossFromHours: 107.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .15M, grossFromHours: 1.5M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .1M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
 
             context.SaveChanges();
 
@@ -2021,13 +2022,13 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a new batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
-            context.Add(Helper.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9.5M, grossFromHours: 0, grossFromPieces: 352, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: .5M, grossFromHours: 0, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 380));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.08M, grossFromHours: 0, grossFromPieces: 170, grossFromIncentive: 15, otherGross: 0, payType: PayType.Pieces));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: .25M, grossFromHours: 0M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular, laborCode: 381));
+            context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, payType: PayType.Regular));
 
 
             context.SaveChanges();

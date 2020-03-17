@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Service;
+using Payroll.UnitTest.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 40M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -64,7 +65,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -93,7 +94,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 40M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -123,7 +124,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 75, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 62.25M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -153,7 +154,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 75, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -183,7 +184,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 75, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 62.25M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -215,7 +216,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 75, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 56.25M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -245,7 +246,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 75, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -275,7 +276,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 4, HoursWorked = 20M, Pieces = 75, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 56.25M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -306,7 +307,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 5, Pieces = 100, PrimaRate = .11119M, ExpectedGross = 11.12M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,
@@ -337,7 +338,7 @@ namespace Payroll.UnitTest
                 new GrossFromIncentiveTest { Id = 5, Pieces = 100, PrimaRate = .11110M, ExpectedGross = 11.11M},
             };
 
-            var testLines = tests.Select(x => Helper.MockPlantPayLine(
+            var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
                 id: x.Id,
                 hoursWorked: x.HoursWorked,
                 pieces: x.Pieces,

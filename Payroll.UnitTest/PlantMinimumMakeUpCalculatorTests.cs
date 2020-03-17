@@ -8,6 +8,7 @@ using System.Text;
 
 namespace Payroll.UnitTest
 {
+    [TestClass]
     public class PlantMinimumMakeUpCalculatorTests
     {
         private PlantMinimumMakeUpCalculator _minimumMakeUpCalculator = new PlantMinimumMakeUpCalculator();

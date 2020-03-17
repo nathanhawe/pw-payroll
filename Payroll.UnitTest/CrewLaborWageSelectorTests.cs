@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data;
 using Payroll.Service;
+using Payroll.UnitTest.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,14 +28,14 @@ namespace Payroll.UnitTest
             context.RemoveRange(context.CrewLaborWages.ToList());
             context.SaveChanges();
 
-            context.Add(Helper.MockCrewLaborWage(id: 1, effectiveDate: new DateTime(2000, 1, 1), wage: 6.75M));
-            context.Add(Helper.MockCrewLaborWage(id: 2, effectiveDate: new DateTime(2020, 2, 17), wage: 13));
-            context.Add(Helper.MockCrewLaborWage(id: 3, effectiveDate: new DateTime(2020, 2, 18), wage: 13.5M));
-            context.Add(Helper.MockCrewLaborWage(id: 4, effectiveDate: new DateTime(2020, 2, 19), wage: 14));
-            context.Add(Helper.MockCrewLaborWage(id: 5, effectiveDate: new DateTime(2020, 2, 20), wage: 14.75M));
-            context.Add(Helper.MockCrewLaborWage(id: 6, effectiveDate: new DateTime(2020, 2, 21), wage: 15));
-            context.Add(Helper.MockCrewLaborWage(id: 7, effectiveDate: new DateTime(2020, 2, 22), wage: 15.67M));
-            context.Add(Helper.MockCrewLaborWage(id: 8, effectiveDate: new DateTime(2020, 2, 23), wage: 16));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 1, effectiveDate: new DateTime(2000, 1, 1), wage: 6.75M));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 2, effectiveDate: new DateTime(2020, 2, 17), wage: 13));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 3, effectiveDate: new DateTime(2020, 2, 18), wage: 13.5M));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 4, effectiveDate: new DateTime(2020, 2, 19), wage: 14));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 5, effectiveDate: new DateTime(2020, 2, 20), wage: 14.75M));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 6, effectiveDate: new DateTime(2020, 2, 21), wage: 15));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 7, effectiveDate: new DateTime(2020, 2, 22), wage: 15.67M));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 8, effectiveDate: new DateTime(2020, 2, 23), wage: 16));
             context.SaveChanges();
 
             if (context.CrewLaborWages.Count() != 8) Assert.Inconclusive("Unexpected number of CrewLaborWages.");
@@ -67,14 +68,14 @@ namespace Payroll.UnitTest
             context.RemoveRange(context.CrewLaborWages.ToList());
             context.SaveChanges();
 
-            context.Add(Helper.MockCrewLaborWage(id: 1, effectiveDate: new DateTime(2000, 1, 1), wage: 6.75M));
-            context.Add(Helper.MockCrewLaborWage(id: 2, effectiveDate: new DateTime(2020, 2, 17), wage: 13, isDeleted: true));
-            context.Add(Helper.MockCrewLaborWage(id: 3, effectiveDate: new DateTime(2020, 2, 18), wage: 13.5M, isDeleted: true));
-            context.Add(Helper.MockCrewLaborWage(id: 4, effectiveDate: new DateTime(2020, 2, 19), wage: 14, isDeleted: true));
-            context.Add(Helper.MockCrewLaborWage(id: 5, effectiveDate: new DateTime(2020, 2, 20), wage: 14.75M, isDeleted: true));
-            context.Add(Helper.MockCrewLaborWage(id: 6, effectiveDate: new DateTime(2020, 2, 21), wage: 15, isDeleted: true));
-            context.Add(Helper.MockCrewLaborWage(id: 7, effectiveDate: new DateTime(2020, 2, 22), wage: 15.67M, isDeleted: true));
-            context.Add(Helper.MockCrewLaborWage(id: 8, effectiveDate: new DateTime(2020, 2, 23), wage: 16, isDeleted: true));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 1, effectiveDate: new DateTime(2000, 1, 1), wage: 6.75M));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 2, effectiveDate: new DateTime(2020, 2, 17), wage: 13, isDeleted: true));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 3, effectiveDate: new DateTime(2020, 2, 18), wage: 13.5M, isDeleted: true));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 4, effectiveDate: new DateTime(2020, 2, 19), wage: 14, isDeleted: true));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 5, effectiveDate: new DateTime(2020, 2, 20), wage: 14.75M, isDeleted: true));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 6, effectiveDate: new DateTime(2020, 2, 21), wage: 15, isDeleted: true));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 7, effectiveDate: new DateTime(2020, 2, 22), wage: 15.67M, isDeleted: true));
+            context.Add(EntityMocker.MockCrewLaborWage(id: 8, effectiveDate: new DateTime(2020, 2, 23), wage: 16, isDeleted: true));
             context.SaveChanges();
 
             if (context.CrewLaborWages.Count() != 8) Assert.Inconclusive("Unexpected number of CrewLaborWages.");

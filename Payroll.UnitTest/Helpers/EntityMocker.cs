@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Payroll.UnitTest
+namespace Payroll.UnitTest.Helpers
 {
-    public static class Helper
+    public static class EntityMocker
     {
         public static RanchPayLine MockRanchPayLine(
             int id = 0,
@@ -34,7 +34,8 @@ namespace Payroll.UnitTest
             bool alternativeWorkWeek = false,
             bool fiveEight = false,
             decimal totalGross = 0,
-            int lastCrew = 0)
+            int lastCrew = 0,
+            decimal hourlyRateOverride = 0)
         {
             dateCreated ??= DateTime.Now;
             dateModified ??= DateTime.Now;
@@ -69,7 +70,8 @@ namespace Payroll.UnitTest
                 OtherGross = otherGross,
                 TotalGross = totalGross,
                 AlternativeWorkWeek = alternativeWorkWeek,
-                FiveEight = fiveEight
+                FiveEight = fiveEight,
+                HourlyRateOverride = hourlyRateOverride
             };
         }
 

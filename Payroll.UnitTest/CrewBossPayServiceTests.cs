@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data;
 using Payroll.Domain;
 using Payroll.Service;
+using Payroll.UnitTest.Helpers;
 using System;
 using System.Linq;
 
@@ -64,23 +65,23 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             // Mock a batch
-            var batch = Helper.MockBatch(id: 1);
+            var batch = EntityMocker.MockBatch(id: 1);
             context.Add(batch);
 
             // Mock crew boss pay lines
-            var hourlyTreeCB = Helper.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 1, hoursWorked: 10, employeeId: "TestHourlyTrees", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyTrees);
-            var hourlyVineCB = Helper.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 2, hoursWorked: 10, employeeId: "TestHourlyVines", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyVines);
-            var hourlySouthCB = Helper.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 3, hoursWorked: 10, employeeId: "TestSouthHourly", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthHourly);
-            var dailySouthCB = Helper.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 4, hoursWorked: 10, employeeId: "TestSouthDaily", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthDaily);
+            var hourlyTreeCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 1, hoursWorked: 10, employeeId: "TestHourlyTrees", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyTrees);
+            var hourlyVineCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 2, hoursWorked: 10, employeeId: "TestHourlyVines", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyVines);
+            var hourlySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 3, hoursWorked: 10, employeeId: "TestSouthHourly", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthHourly);
+            var dailySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 4, hoursWorked: 10, employeeId: "TestSouthDaily", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthDaily);
             context.AddRange(hourlyTreeCB, hourlyVineCB, hourlySouthCB, dailySouthCB);
 
             // Mock ranch pay lines
             for (int i = 0; i < 30; i++)
             {
-                context.Add(Helper.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: hourlyTreeCB.WeekEndDate, shiftDate: hourlyTreeCB.ShiftDate, crew: hourlyTreeCB.Crew, employeeId: $"Crew{hourlyTreeCB.Crew.ToString()}#{i.ToString()}"));
-                context.Add(Helper.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: hourlyVineCB.WeekEndDate, shiftDate: hourlyVineCB.ShiftDate, crew: hourlyVineCB.Crew, employeeId: $"Crew{hourlyVineCB.Crew.ToString()}#{i.ToString()}"));
-                context.Add(Helper.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: hourlySouthCB.WeekEndDate, shiftDate: hourlySouthCB.ShiftDate, crew: hourlySouthCB.Crew, employeeId: $"Crew{hourlySouthCB.Crew.ToString()}#{i.ToString()}"));
-                context.Add(Helper.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: dailySouthCB.WeekEndDate, shiftDate: dailySouthCB.ShiftDate, crew: dailySouthCB.Crew, employeeId: $"Crew{dailySouthCB.Crew.ToString()}#{i.ToString()}"));
+                context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: hourlyTreeCB.WeekEndDate, shiftDate: hourlyTreeCB.ShiftDate, crew: hourlyTreeCB.Crew, employeeId: $"Crew{hourlyTreeCB.Crew.ToString()}#{i.ToString()}"));
+                context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: hourlyVineCB.WeekEndDate, shiftDate: hourlyVineCB.ShiftDate, crew: hourlyVineCB.Crew, employeeId: $"Crew{hourlyVineCB.Crew.ToString()}#{i.ToString()}"));
+                context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: hourlySouthCB.WeekEndDate, shiftDate: hourlySouthCB.ShiftDate, crew: hourlySouthCB.Crew, employeeId: $"Crew{hourlySouthCB.Crew.ToString()}#{i.ToString()}"));
+                context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, hoursWorked: 10, weekEndDate: dailySouthCB.WeekEndDate, shiftDate: dailySouthCB.ShiftDate, crew: dailySouthCB.Crew, employeeId: $"Crew{dailySouthCB.Crew.ToString()}#{i.ToString()}"));
             }
 
             context.SaveChanges();

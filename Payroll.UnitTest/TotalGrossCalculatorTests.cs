@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Payroll.Data;
 using System.Linq;
+using Payroll.UnitTest.Helpers;
 
 namespace Payroll.UnitTest
 {
@@ -36,7 +37,7 @@ namespace Payroll.UnitTest
 
             var totalGrossCalculator = new TotalGrossCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockRanchPayLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockRanchPayLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
             totalGrossCalculator.CalculateTotalGross(testPayLines);
 
             foreach(var test in tests)
@@ -59,7 +60,7 @@ namespace Payroll.UnitTest
 
             var totalGrossCalculator = new TotalGrossCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockRanchAdjustmentLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockRanchAdjustmentLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
             totalGrossCalculator.CalculateTotalGross(testPayLines);
 
             foreach (var test in tests)
@@ -83,7 +84,7 @@ namespace Payroll.UnitTest
 
             var totalGrossCalculator = new TotalGrossCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockPlantPayLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockPlantPayLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
             totalGrossCalculator.CalculateTotalGross(testPayLines);
 
             foreach (var test in tests)
@@ -107,7 +108,7 @@ namespace Payroll.UnitTest
 
             var totalGrossCalculator = new TotalGrossCalculator();
 
-            var testPayLines = tests.Select(x => Helper.MockPlantAdjustmentLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
+            var testPayLines = tests.Select(x => EntityMocker.MockPlantAdjustmentLine(id: x.Id, grossFromHours: x.GrossFromHours, grossFromPieces: x.GrossFromPieces, otherGross: x.OtherGross)).ToList();
             totalGrossCalculator.CalculateTotalGross(testPayLines);
 
             foreach (var test in tests)

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data;
 using Payroll.Service;
+using Payroll.UnitTest.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,11 +59,11 @@ namespace Payroll.UnitTest
             context.Database.EnsureCreated();
 
             context.MinimumWages.RemoveRange(context.MinimumWages.ToList());
-            context.Add(Helper.MockMinimumWage(effectiveDate: new DateTime(2000, 1, 1), wage: 8.5M));
-            context.Add(Helper.MockMinimumWage(effectiveDate: new DateTime(2001, 1, 1), wage: 9M, isDeleted: true));
-            context.Add(Helper.MockMinimumWage(effectiveDate: new DateTime(2002, 1, 1), wage: 9.5M, isDeleted: true));
-            context.Add(Helper.MockMinimumWage(effectiveDate: new DateTime(2003, 1, 1), wage: 10M, isDeleted: true));
-            context.Add(Helper.MockMinimumWage(effectiveDate: new DateTime(2004, 1, 1), wage: 10.5M, isDeleted: true));
+            context.Add(EntityMocker.MockMinimumWage(effectiveDate: new DateTime(2000, 1, 1), wage: 8.5M));
+            context.Add(EntityMocker.MockMinimumWage(effectiveDate: new DateTime(2001, 1, 1), wage: 9M, isDeleted: true));
+            context.Add(EntityMocker.MockMinimumWage(effectiveDate: new DateTime(2002, 1, 1), wage: 9.5M, isDeleted: true));
+            context.Add(EntityMocker.MockMinimumWage(effectiveDate: new DateTime(2003, 1, 1), wage: 10M, isDeleted: true));
+            context.Add(EntityMocker.MockMinimumWage(effectiveDate: new DateTime(2004, 1, 1), wage: 10.5M, isDeleted: true));
             context.SaveChanges();
 
             if (context.MinimumWages.Count() != 5) Assert.Inconclusive("Unexpected count of Minimum Wage records.");
