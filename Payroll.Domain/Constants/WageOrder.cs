@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Payroll.Domain.Constants
 {
-    public enum WageOrder
-    {
-        Undefined = 0,
-        Plants,
-        Ranches
-    }
+	public enum WageOrder
+	{
+		Undefined = 0,
+		Plants,
+		Ranches
+	}
 }

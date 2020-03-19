@@ -2,8 +2,8 @@
 
 namespace Payroll.Service.Interface
 {
-    public interface ICrewLaborWageSelector
-    {
-        public decimal GetCrewLaborWage(DateTime shiftDate);        
-    }
+	public interface ICrewLaborWageSelector
+	{
+		public decimal GetCrewLaborWage(DateTime shiftDate);
+	}
 }

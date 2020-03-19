@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Payroll.Domain
 {
-    public class PlantPayLine : Record
-    {
+	public class PlantPayLine : Record
+	{
 		public int BatchId { get; set; }
 		public int LayoffId { get; set; }
 		public int QuickBaseRecordId { get; set; }

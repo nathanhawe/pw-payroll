@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Payroll.Service.Interface
 {
-    public interface IMinimumWageService
-    {
-        public decimal GetMinimumWageOnDate(DateTime date);        
-    }
+	public interface IMinimumWageService
+	{
+		public decimal GetMinimumWageOnDate(DateTime date);
+	}
 }

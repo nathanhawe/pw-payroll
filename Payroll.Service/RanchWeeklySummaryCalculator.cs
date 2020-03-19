@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Payroll.Service
 {
-    public class RanchWeeklySummaryCalculator
-    {
-        public List<WeeklySummary> GetWeeklySummary(List<DailySummary> dailySummaries)
-        {
-            throw new NotImplementedException();
-        }
-    }
+	public class RanchWeeklySummaryCalculator
+	{
+		public List<WeeklySummary> GetWeeklySummary(List<DailySummary> dailySummaries)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

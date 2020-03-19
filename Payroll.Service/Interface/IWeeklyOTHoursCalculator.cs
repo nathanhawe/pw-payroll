@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Payroll.Service.Interface
 {
-    interface IWeeklyOTHoursCalculator
-    {
-        public List<WeeklyOverTimeHours> GetWeeklyOTHours(List<WeeklySummary> weeklySummaries);
-    }
+	interface IWeeklyOTHoursCalculator
+	{
+		public List<WeeklyOverTimeHours> GetWeeklyOTHours(List<WeeklySummary> weeklySummaries);
+	}
 }

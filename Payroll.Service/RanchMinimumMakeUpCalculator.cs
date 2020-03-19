@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Payroll.Service
 {
-    public class RanchMinimumMakeUpCalculator
-    {
-        public List<MinimumMakeUp> GetMinimumMakeUps(List<WeeklySummary> weeklySummaries)
-        {
-            throw new NotImplementedException();
-        }
-    }
+	public class RanchMinimumMakeUpCalculator
+	{
+		public List<MinimumMakeUp> GetMinimumMakeUps(List<WeeklySummary> weeklySummaries)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

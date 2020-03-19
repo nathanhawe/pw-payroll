@@ -18,7 +18,7 @@ namespace Payroll.Domain
 		public string PayType { get; set; }
 		public decimal Pieces { get; set; }
 		public decimal PieceRate { get; set; }
-		public decimal HourlyRate  {get; set;}
+		public decimal HourlyRate { get; set; }
 		public decimal OtDtWotRate { get; set; }
 		public decimal OtDtWotHours { get; set; }
 		public decimal GrossFromHours { get; set; }

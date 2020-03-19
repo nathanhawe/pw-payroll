@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Payroll.Service
 {
-    public class RanchWeeklyOTHoursCalculator : IWeeklyOTHoursCalculator
-    {
-        public List<WeeklyOverTimeHours> GetWeeklyOTHours(List<WeeklySummary> weeklySummaries)
-        {
-            throw new NotImplementedException();
-        }
-    }
+	public class RanchWeeklyOTHoursCalculator : IWeeklyOTHoursCalculator
+	{
+		public List<WeeklyOverTimeHours> GetWeeklyOTHours(List<WeeklySummary> weeklySummaries)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

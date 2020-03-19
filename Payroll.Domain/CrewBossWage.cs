@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Payroll.Domain
 {
-    public class CrewBossWage : Record
-    {
-        public DateTime EffectiveDate { get; set; }
-        public decimal Wage { get; set; }
-        public int WorkerCountThreshold { get; set; }
-    }
+	public class CrewBossWage : Record
+	{
+		public DateTime EffectiveDate { get; set; }
+		public decimal Wage { get; set; }
+		public int WorkerCountThreshold { get; set; }
+	}
 }

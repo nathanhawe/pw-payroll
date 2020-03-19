@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Payroll.Service
 {
-    public class RanchDailyOTDTHoursCalculator : IDailyOTDTHoursCalculator
-    {
-        public void SetDailyOTDTHours(List<DailySummary> dailySummaries)
-        {
-            throw new NotImplementedException();
-        }
-    }
+	public class RanchDailyOTDTHoursCalculator : IDailyOTDTHoursCalculator
+	{
+		public void SetDailyOTDTHours(List<DailySummary> dailySummaries)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

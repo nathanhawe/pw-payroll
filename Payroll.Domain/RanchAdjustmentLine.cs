@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Payroll.Domain
 {
-    public class RanchAdjustmentLine : Record
-    {
+	public class RanchAdjustmentLine : Record
+	{
 		public int BatchId { get; set; }
 		public int LayoffId { get; set; }
 		public int QuickBaseRecordId { get; set; }
@@ -31,8 +31,8 @@ namespace Payroll.Domain
 		public decimal HourlyRateOverride { get; set; }
 		public decimal EmployeeHourlyRate { get; set; }
 		public DateTime WeekEndOfAdjustmentPaid { get; set; }
-        public bool IsOriginal { get; set; }
-        public decimal OldHourlyRate { get; set; }
-        public bool UseOldHourlyRate { get; set; }
-    }
+		public bool IsOriginal { get; set; }
+		public decimal OldHourlyRate { get; set; }
+		public bool UseOldHourlyRate { get; set; }
+	}
 }
