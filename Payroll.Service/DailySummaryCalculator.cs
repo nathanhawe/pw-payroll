@@ -349,13 +349,13 @@ namespace Payroll.Service
 		private void SetRates(List<DailySummary> summaries)
 		{
 			// Calculate effective hourly rate and select minimum wage
-			decimal quotient;
+			decimal divisor;
 			summaries.ForEach(x =>
 			{
-				quotient = x.TotalHours - x.NonProductiveTime;
-				if (quotient > 0)
+				divisor = x.TotalHours - x.NonProductiveTime;
+				if (divisor > 0)
 				{
-					x.EffectiveHourlyRate = _roundingService.Round(x.TotalGross / quotient, 2);
+					x.EffectiveHourlyRate = _roundingService.Round(x.TotalGross / divisor, 2);
 				}
 				else
 				{

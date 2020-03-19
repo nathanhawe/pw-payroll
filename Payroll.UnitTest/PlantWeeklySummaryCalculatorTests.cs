@@ -13,6 +13,8 @@ namespace Payroll.UnitTest
 	[TestClass]
 	public class PlantWeeklySummaryCalculatorTests
 	{
+		private RoundingService _roundingService = new RoundingService();
+		
 		[TestMethod]
 		public void CorrectlySumTotalHours()
 		{
@@ -36,11 +38,11 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), Crew = (int)Plant.Kerman, Gross = 10 },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 63M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 63M).Count());
 		}
 
 		[TestMethod]
@@ -66,11 +68,11 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), Crew = (int)Plant.Kerman, Gross = 9.94M },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalGross == 1004.79M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalGross == 1004.79M).Count());
 		}
 
 		[TestMethod]
@@ -96,11 +98,11 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), Crew = (int)Plant.Kerman, Gross = 10 },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalOverTimeHours == 5M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalOverTimeHours == 5M).Count());
 		}
 
 		[TestMethod]
@@ -126,11 +128,11 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), Crew = (int)Plant.Kerman, Gross = 10 },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalDoubleTimeHours == 3M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalDoubleTimeHours == 3M).Count());
 		}
 
 		[TestMethod]
@@ -145,12 +147,12 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 12M, TotalGross = 150M, NonProductiveTime = .5M, MinimumWage = 15M, EffectiveHourlyRate = 15M, OverTimeHours = 2, DoubleTimeHours = 2 },
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = .5M, MinimumWage = 15M, EffectiveHourlyRate = 15.79M, OverTimeHours = 2  },
 
-				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 8M, TotalGross = 167M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 15M },
-				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 8M, TotalGross = 167M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 15M },
-				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 8M, TotalGross = 167M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 15M },
-				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 8M, TotalGross = 150M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 15M },
-				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 8M, TotalGross = 150M, NonProductiveTime = .5M, MinimumWage = 15M, EffectiveHourlyRate = 15M },
-				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 8M, TotalGross = 150M, NonProductiveTime = .5M, MinimumWage = 15M, EffectiveHourlyRate = 15M }
+				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 8M, TotalGross = 167M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 21.55M },
+				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 8M, TotalGross = 167M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 21.55M },
+				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 8M, TotalGross = 167M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 21.55M },
+				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 8M, TotalGross = 150M, NonProductiveTime = .25M, MinimumWage = 15M, EffectiveHourlyRate = 19.35M },
+				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 8M, TotalGross = 150M, NonProductiveTime = .5M, MinimumWage = 15M, EffectiveHourlyRate = 20M },
+				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 8M, TotalGross = 150M, NonProductiveTime = .5M, MinimumWage = 15M, EffectiveHourlyRate = 20M }
 			};
 
 			var minimumMakeUps = new List<MinimumMakeUp>
@@ -159,12 +161,12 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), Crew = (int)Plant.Kerman, Gross = 22.5M },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
 			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 933.75M && x.EffectiveHourlyRate == 16.10M));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 48M && x.NonProductiveTime == 2M && x.TotalGross == 690M && x.EffectiveHourlyRate == 15M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 933.75M && x.EffectiveHourlyRate == 16.10M).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 48M && x.NonProductiveTime == 2M && x.TotalGross == 951M && x.EffectiveHourlyRate == 20.67M).Count());
 		}
 
 		[TestMethod]
@@ -197,12 +199,12 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), Crew = (int)Plant.Kerman, Gross = 0 },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
 			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15M));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 3, 1) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15.85M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15M).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 3, 1) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 951M && x.EffectiveHourlyRate == 15.85M).Count());
 
 		}
 
@@ -215,8 +217,8 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 9M, TotalGross = 135M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 8.5M },
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 8M, TotalGross = 120M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 8.5M },
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 11M, TotalGross = 165M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 8.75M, OverTimeHours = 1 },
-				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 12M, TotalGross = 180M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 8.75M, OverTimeHours = 2 },
-				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 8.75M },
+				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 12M, TotalGross = 180M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 7.5M, OverTimeHours = 2 },
+				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 6.75M },
 			};
 			var minimumMakeUps = new List<MinimumMakeUp>
 			{
@@ -228,11 +230,11 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), Crew = (int)Plant.Kerman, Gross = 0 },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
-			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15M && x.MinimumWage == 8.75M));
+			Assert.AreEqual(1, weeklySummary.Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15M && x.MinimumWage == 8.75M).Count());
 		}
 
 		[TestMethod]
@@ -264,12 +266,12 @@ namespace Payroll.UnitTest
 				new MinimumMakeUp { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), Crew = (int)Plant.Kerman, Gross = 0 },
 			};
 
-			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new PlantWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary, minimumMakeUps);
 
 			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 6));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 1));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 5).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 1).Count());
 		}
 	}
 }
