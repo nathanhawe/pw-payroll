@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data;
+using Payroll.Domain.Constants;
 using Payroll.Service;
 using Payroll.UnitTest.Helpers;
 using System;
@@ -49,7 +50,7 @@ namespace Payroll.UnitTest
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-			_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 27, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+			_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: (int)Crew.WestTractor_Night, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
@@ -73,7 +74,7 @@ namespace Payroll.UnitTest
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
-			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: 27, lastCrew: 100, hoursWorked: 10, totalGross: 172));
+			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", crew: (int)Crew.WestTractor_Night, lastCrew: 100, hoursWorked: 10, totalGross: 172));
 
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
@@ -97,7 +98,7 @@ namespace Payroll.UnitTest
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", crew: 27, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+			_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", crew: (int)Crew.WestTractor_Night, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 
 
 			_context.SaveChanges();

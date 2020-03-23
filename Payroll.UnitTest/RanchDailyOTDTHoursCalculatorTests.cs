@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Domain;
+using Payroll.Domain.Constants;
 using Payroll.Service;
 using System;
 using System.Collections.Generic;
@@ -14,24 +15,25 @@ namespace Payroll.UnitTest
 		private RanchDailyOTDTHoursCalculator _ranchDailyOTDTHoursCalculator = new RanchDailyOTDTHoursCalculator();
 
 		[TestMethod]
-		public void CrewEight_RegularSchedule_OverTimeBetweenEightAndTwelveHours()
+		public void Crew_8_OfficeClerical_EastWest__RegularSchedule_OverTimeBetweenEightAndTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_EastWest;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -54,15 +56,16 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewEight_RegularSchedule_DoubleTimeOverTwelveHours()
+		public void Crew_8_OfficeClerical_EastWest_RegularSchedule_DoubleTimeOverTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_EastWest;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -75,24 +78,25 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewEight_AlternativeSchedule_OverTimeBetweenTenAndTwelveHours()
+		public void Crew_8_OfficeClerical_EastWest_AlternativeSchedule_OverTimeBetweenTenAndTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_EastWest;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -114,15 +118,16 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewEight_AlternativeSchedule_DoubleTimeOverTwelveHours()
+		public void Crew_8_OfficeClerical_EastWest_AlternativeSchedule_DoubleTimeOverTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_EastWest;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = true, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -135,24 +140,25 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewEight_SeventhDay_OverTimeUpToEightHours()
+		public void Crew_8_OfficeClerical_EastWest_SeventhDay_OverTimeUpToEightHours()
 		{
+			var crew = (int)Crew.OfficeClerical_EastWest;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -162,24 +168,25 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewEight_SeventhDay_DoubleTimeOverEightHours()
+		public void Crew_8_OfficeClerical_EastWest_SeventhDay_DoubleTimeOverEightHours()
 		{
+			var crew = (int)Crew.OfficeClerical_EastWest;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -189,17 +196,18 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewEight_IgnoresFiveEight()
+		public void Crew_8_OfficeClerical_EastWest_IgnoresFiveEight()
 		{
+			var crew = (int)Crew.OfficeClerical_EastWest;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 8, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -214,24 +222,25 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewNine_RegularSchedule_OverTimeBetweenEightAndTwelveHours()
+		public void Crew_9_OfficeClerical_South_RegularSchedule_OverTimeBetweenEightAndTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_South;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -254,15 +263,16 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewNine_RegularSchedule_DoubleTimeOverTwelveHours()
+		public void Crew_9_OfficeClerical_South_RegularSchedule_DoubleTimeOverTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_South;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -275,24 +285,25 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewNine_AlternativeSchedule_OverTimeBetweenTenAndTwelveHours()
+		public void Crew_9_OfficeClerical_South_AlternativeSchedule_OverTimeBetweenTenAndTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_South;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 2, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 3, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 4, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 5, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 6, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 7, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -314,15 +325,16 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewNine_AlternativeSchedule_DoubleTimeOverTwelveHours()
+		public void Crew_9_OfficeClerical_South_AlternativeSchedule_DoubleTimeOverTwelveHours()
 		{
+			var crew = (int)Crew.OfficeClerical_South;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = true, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 12, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 14, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 15, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = true, TotalHours = 16.25M, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -335,17 +347,18 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewNine_IgnoresFiveEight()
+		public void Crew_9_OfficeClerical_South_IgnoresFiveEight()
 		{
+			var crew = (int)Crew.OfficeClerical_South;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 8.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 9, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 11.99M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 12.01M, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, AlternativeWorkWeek = false, FiveEight = true, TotalHours = 13, OverTimeHours = 0, DoubleTimeHours = 0},
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -360,24 +373,25 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewNine_SeventhDay_OverTimeUpToEightHours()
+		public void Crew_9_OfficeClerical_South_SeventhDay_OverTimeUpToEightHours()
 		{
+			var crew = (int)Crew.OfficeClerical_South;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
@@ -387,24 +401,25 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CrewNine_SeventhDay_DoubleTimeOverEightHours()
+		public void Crew_9_OfficeClerical_South_SeventhDay_DoubleTimeOverEightHours()
 		{
+			var crew = (int)Crew.OfficeClerical_South;
 			var dailySummaries = new List<DailySummary>
 			{
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
-				new DailySummary{ Crew = 9, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 17), TotalHours = 0, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 18), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 19), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 20), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 21), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 1, OverTimeHours = 0, DoubleTimeHours = 0},
+				new DailySummary{ Crew = crew, EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 23), TotalHours = 10, OverTimeHours = 0, DoubleTimeHours = 0}
 			};
 
 			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
