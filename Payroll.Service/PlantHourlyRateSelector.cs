@@ -107,40 +107,40 @@ namespace Payroll.Service
 				return H2ARate;
 			}
 
-			if (laborCode == 125)
+			if (laborCode == (int)PlantLaborCode.Palletizing)
 			{
 				
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
-			if (laborCode == 151)
+			if (laborCode == (int)PlantLaborCode.FreshCut)
 			{
 				return Rate151(shiftDate, plant, calculatedEmployeeRate);
 			}
-			if (laborCode == 312)
+			if (laborCode == (int)PlantLaborCode.ReceivingAndMarkingGrapes)
 			{
 				// Same as 125
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
-			if (laborCode == 535)
+			if (laborCode == (int)PlantLaborCode.NightSanitation)
 			{
 				return Rate535(shiftDate, plant, calculatedEmployeeRate, minimumWage, H2ARate);
 			}
-			if (laborCode == 536)
+			if (laborCode == (int)PlantLaborCode.NightShiftSupervision)
 			{
 				// [536 Rate] = [EmployeeHourlyRateCalc] + 3
 				return (calculatedEmployeeRate + 3M);
 			}
-			if (laborCode == 537)
+			if (laborCode == (int)PlantLaborCode.NightShiftAuditor)
 			{
 				// [537 Rate] = [EmployeeHourlyRateCalc] + 1.5
 				return (calculatedEmployeeRate + 1.5M);
 			}
-			if (laborCode == 9503)
+			if (laborCode == (int)PlantLaborCode.Receiving_Break)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
-			if (laborCode == 503)
+			if (laborCode == (int)PlantLaborCode.ReceivingFreshFruit)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}

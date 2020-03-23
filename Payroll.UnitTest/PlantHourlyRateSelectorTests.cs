@@ -311,13 +311,13 @@ namespace Payroll.UnitTest
 		#region Labor Code Tests
 
 		[TestMethod]
-		public void LaborCode125()
+		public void LaborCode_125_Palletizing()
 		{
-			Rate125Tests(125);
+			Rate125Tests((int)PlantLaborCode.Palletizing);
 		}
 
 		[TestMethod]
-		public void LaborCode151()
+		public void LaborCode_151_FreshCut()
 		{
 			/*
 				[Plant] = 2 => [EmployeeHourlyRateCalc] + 2. 
@@ -327,7 +327,7 @@ namespace Payroll.UnitTest
 						[Hourly Rate Override] > 0 => [Hourly Rate Override]
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
-			var laborCode = 151;
+			var laborCode = (int)PlantLaborCode.FreshCut;
 
 			// Override
 			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, plant: Plant.Reedley));
@@ -356,14 +356,14 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode312()
+		public void LaborCode_312_ReceivingAndMarkingGrapes()
 		{
 			// Returns the 125 rate (see LaborCode125()).
-			Rate125Tests(312);
+			Rate125Tests((int)PlantLaborCode.ReceivingAndMarkingGrapes);
 		}
 
 		[TestMethod]
-		public void LaborCode535_Before20200302_Cutler_IgnoreH2A()
+		public void LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A()
 		{
 			/*
 				[535 Rate] = 
@@ -375,7 +375,7 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = 535;
+			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var plant = Plant.Cutler;
 			var startDate = new DateTime(2000, 1, 1);
 			var endDate = new DateTime(2020, 3, 1);
@@ -394,7 +394,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode535_Before20200302_NonCutler_EnsuresMinimumH2ARate()
+		public void LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate()
 		{
 			/*
 				[535 Rate] = 
@@ -406,7 +406,7 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = 535;
+			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var startDate = new DateTime(2000, 1, 1);
 			var endDate = new DateTime(2020, 3, 1);
 
@@ -432,7 +432,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode535_OnOrAfter20200302_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne()
+		public void LaborCode_535_NightSanitation_OnOrAfter20200302_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne()
 		{
 			/*
 				[535 Rate] = 
@@ -444,7 +444,7 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = 535;
+			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var plant = Plant.Cutler;
 			var startDate = new DateTime(2020, 3, 2);
 			var endDate = startDate.AddYears(5);
@@ -471,7 +471,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode535_OnOrAfter20200302_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77()
+		public void LaborCode_535_NightSanitation_OnOrAfter20200302_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77()
 		{
 			/*
 				[535 Rate] = 
@@ -483,7 +483,7 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = 535;
+			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var startDate = new DateTime(2020, 3, 2);
 			var endDate = startDate.AddYears(5);
 
@@ -514,7 +514,7 @@ namespace Payroll.UnitTest
 
 
 		[TestMethod]
-		public void LaborCode536()
+		public void LaborCode_536_NightShiftSupervision()
 		{
 			/*
 				Always returns 3 + [EmployeeHourlyRateCalc].  The formula for [EmployeeHourlyRateCalc] is:
@@ -522,7 +522,7 @@ namespace Payroll.UnitTest
 						[Hourly Rate Override] > 0 => [Hourly Rate Override]
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
-			var laborCode = 536;
+			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
 
 			// Override
 			Assert.AreEqual(18M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M));
@@ -535,7 +535,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode537()
+		public void LaborCode_537_NightShiftAuditor()
 		{
 			/*
 				Always returns 1.5 + [EmployeeHourlyRateCalc].  The formula for [EmployeeHourlyRateCalc] is:
@@ -543,7 +543,7 @@ namespace Payroll.UnitTest
 						[Hourly Rate Override] > 0 => [Hourly Rate Override]
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
-			var laborCode = 537;
+			var laborCode = (int)PlantLaborCode.NightShiftAuditor;
 
 			// Override
 			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M));
@@ -556,15 +556,15 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode9503()
+		public void LaborCode_9503_Receiving_Break()
 		{
-			Rate503Tests(9503);
+			Rate503Tests((int)PlantLaborCode.Receiving_Break);
 		}
 
 		[TestMethod]
-		public void LaborCode503()
+		public void LaborCode_503_ReceivingFreshFruit()
 		{
-			Rate503Tests(503);
+			Rate503Tests((int)PlantLaborCode.ReceivingFreshFruit);
 		}
 
 		#endregion

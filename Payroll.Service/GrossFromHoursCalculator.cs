@@ -40,7 +40,8 @@ namespace Payroll.Service
 					payLine.Crew,
 					payLine.LaborCode,
 					payLine.EmployeeHourlyRate,
-					payLine.HourlyRateOverride);
+					payLine.HourlyRateOverride,
+					payLine.ShiftDate);
 
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 			}
@@ -91,7 +92,8 @@ namespace Payroll.Service
 						adjustmentLine.Crew, 
 						adjustmentLine.LaborCode, 
 						adjustmentLine.EmployeeHourlyRate, 
-						0);
+						0,
+						adjustmentLine.ShiftDate);
 				}
 
 				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);

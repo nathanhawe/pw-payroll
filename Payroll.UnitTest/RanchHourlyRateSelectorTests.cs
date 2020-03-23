@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Payroll.Data;
+using Payroll.Domain.Constants;
 using Payroll.Service;
 using Payroll.Service.Interface;
 using Payroll.UnitTest.Mocks;
@@ -33,9 +34,11 @@ namespace Payroll.UnitTest
 			int crew = 100,
 			int laborCode = -1,
 			decimal employeeHourlyRate = 14,
-			decimal hourlyRateOverride = 0)
+			decimal hourlyRateOverride = 0,
+			DateTime? shiftDate = null)
 		{
-			return _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride);
+			shiftDate ??= new DateTime(2020, 1, 1);
+			return _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride, shiftDate.Value);
 		}
 
 		[TestMethod]
@@ -46,8 +49,9 @@ namespace Payroll.UnitTest
 			var laborCode = -1;
 			var employeeHourly = 15;
 			var hourlyOverride = 42;
+			var shiftDate = new DateTime(2020, 1, 1);
 
-			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
+			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate);
 			Assert.AreEqual(hourlyOverride, hourlyRate);
 		}
 
@@ -57,17 +61,18 @@ namespace Payroll.UnitTest
 
 			var payType = Payroll.Domain.Constants.PayType.Regular;
 			var crew = 100;
-			var laborCode = 116;
+			var laborCode = (int)RanchLaborCode.GrapeHarvestCrewHelper;
 			var employeeHourly = 15;
 			var hourlyOverride = 42;
+			var shiftDate = new DateTime(2020, 1, 1);
 
 			// Labor code 116 rate is currently set to 12 dollars but hourly rate override will ensure it is 42
-			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
+			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate);
 			Assert.AreEqual(hourlyOverride, hourlyRate);
 
 			// Crew 100 should receive the regular crew labor rate of 15 but hourly rate override will ensure it is 42
 			laborCode = -1;
-			hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride);
+			hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate);
 			Assert.AreEqual(hourlyOverride, hourlyRate);
 		}
 
@@ -245,88 +250,118 @@ namespace Payroll.UnitTest
 		#region Labor Code Tests
 
 		[TestMethod]
-		public void LaborCode103()
+		public void LaborCode_103_AlmostHarvestEquipmentOperatorDay()
 		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay;
 			// [Labor Code]=103 => If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14.25)
-			Assert.AreEqual(14.25M, DefaultTest(laborCode: 103, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(14.25M, DefaultTest(laborCode: 103, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: 103, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
-		public void LaborCode104()
+		public void LaborCode_104_AlmondHarvestEquipmentOperatorNight()
 		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight;
 			// [LC104Rate] = If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate]+1,15.25)
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: 104, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: 104, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: 104, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
-		public void LaborCode105()
+		public void LaborCode_105_AlmondHarvestGeneral()
 		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestGeneral;
 			// [LC105Rate] = If([Crew]=65,If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14),If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],[Crew Labor Rate]))
-			Assert.AreEqual(14M, DefaultTest(laborCode: 105, crew: 65, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(14M, DefaultTest(laborCode: 105, crew: 65, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: 105, crew: 65, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: 65, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: 65, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, crew: 65, employeeHourlyRate: _crewLaborRate + 1));
 
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: 105, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: 105, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: 105, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
-		public void LaborCode116()
+		public void LaborCode_116_GrapeHarvestCrewHelper()
 		{
+			var laborCode = (int)RanchLaborCode.GrapeHarvestCrewHelper;
 			// [LC116Rate] = 12
-			Assert.AreEqual(12M, DefaultTest(laborCode: 116, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(12M, DefaultTest(laborCode: 116, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(12M, DefaultTest(laborCode: 116, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(12M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(12M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(12M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
-		public void LaborCode117()
+		public void LaborCode_117_GrapeHarvestCrewHelper_BonusRate()
 		{
+			var laborCode = (int)RanchLaborCode.GrapeHarvestCrewHelper_BonusRate;
 			// [LC117Rate] = NULL
-			Assert.AreEqual(0M, DefaultTest(laborCode: 117, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(0M, DefaultTest(laborCode: 117, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(0M, DefaultTest(laborCode: 117, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
-		public void LaborCode120()
+		public void LaborCode_120_GrapeHarvestSupport()
 		{
+			var laborCode = (int)RanchLaborCode.GrapeHarvestSupport;
 			// [Labor Code] = 120 => [CulturalRate]
 			// [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: 120, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: 120, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: 120, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
-		public void LaborCode380_ReturnsZero()
+		public void LaborCode_215_Girdling_Before20200321_IsIgnored()
 		{
-			Assert.AreEqual(0M, DefaultTest(laborCode: 380, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(0M, DefaultTest(laborCode: 380, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(0M, DefaultTest(laborCode: 380, employeeHourlyRate: _crewLaborRate + 1));
+			var laborCode = (int)RanchLaborCode.Girdling;
+			// Crew 27 returns _crewLaborRate + .50 (15.50) in the first two instances and _crewLaborRate + 2 (17) in the last
+			// since labor code 215 does not take precedence before 3/21/2020
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: 27, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: 27, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, crew: 27, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
-		public void LaborCode381_ReturnsZero()
+		public void LaborCode_215_Girdling_OnOrAfter20200321_Returns15_50()
 		{
-			Assert.AreEqual(0M, DefaultTest(laborCode: 381, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(0M, DefaultTest(laborCode: 381, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(0M, DefaultTest(laborCode: 381, employeeHourlyRate: _crewLaborRate + 1));
+			var laborCode = (int)RanchLaborCode.Girdling;
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2020, 3, 21)));
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2030, 12, 31)));
 		}
+
+		[TestMethod]
+		public void LaborCode_380_RecoveryTime_ReturnsZero()
+		{
+			var laborCode = (int)RanchLaborCode.RecoveryTime;
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+		}
+
+		[TestMethod]
+		public void LaborCode_381_NonProductiveTime_ReturnsZero()
+		{
+			var laborCode = (int)RanchLaborCode.NonProductiveTime;
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+		}
+
+		
 
 		[TestMethod]
 		public void LaborCode_SupercedesCrew()
 		{
-			// Crew 27 would return _crewLaborRate + .50 (15.50) in the first two instances and _crewLaborRate + 2.5 (17.50) in the last
+			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight;
+			// Crew 27 would return _crewLaborRate + .50 (15.50) in the first two instances and _crewLaborRate + 2 (17.50) in the last
 			// but labor code 104 takes precedence
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: 104, crew: 27, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: 104, crew: 27, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: 104, crew: 27, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, crew: 27, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, crew: 27, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, crew: 27, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		#endregion
@@ -389,12 +424,13 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void Crew223AndGrafting()
+		public void Crew223AndGrafting_BuddingExpertCrew()
 		{
+			var laborCode = (int)RanchLaborCode.Grafting_BuddingExpertCrew;
 			// Crew 223 gets the grafting rate of 15 when using labor code 217, otherwise they get the crew labor rate.
-			Assert.AreEqual(15, DefaultTest(crew: 223, laborCode: 217, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(15, DefaultTest(crew: 223, laborCode: 217, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(15, DefaultTest(crew: 223, laborCode: 217, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(15, DefaultTest(crew: 223, laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(15, DefaultTest(crew: 223, laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(15, DefaultTest(crew: 223, laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: 223, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: 223, employeeHourlyRate: _crewLaborRate));

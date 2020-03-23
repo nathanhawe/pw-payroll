@@ -80,7 +80,7 @@ namespace Payroll.Service
 
 			// Incentives!!!
 			var incentiveLines = _context.PlantPayLines.Where(x => x.BatchId == batchId && (
-				x.LaborCode == 555
+				x.LaborCode == (int)PlantLaborCode.TallyTagWriter
 				|| (x.PayType == PayType.Pieces && !x.IsIncentiveDisqualified))).ToList();
 			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(incentiveLines);
 			_context.UpdateRange(incentiveLines);
@@ -281,7 +281,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.PlantPayLines.Where(x => x.BatchId == batchId && (x.LaborCode == 380 || x.LaborCode == 381)).ToList();
+			var nonProductiveRecords = _context.PlantPayLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)PlantLaborCode.RecoveryTime || x.LaborCode == (int)PlantLaborCode.NonProductiveTime)).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
@@ -447,7 +447,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && (x.LaborCode == 380 || x.LaborCode == 381)).ToList();
+			var nonProductiveRecords = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)PlantLaborCode.RecoveryTime || x.LaborCode == (int)PlantLaborCode.NonProductiveTime)).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
@@ -718,7 +718,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.RanchPayLines.Where(x => x.BatchId == batchId && (x.LaborCode == 380 || x.LaborCode == 381)).ToList();
+			var nonProductiveRecords = _context.RanchPayLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
 			foreach (var record in nonProductiveRecords)
 			{
 				// Needs to select Max from effective and minimum wage.
@@ -879,7 +879,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal && (x.LaborCode == 380 || x.LaborCode == 381)).ToList();
+			var nonProductiveRecords = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
 			foreach (var record in nonProductiveRecords)
 			{
 				// Needs to select Max from effective and minimum wage.
