@@ -274,9 +274,9 @@ namespace Payroll.UnitTest
 		{
 			var laborCode = (int)RanchLaborCode.AlmondHarvestGeneral;
 			// [LC105Rate] = If([Crew]=65,If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14),If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],[Crew Labor Rate]))
-			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: 65, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: 65, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, crew: 65, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate - 1));
+			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate + 1));
 
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
@@ -322,7 +322,7 @@ namespace Payroll.UnitTest
 			// since labor code 215 does not take precedence before 3/21/2020
 			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(_crewLaborRate + 1.5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
@@ -371,8 +371,8 @@ namespace Payroll.UnitTest
 		[TestMethod]
 		public void CrewLabor()
 		{
-			// Crews 100+ always get the crew labor rate.
-			for (int i = 100; i < 1000; i++)
+			// Crews over 100 always get the crew labor rate.
+			for (int i = 101; i < 1000; i++)
 			{
 				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate - 1));
 				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate));
