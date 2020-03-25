@@ -103,5 +103,45 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(30.30M, cbWageSelector.GetWage(new DateTime(2020, 2, 19), 0));
 			Assert.AreEqual(30.30M, cbWageSelector.GetWage(new DateTime(2020, 2, 20), 0));
 		}
+
+		[TestMethod]
+		public void IgnoresDeletedRecords()
+		{
+			var dbName = "IgnoresDeletedRecords";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+
+			// Mock Wage records
+			context.Add(new CrewBossWage { Wage = 10.10M, WorkerCountThreshold = 0, EffectiveDate = new DateTime(2020, 2, 3) });
+			context.Add(new CrewBossWage { Wage = 20.20M, WorkerCountThreshold = 0, EffectiveDate = new DateTime(2020, 2, 10), IsDeleted = true });
+			context.Add(new CrewBossWage { Wage = 30.30M, WorkerCountThreshold = 0, EffectiveDate = new DateTime(2020, 2, 17), IsDeleted = true });
+			context.SaveChanges();
+
+			if (context.CrewBossWages.Count() != 3) Assert.Inconclusive("Count of CrewBossWages is unexpected.");
+
+			var cbWageSelector = new CrewBossWageSelector(context);
+
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 3), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 4), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 5), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 6), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 7), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 8), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 9), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 10), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 11), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 12), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 13), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 14), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 15), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 16), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 17), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 18), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 19), 0));
+			Assert.AreEqual(10.10M, cbWageSelector.GetWage(new DateTime(2020, 2, 20), 0));
+		}
 	}
 }

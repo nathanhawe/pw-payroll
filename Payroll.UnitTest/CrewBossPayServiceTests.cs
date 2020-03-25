@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data;
 using Payroll.Domain;
+using Payroll.Domain.Constants;
 using Payroll.Service;
 using Payroll.UnitTest.Helpers;
 using System;
@@ -12,10 +13,11 @@ namespace Payroll.UnitTest
 	[TestClass]
 	public class CrewBossPayServiceTests
 	{
+		private RoundingService _roundingService = new RoundingService();
 		[TestMethod]
-		public void RateSelectionTests()
+		public void UpdatesCrewBossPayLines()
 		{
-			var dbName = "RateSelectionTests";
+			var dbName = "UpdatesCrewBossPayLines";
 			var options = new DbContextOptionsBuilder<PayrollContext>()
 				.UseInMemoryDatabase(databaseName: dbName)
 				.Options;
@@ -24,7 +26,7 @@ namespace Payroll.UnitTest
 
 			using var context = new PayrollContext(options);
 			var cbWageSelector = new CrewBossWageSelector(context);
-			var cbService = new CrewBossPayService(context, cbWageSelector);
+			var cbService = new CrewBossPayService(context, cbWageSelector, _roundingService);
 
 			cbService.CalculateCrewBossPay(1);
 
@@ -53,6 +55,29 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(179M, hourlySouthCB.Gross);
 			Assert.AreEqual(170.05M, dailySouthCB.Gross);
 
+		}
+
+		[TestMethod]
+		public void CreatesRanchPayLines()
+		{
+			var dbName = "CreatesRanchPayLines";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			MockCBTest(dbName);
+
+			using var context = new PayrollContext(options);
+			var cbWageSelector = new CrewBossWageSelector(context);
+			var cbService = new CrewBossPayService(context, cbWageSelector, _roundingService);
+
+			var ranchPayLines = cbService.CalculateCrewBossPay(1);
+
+			Assert.AreEqual(4, ranchPayLines.Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestHourlyTrees" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 1 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 215 && x.PayType == PayType.CBHourlyTrees).Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestHourlyVines" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 2 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 215 && x.PayType == PayType.CBHourlyVines).Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestSouthHourly" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 3 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 179 && x.PayType == PayType.CBSouthHourly).Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestSouthDaily" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 4 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 170.05M && x.PayType == PayType.CBSouthDaily).Count());
 		}
 
 		private void MockCBTest(string dbName)
