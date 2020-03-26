@@ -12,6 +12,8 @@ namespace Payroll.UnitTest
 	[TestClass]
 	public class RanchWeeklySummaryCalculatorTests
 	{
+		private RoundingService _roundingService = new RoundingService();
+
 		[TestMethod]
 		public void CorrectlySumTotalHours()
 		{
@@ -25,11 +27,11 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 13M, OverTimeHours = 2, DoubleTimeHours = 1},
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 63M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 63M).Count());
 		}
 
 		[TestMethod]
@@ -45,11 +47,11 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 13M, TotalGross = 195, OverTimeHours = 2, DoubleTimeHours = 1},
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalGross == 945M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalGross == 945M).Count());
 		}
 
 		[TestMethod]
@@ -65,11 +67,11 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 13M, OverTimeHours = 2, DoubleTimeHours = 1},
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalOverTimeHours == 5M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalOverTimeHours == 5M).Count());
 		}
 
 		[TestMethod]
@@ -85,11 +87,11 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 14M, OverTimeHours = 2, DoubleTimeHours = 2 },
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalDoubleTimeHours == 3M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalDoubleTimeHours == 3M).Count());
 		}
 
 		[TestMethod]
@@ -112,12 +114,12 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 142.5M, NonProductiveTime = .5M, EffectiveHourlyRate = 15M }
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 870M && x.EffectiveHourlyRate == 15M));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 919.73M && x.EffectiveHourlyRate == 15.86M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 870M && x.EffectiveHourlyRate == 15M).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 2M && x.TotalGross == 919.74M && x.EffectiveHourlyRate == 15.86M).Count());
 		}
 
 		[TestMethod]
@@ -140,12 +142,12 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 3, 1), ShiftDate = new DateTime(2020, 2, 29), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M }
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15M));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 3, 1) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15.85M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 900M && x.EffectiveHourlyRate == 15M).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 3, 1) && x.TotalHours == 60M && x.NonProductiveTime == 0M && x.TotalGross == 951M && x.EffectiveHourlyRate == 15.85M).Count());
 
 		}
 
@@ -162,12 +164,12 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee1", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), TotalHours = 10M, TotalGross = 150M, NonProductiveTime = 0M, EffectiveHourlyRate = 15M, MinimumWage = 8.75M },
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 27M && x.NonProductiveTime == 0M && x.TotalGross == 405M && x.EffectiveHourlyRate == 15M && x.MinimumWage == 8.5M));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 33M && x.NonProductiveTime == 0M && x.TotalGross == 495M && x.EffectiveHourlyRate == 15M && x.MinimumWage == 8.75M));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 27M && x.NonProductiveTime == 0M && x.TotalGross == 405M && x.EffectiveHourlyRate == 15M && x.MinimumWage == 8.5M).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.TotalHours == 33M && x.NonProductiveTime == 0M && x.TotalGross == 495M && x.EffectiveHourlyRate == 15M && x.MinimumWage == 8.75M).Count());
 		}
 
 		[TestMethod]
@@ -189,12 +191,12 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), Crew = 1},
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
 			Assert.AreEqual(2, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 6));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 1));
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 5).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.Crew == 1).Count());
 		}
 
 		[TestMethod]
@@ -216,12 +218,12 @@ namespace Payroll.UnitTest
 				new DailySummary { EmployeeId = "Employee2", WeekEndDate = new DateTime(2020, 2, 23), ShiftDate = new DateTime(2020, 2, 22), FiveEight = false},
 			};
 
-			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator();
+			var weeklySummaryCalculator = new RanchWeeklySummaryCalculator(_roundingService);
 			var weeklySummary = weeklySummaryCalculator.GetWeeklySummary(dailySummary);
 
-			Assert.AreEqual(1, weeklySummary.Count());
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.FiveEight == true));
-			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.FiveEight == false));
+			Assert.AreEqual(2, weeklySummary.Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.FiveEight == true).Count());
+			Assert.AreEqual(1, weeklySummary.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.FiveEight == false).Count());
 		}
 	}
 }
