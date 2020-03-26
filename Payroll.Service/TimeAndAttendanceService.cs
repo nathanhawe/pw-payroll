@@ -685,9 +685,18 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
-				//HourlyRateOverride = Math.Max(x.EffectiveHourlyRate, x.MinimumWage)
 			}).ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(overTimeRecords);
+			overTimeRecords.ForEach(x =>
+			{
+				var weeklySummary = weeklySummaries
+					.Where(w => 
+						w.WeekEndDate == x.WeekEndDate 
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
 			_context.AddRange(overTimeRecords);
 
@@ -698,9 +707,18 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
-				//HourlyRateOverride = Math.Max(x.EffectiveHourlyRate, x.MinimumWage)
 			}).ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(doubleTimeRecords);
+			doubleTimeRecords.ForEach(x =>
+			{
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
 			_context.AddRange(doubleTimeRecords);
 
@@ -713,38 +731,48 @@ namespace Payroll.Service
 				PayType = PayType.WeeklyOverTime,
 				HoursWorked = x.OverTimeHours
 			}).ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(weeklyOverTimeRecords);
+			weeklyOverTimeRecords.ForEach(x =>
+			{
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			_context.AddRange(weeklyOverTimeRecords);
 
 
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
 			var reportingPayRecords = _context.RanchPayLines.Where(x => x.BatchId == batchId && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
-			foreach (var record in reportingPayRecords)
+			reportingPayRecords.ForEach(x =>
 			{
-				// Needs to select Max from effective and minimum wage.
-				//record.HourlyRateOverride = weeklySummaries
-				//    .Where(x => x.EmployeeId == record.EmployeeId && x.WeekEndDate == record.WeekEndDate)
-				//    .OrderByDescending(x => x.EffectiveHourlyRate)
-				//    .FirstOrDefault()
-				//    ?.EffectiveHourlyRate
-				//    ?? 0;
-			}
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+			});
 			_grossFromHoursCalculator.CalculateGrossFromHours(reportingPayRecords);
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
 			var nonProductiveRecords = _context.RanchPayLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
-			foreach (var record in nonProductiveRecords)
+			nonProductiveRecords.ForEach(x =>
 			{
-				// Needs to select Max from effective and minimum wage.
-				//record.HourlyRateOverride = weeklySummaries
-				//    .Where(x => x.EmployeeId == record.EmployeeId && x.WeekEndDate == record.WeekEndDate)
-				//    .OrderByDescending(x => x.EffectiveHourlyRate)
-				//    .FirstOrDefault()
-				//    ?.EffectiveHourlyRate
-				//    ?? 0;
-			}
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+			});
 			_grossFromHoursCalculator.CalculateGrossFromHours(nonProductiveRecords);
 			_totalGrossCalculator.CalculateTotalGross(nonProductiveRecords);
 
@@ -846,9 +874,18 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
-				//HourlyRateOverride = Math.Max(x.EffectiveHourlyRate, x.MinimumWage)
 			}).ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(overTimeRecords);
+			overTimeRecords.ForEach(x =>
+			{
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
 			_context.AddRange(overTimeRecords);
 
@@ -859,9 +896,18 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
-				//HourlyRateOverride = Math.Max(x.EffectiveHourlyRate, x.MinimumWage)
 			}).ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(doubleTimeRecords);
+			doubleTimeRecords.ForEach(x =>
+			{
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
 			_context.AddRange(doubleTimeRecords);
 
@@ -874,38 +920,48 @@ namespace Payroll.Service
 				PayType = PayType.WeeklyOverTime,
 				HoursWorked = x.OverTimeHours
 			}).ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(weeklyOverTimeRecords);
+			weeklyOverTimeRecords.ForEach(x =>
+			{
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			_context.AddRange(weeklyOverTimeRecords);
 
 
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
-			var reportingPayRecords = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
-			foreach (var record in reportingPayRecords)
+			var reportingPayRecords = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
+			reportingPayRecords.ForEach(x =>
 			{
-				// Needs to select Max from effective and minimum wage.
-				//record.HourlyRateOverride = weeklySummaries
-				//    .Where(x => x.EmployeeId == record.EmployeeId && x.WeekEndDate == record.WeekEndDate)
-				//    .OrderByDescending(x => x.EffectiveHourlyRate)
-				//    .FirstOrDefault()
-				//    ?.EffectiveHourlyRate
-				//    ?? 0;
-			}
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+			});
 			_grossFromHoursCalculator.CalculateGrossFromHours(reportingPayRecords);
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
-			foreach (var record in nonProductiveRecords)
+			var nonProductiveRecords = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
+			nonProductiveRecords.ForEach(x =>
 			{
-				// Needs to select Max from effective and minimum wage.
-				//record.HourlyRateOverride = weeklySummaries
-				//    .Where(x => x.EmployeeId == record.EmployeeId && x.WeekEndDate == record.WeekEndDate)
-				//    .OrderByDescending(x => x.EffectiveHourlyRate)
-				//    .FirstOrDefault()
-				//    ?.EffectiveHourlyRate
-				//    ?? 0;
-			}
+				var weeklySummary = weeklySummaries
+					.Where(w =>
+						w.WeekEndDate == x.WeekEndDate
+						&& w.EmployeeId == x.EmployeeId)
+					.OrderByDescending(o => o.MinimumWage)
+					.FirstOrDefault();
+				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+			});
 			_grossFromHoursCalculator.CalculateGrossFromHours(nonProductiveRecords);
 			_totalGrossCalculator.CalculateTotalGross(nonProductiveRecords);
 
