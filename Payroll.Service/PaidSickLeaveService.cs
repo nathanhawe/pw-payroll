@@ -1,6 +1,7 @@
 ﻿using Payroll.Data;
 using Payroll.Domain;
 using Payroll.Domain.Constants;
+using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace Payroll.Service
 	public class PaidSickLeaveService
 	{
 		private readonly PayrollContext _context;
+		private readonly IRoundingService _roundingService;
 
 		/// <summary>
 		/// Type of action performed by UpdateOrInsert method.
@@ -27,9 +29,10 @@ namespace Payroll.Service
 			NinetyDay
 		}
 
-		public PaidSickLeaveService(PayrollContext context)
+		public PaidSickLeaveService(PayrollContext context, IRoundingService roundingService)
 		{
 			_context = context ?? throw new ArgumentNullException(nameof(context));
+			_roundingService = roundingService ?? throw new ArgumentNullException();
 		}
 
 		/// <summary>
@@ -108,6 +111,31 @@ namespace Payroll.Service
 			}
 
 			UpdateOrInsert(paidSickLeaves, UpdateOrInsertType.NinetyDay);
+		}
+
+		/// <summary>
+		/// Returns the calculated ninety day rate for the provided parameter values.  This method assumes that ninety day gross and ninety day hours
+		/// total values have been calculated already.
+		/// </summary>
+		/// <param name="batchId"></param>
+		/// <param name="company"></param>
+		/// <param name="employeeId"></param>
+		/// <param name="shiftDate"></param>
+		/// <returns></returns>
+		public decimal GetNinetyDayRate(int batchId, string company, string employeeId, DateTime shiftDate)
+		{
+			var psl = _context.PaidSickLeaves
+				.Where(x =>
+					x.BatchId == batchId
+					&& x.EmployeeId == employeeId
+					&& x.ShiftDate == shiftDate
+					&& x.Company == company
+					&& !x.IsDeleted)
+				.FirstOrDefault();
+
+			if ((psl?.NinetyDayHours ?? 0) == 0) return 0;
+
+			return _roundingService.Round(psl.NinetyDayGross / psl.NinetyDayHours, 2);
 		}
 
 		/// <summary>

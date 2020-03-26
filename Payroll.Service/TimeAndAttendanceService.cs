@@ -176,7 +176,15 @@ namespace Payroll.Service
 			_paidSickLeaveService.UpdateUsage(batchId, company);
 
 			// Set PSL rate and recalculate gross.
-
+			var paidSickLeaves = _context.PlantPayLines
+				.Where(x =>
+					x.BatchId == batchId
+					&& x.PayType == PayType.SickLeave)
+				.ToList();
+			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batchId, Company.Plants, x.EmployeeId, x.ShiftDate));
+			_grossFromHoursCalculator.CalculateGrossFromHours(paidSickLeaves);
+			_totalGrossCalculator.CalculateTotalGross(paidSickLeaves);
+			_context.SaveChanges();
 
 
 			/* OT/DT/Seventh Day Hours */
@@ -625,7 +633,15 @@ namespace Payroll.Service
 			_paidSickLeaveService.UpdateUsage(batchId, company);
 
 			// Set PSL rate and recalculate gross.
-
+			var paidSickLeaves = _context.RanchPayLines
+				.Where(x =>
+					x.BatchId == batchId
+					&& x.PayType == PayType.SickLeave)
+				.ToList();
+			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batchId, Company.Ranches, x.EmployeeId, x.ShiftDate));
+			_grossFromHoursCalculator.CalculateGrossFromHours(paidSickLeaves);
+			_totalGrossCalculator.CalculateTotalGross(paidSickLeaves);
+			_context.SaveChanges();
 
 
 			/* OT/DT/Seventh Day Hours */

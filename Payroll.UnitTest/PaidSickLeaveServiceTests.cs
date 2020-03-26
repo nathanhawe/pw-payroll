@@ -14,6 +14,8 @@ namespace Payroll.UnitTest
 	[TestClass]
 	public class PaidSickLeaveServiceTests
 	{
+		private RoundingService _roundingService = new RoundingService();
+
 		[TestMethod]
 		public void UpdateTracking_Ranch_AddNewPSL()
 		{
@@ -49,7 +51,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -118,7 +120,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -177,7 +179,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, context.PaidSickLeaves.Count());
@@ -211,7 +213,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(1, context.PaidSickLeaves.Count());
@@ -241,7 +243,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -278,7 +280,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -320,7 +322,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -356,7 +358,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -395,7 +397,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Ranches, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(21, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -454,7 +456,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Ranches, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(14, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -519,7 +521,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -586,7 +588,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -653,7 +655,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -694,7 +696,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(1, context.PaidSickLeaves.Count());
@@ -724,7 +726,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -761,7 +763,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -803,7 +805,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -835,7 +837,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -873,7 +875,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Plants, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(21, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -932,7 +934,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context);
+			var pslService = new PaidSickLeaveService(context, _roundingService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Plants, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(14, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -959,6 +961,113 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, context.PaidSickLeaves.Where(x => x.EmployeeId == "Employee3" && x.Company == Company.Plants && x.ShiftDate == new DateTime(2020, 4, 2) && x.Hours == 10 && x.Gross == 125 && x.NinetyDayHours == 0 && x.NinetyDayGross == 0 && x.IsDeleted).Count());
 			Assert.AreEqual(1, context.PaidSickLeaves.Where(x => x.EmployeeId == "Employee3" && x.Company == Company.Plants && x.ShiftDate == new DateTime(2020, 4, 3) && x.Hours == 10 && x.Gross == 125 && x.NinetyDayHours == 0 && x.NinetyDayGross == 0 && x.IsDeleted).Count());
 			Assert.AreEqual(1, context.PaidSickLeaves.Where(x => x.EmployeeId == "Employee3" && x.Company == Company.Plants && x.ShiftDate == new DateTime(2020, 4, 4) && x.Hours == 10 && x.Gross == 125 && x.NinetyDayHours == 0 && x.NinetyDayGross == 0 && x.IsDeleted).Count());
+		}
+
+		[TestMethod]
+		public void GetNinetyDayRate()
+		{
+			var dbName = "GetNinetyDayRate";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Mock Batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+
+			// Mock existing plant PSL lines
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 23), ninetyDayHours: 760, ninetyDayGross: 11400));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 24), ninetyDayHours: 770, ninetyDayGross: 11550));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 25), ninetyDayHours: 780, ninetyDayGross: 11700));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 26), ninetyDayHours: 780, ninetyDayGross: 11700));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 27), ninetyDayHours: 780, ninetyDayGross: 11700));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 28), ninetyDayHours: 780, ninetyDayGross: 11700));
+
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 23), ninetyDayHours: 760, ninetyDayGross: 13300));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 24), ninetyDayHours: 770, ninetyDayGross: 14000));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 25), ninetyDayHours: 780, ninetyDayGross: 14001));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 26), ninetyDayHours: 780, ninetyDayGross: 13700));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 27), ninetyDayHours: 780, ninetyDayGross: 13750));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 28), ninetyDayHours: 780, ninetyDayGross: 14050));
+
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 23), ninetyDayHours: 760, ninetyDayGross: 9500));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 24), ninetyDayHours: 770, ninetyDayGross: 9625));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 25), ninetyDayHours: 780, ninetyDayGross: 9750));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 26), ninetyDayHours: 780, ninetyDayGross: 9750));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 27), ninetyDayHours: 780, ninetyDayGross: 9750));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Plants, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 28), ninetyDayHours: 780, ninetyDayGross: 9750));
+
+			// Mock existing ranch PSL lines
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 23), ninetyDayHours: 760, ninetyDayGross: 11020));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 24), ninetyDayHours: 770, ninetyDayGross: 11020));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 25), ninetyDayHours: 780, ninetyDayGross: 11020));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 26), ninetyDayHours: 780, ninetyDayGross: 11020));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 27), ninetyDayHours: 780, ninetyDayGross: 11020));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee1", shiftDate: new DateTime(2020, 3, 28), ninetyDayHours: 780, ninetyDayGross: 11020));
+
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 23), ninetyDayHours: 760, ninetyDayGross: 13300));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 24), ninetyDayHours: 770, ninetyDayGross: 13475));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 25), ninetyDayHours: 780, ninetyDayGross: 13650));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 26), ninetyDayHours: 780, ninetyDayGross: 13650));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 27), ninetyDayHours: 780, ninetyDayGross: 13650));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee2", shiftDate: new DateTime(2020, 3, 28), ninetyDayHours: 780, ninetyDayGross: 13650));
+
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 23), ninetyDayHours: 760, ninetyDayGross: 10640));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 24), ninetyDayHours: 770, ninetyDayGross: 10780));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 25), ninetyDayHours: 780, ninetyDayGross: 10920));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 26), ninetyDayHours: 780, ninetyDayGross: 10920));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 27), ninetyDayHours: 780, ninetyDayGross: 10920));
+			context.Add(EntityMocker.MockPaidSickLeave(batchId: batch.Id, company: Company.Ranches, EmployeeId: "Employee3", shiftDate: new DateTime(2020, 3, 28), ninetyDayHours: 780, ninetyDayGross: 10920));
+
+			context.SaveChanges();
+
+			var pslService = new PaidSickLeaveService(context, _roundingService);
+
+			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 23)));
+			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 24)));
+			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 25)));
+			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 26)));
+			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 27)));
+			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 28)));
+
+			Assert.AreEqual(17.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee2", new DateTime(2020, 3, 23)));
+			Assert.AreEqual(18.18M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee2", new DateTime(2020, 3, 24)));
+			Assert.AreEqual(17.95M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee2", new DateTime(2020, 3, 25)));
+			Assert.AreEqual(17.56M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee2", new DateTime(2020, 3, 26)));
+			Assert.AreEqual(17.63M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee2", new DateTime(2020, 3, 27)));
+			Assert.AreEqual(18.01M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee2", new DateTime(2020, 3, 28)));
+
+			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 23)));
+			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 24)));
+			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 25)));
+			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 26)));
+			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 27)));
+			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 28)));
+
+			Assert.AreEqual(14.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 23)));
+			Assert.AreEqual(14.31M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 24)));
+			Assert.AreEqual(14.13M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 25)));
+			Assert.AreEqual(14.13M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 26)));
+			Assert.AreEqual(14.13M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 27)));
+			Assert.AreEqual(14.13M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 28)));
+
+			Assert.AreEqual(17.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee2", new DateTime(2020, 3, 23)));
+			Assert.AreEqual(17.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee2", new DateTime(2020, 3, 24)));
+			Assert.AreEqual(17.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee2", new DateTime(2020, 3, 25)));
+			Assert.AreEqual(17.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee2", new DateTime(2020, 3, 26)));
+			Assert.AreEqual(17.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee2", new DateTime(2020, 3, 27)));
+			Assert.AreEqual(17.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee2", new DateTime(2020, 3, 28)));
+
+			Assert.AreEqual(14M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee3", new DateTime(2020, 3, 23)));
+			Assert.AreEqual(14M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee3", new DateTime(2020, 3, 24)));
+			Assert.AreEqual(14M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee3", new DateTime(2020, 3, 25)));
+			Assert.AreEqual(14M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee3", new DateTime(2020, 3, 26)));
+			Assert.AreEqual(14M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee3", new DateTime(2020, 3, 27)));
+			Assert.AreEqual(14M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee3", new DateTime(2020, 3, 28)));
+
 		}
 	}
 }
