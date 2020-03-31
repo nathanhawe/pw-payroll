@@ -5,13 +5,22 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll", "Payroll\Payroll.csproj", "{F65FB3EE-B765-41BB-AF3C-666D6FEB9A87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payroll.Domain", "Payroll.Domain\Payroll.Domain.csproj", "{CD0C2C01-90F5-4EB6-973E-B2BFE38B40F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll.Domain", "Payroll.Domain\Payroll.Domain.csproj", "{CD0C2C01-90F5-4EB6-973E-B2BFE38B40F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payroll.UnitTest", "Payroll.UnitTest\Payroll.UnitTest.csproj", "{B82DF15D-A264-4773-9FA1-067EF53F027E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll.UnitTest", "Payroll.UnitTest\Payroll.UnitTest.csproj", "{B82DF15D-A264-4773-9FA1-067EF53F027E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payroll.Service", "Payroll.Service\Payroll.Service.csproj", "{E1DB108D-B62A-4E6B-9D3C-ADDBB832C835}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll.Service", "Payroll.Service\Payroll.Service.csproj", "{E1DB108D-B62A-4E6B-9D3C-ADDBB832C835}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payroll.Data", "Payroll.Data\Payroll.Data.csproj", "{01F56A0E-5C4D-4496-A830-ECA50C676FEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll.Data", "Payroll.Data\Payroll.Data.csproj", "{01F56A0E-5C4D-4496-A830-ECA50C676FEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickBase.Api", "QuickBaseApi\QuickBase.Api.csproj", "{38F86A9E-962D-4A42-AA24-E094AD02E202}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickBase.IntegrationTests", "QuickBase.IntegrationTests\QuickBase.IntegrationTests.csproj", "{9ED5CC8C-309A-471B-8B4F-ED6F248010C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BEF4AAB-2F83-46A6-B30A-B008EFA547B0}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +48,14 @@ Global
 		{01F56A0E-5C4D-4496-A830-ECA50C676FEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01F56A0E-5C4D-4496-A830-ECA50C676FEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01F56A0E-5C4D-4496-A830-ECA50C676FEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38F86A9E-962D-4A42-AA24-E094AD02E202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38F86A9E-962D-4A42-AA24-E094AD02E202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38F86A9E-962D-4A42-AA24-E094AD02E202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38F86A9E-962D-4A42-AA24-E094AD02E202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ED5CC8C-309A-471B-8B4F-ED6F248010C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ED5CC8C-309A-471B-8B4F-ED6F248010C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ED5CC8C-309A-471B-8B4F-ED6F248010C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ED5CC8C-309A-471B-8B4F-ED6F248010C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
