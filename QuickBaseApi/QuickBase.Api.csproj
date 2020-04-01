@@ -6,8 +6,4 @@
     <RootNamespace>QuickBase.Api</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-
 </Project>

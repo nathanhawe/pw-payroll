@@ -1,11 +1,13 @@
-﻿using System;
+﻿using QuickBase.Api.Exceptions;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Xml.Linq;
 
 namespace QuickBase.Api
 {
-	public class QuickBaseConnection
+	public class QuickBaseConnection : IQuickBaseConnection
 	{
 		public string Realm { get; set; }
 		public string UserToken { get; set; }
@@ -16,15 +18,15 @@ namespace QuickBase.Api
 			UserToken = userToken ?? throw new ArgumentNullException(nameof(userToken));
 		}
 
-		public string DoQuery(
+		public XElement DoQuery(
 			string applicationId,
 			string query = null,
 			string clist = null,
 			string slist = null,
 			string options = null,
-			string format = "structured",
+			string format = null,
 			bool returnPercentageAsString = false,
-			bool includeRecordIds = true,
+			bool includeRecordIds = false,
 			bool? useFieldIds = null,
 			string udata = null,
 			bool queryIsName = false)
@@ -43,31 +45,20 @@ namespace QuickBase.Api
 				udata,
 				queryIsName);
 
-			var response = Post(uri, payLoad);
-
-			// todo: Handle non-200 responses
-			//Console.WriteLine(((HttpWebResponse)response).StatusDescription);
-
-			string responseFromServer;
-			using (var dataStream = response.GetResponseStream())
-			{
-				var reader = new StreamReader(dataStream);
-				responseFromServer = reader.ReadToEnd();
-			}
-			response.Close();
-
-			return responseFromServer;
+			return Post(uri, payLoad);
 		}
+		
 
-		public string DoQuery(
+
+		public XElement DoQuery(
 			string applicationId,
 			int qid,
 			string clist = null,
 			string slist = null,
 			string options = null,
-			string format = "structured",
+			string format = null,
 			bool returnPercentageAsString = false,
-			bool includeRecordIds = true,
+			bool includeRecordIds = false,
 			bool? useFieldIds = null,
 			string udata = null)
 		{
@@ -84,45 +75,20 @@ namespace QuickBase.Api
 				useFieldIds,
 				udata);
 
-			var response = Post(uri, payLoad);
-
-			// todo: Handle non-200 responses
-			//Console.WriteLine(((HttpWebResponse)response).StatusDescription);
-
-			string responseFromServer;
-			using (var dataStream = response.GetResponseStream())
-			{
-				var reader = new StreamReader(dataStream);
-				responseFromServer = reader.ReadToEnd();
-			}
-			response.Close();
-
-			return responseFromServer;
+			return Post(uri, payLoad);
 		}
 
-		public string DoQueryCount(string tableId, string query, string udata = null)
+		public XElement DoQueryCount(string tableId, string query, string udata = null)
 		{
 			var uri = GetBaseUriForId(tableId);
 			var payLoad = new Payloads.DoQueryCountPayload(UserToken, query, udata);
-			var response = Post(uri, payLoad);
 
-			// todo: Handle non-200 responses
-			//Console.WriteLine(((HttpWebResponse)response).StatusDescription);
-
-			string responseFromServer;
-			using (var dataStream = response.GetResponseStream())
-			{
-				var reader = new StreamReader(dataStream);
-				responseFromServer = reader.ReadToEnd();
-			}
-			response.Close();
-
-			return responseFromServer;
+			return Post(uri, payLoad);
 		}
 
 		private Uri GetBaseUriForId(string id) => new Uri($"https://{Realm}.quickbase.com/db/{id}");
 
-		private HttpWebResponse Post(Uri uri, Payloads.Payload payLoad)
+		private XElement Post(Uri uri, Payloads.Payload payLoad)
 		{
 			var request = WebRequest.Create(uri);
 			var data = payLoad.GetXmlString();
@@ -138,9 +104,21 @@ namespace QuickBase.Api
 			dataStream.Write(byteArray, 0, byteArray.Length);
 			dataStream.Close();
 
-			var response = request.GetResponse();
+			// Issue request
+			var response = (HttpWebResponse)request.GetResponse();
 
-			return (HttpWebResponse)response;
+			// Parse response
+			var responseText = ReadResponseToText(response);
+			response.Close();
+
+			// todo: Handle non-200 responses
+			// Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+
+			var responseXml = XElement.Parse(responseText);
+
+			CheckForErrors(responseXml);
+
+			return responseXml;
 		}
 
 		private string GetQuickBaseActionHeader(Constants.QuickBaseAction quickBaseAction)
@@ -151,6 +129,26 @@ namespace QuickBase.Api
 				Constants.QuickBaseAction.API_DoQueryCount => "QUICKBASE-ACTION:API_DoQueryCount",
 				_ => "",
 			};
+		}
+
+		private string ReadResponseToText(HttpWebResponse response)
+		{
+			string responseFromServer;
+			using var dataStream = response.GetResponseStream();
+			var reader = new StreamReader(dataStream);
+			responseFromServer = reader.ReadToEnd();
+			reader.Close();
+
+			return responseFromServer;
+		}
+
+		private void CheckForErrors(XElement document)
+		{
+			var errorCode = document?.Element("errcode")?.Value;
+			var errorText = document?.Element("errtext")?.Value ?? string.Empty;
+
+			if (string.IsNullOrWhiteSpace(errorCode)) throw new QuickBaseException("Unable to read errorcode value.");
+			if (errorCode != "0") throw new QuickBaseException(errorCode, errorText);
 		}
 	}
 }
