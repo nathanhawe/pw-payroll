@@ -33,10 +33,32 @@ namespace QuickBase.IntegrationTests
 		}
 
 		[TestMethod]
-		public void DoQuery()
+		public void DoQuery_NoLayoff()
 		{
-			var temp = _repo.Get(new DateTime(2020, 3, 1));
+			var temp = _repo.Get(new DateTime(2020, 3, 1), 0);
 			Print(temp);
+		}
+
+		[TestMethod]
+		public void DoQuery_WithLayoff()
+		{
+			var temp = _repo.Get(new DateTime(2020, 3, 1), 920);
+			Print(temp);
+		}
+
+		[TestMethod]
+		public void ImportFromCSV()
+		{
+			var crewBossPayLines = new List<CrewBossPayLine>
+			{
+				new CrewBossPayLine{ QuickBaseRecordId = 118410, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, HoursWorked = 9M, WorkerCount = 20, EmployeeId = "1006"},
+				new CrewBossPayLine{ QuickBaseRecordId = 118411, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, HoursWorked = 9M, WorkerCount = 21, EmployeeId = "1006"},
+				new CrewBossPayLine{ QuickBaseRecordId = 118412, ShiftDate = new DateTime(2019, 1, 3), Crew = 1002, HoursWorked = 9M, WorkerCount = 22, EmployeeId = "1006"},
+				new CrewBossPayLine{ QuickBaseRecordId = 118413, ShiftDate = new DateTime(2019, 1, 4), Crew = 1002, HoursWorked = 9M, WorkerCount = 23, EmployeeId = "1006"}
+			};
+
+			var response = _repo.Save(crewBossPayLines);
+			Console.WriteLine(response);
 		}
 
 		private void Print(IEnumerable<CrewBossPayLine> lines)

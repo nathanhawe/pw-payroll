@@ -19,7 +19,7 @@ namespace QuickBase.Api
 		}
 
 		public XElement DoQuery(
-			string applicationId,
+			string tableId,
 			string query = null,
 			string clist = null,
 			string slist = null,
@@ -31,8 +31,8 @@ namespace QuickBase.Api
 			string udata = null,
 			bool queryIsName = false)
 		{
-			var uri = GetBaseUriForId(applicationId);
-			var payLoad = new Payloads.DoQueryPayload(
+			var uri = GetBaseUriForId(tableId);
+			var payload = new Payloads.DoQueryPayload(
 				UserToken,
 				query,
 				clist,
@@ -45,13 +45,11 @@ namespace QuickBase.Api
 				udata,
 				queryIsName);
 
-			return Post(uri, payLoad);
+			return Post(uri, payload);
 		}
 		
-
-
 		public XElement DoQuery(
-			string applicationId,
+			string tableId,
 			int qid,
 			string clist = null,
 			string slist = null,
@@ -62,8 +60,8 @@ namespace QuickBase.Api
 			bool? useFieldIds = null,
 			string udata = null)
 		{
-			var uri = GetBaseUriForId(applicationId);
-			var payLoad = new Payloads.DoQueryPayload(
+			var uri = GetBaseUriForId(tableId);
+			var payload = new Payloads.DoQueryPayload(
 				UserToken,
 				qid,
 				clist,
@@ -75,15 +73,41 @@ namespace QuickBase.Api
 				useFieldIds,
 				udata);
 
-			return Post(uri, payLoad);
+			return Post(uri, payload);
 		}
 
 		public XElement DoQueryCount(string tableId, string query, string udata = null)
 		{
 			var uri = GetBaseUriForId(tableId);
-			var payLoad = new Payloads.DoQueryCountPayload(UserToken, query, udata);
+			var payload = new Payloads.DoQueryCountPayload(UserToken, query, udata);
 
-			return Post(uri, payLoad);
+			return Post(uri, payload);
+		}
+
+		public XElement ImportFromCsv(
+			string tableId, 
+			string cdata, 
+			string clist, 
+			string outputClist = null, 
+			bool percentageAsString = false, 
+			bool skipFirstRow = false, 
+			int mergeFieldId = 0, 
+			bool useUtcTime = false, 
+			string udata = null)
+		{
+			var uri = GetBaseUriForId(tableId);
+			var payload = new Payloads.ImportFromCsvPayload(
+				UserToken,
+				cdata,
+				clist,
+				outputClist,
+				percentageAsString,
+				skipFirstRow,
+				mergeFieldId,
+				useUtcTime,
+				udata);
+
+			return Post(uri, payload);
 		}
 
 		private Uri GetBaseUriForId(string id) => new Uri($"https://{Realm}.quickbase.com/db/{id}");
@@ -123,12 +147,7 @@ namespace QuickBase.Api
 
 		private string GetQuickBaseActionHeader(Constants.QuickBaseAction quickBaseAction)
 		{
-			return quickBaseAction switch
-			{
-				Constants.QuickBaseAction.API_DoQuery => "QUICKBASE-ACTION:API_DoQuery",
-				Constants.QuickBaseAction.API_DoQueryCount => "QUICKBASE-ACTION:API_DoQueryCount",
-				_ => "",
-			};
+			return $"QUICKBASE-ACTION:{quickBaseAction}";
 		}
 
 		private string ReadResponseToText(HttpWebResponse response)

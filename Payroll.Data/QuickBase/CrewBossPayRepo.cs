@@ -8,21 +8,76 @@ using System.Xml.Linq;
 
 namespace Payroll.Data.QuickBase
 {
+	/// <summary>
+	/// Repository that exposes query and persistence methods against the Crew Boss Pay table in Quick Base.
+	/// </summary>
 	public class CrewBossPayRepo
 	{
 		private readonly IQuickBaseConnection _quickBaseConn;
-		private readonly int _batchSize = 1000;
+		public int BatchSize { get; } = 1000;
 
 		public CrewBossPayRepo(IQuickBaseConnection quickBaseConnection)
 		{
 			_quickBaseConn = quickBaseConnection ?? throw new ArgumentNullException(nameof(quickBaseConnection));
 		}
 
-		public IEnumerable<CrewBossPayLine> Get(DateTime weekEndDate)
+		/// <summary>
+		/// Queries the CrewBossPay table in Quick Base for all records with the provided <c>weekEndDate</c>.  If <c>layoffId</c>
+		/// is greater than 0, records are filtered to only those with a matching [LayOffRunId].  If <c>layoffId</c> is equal
+		/// to 0, only records without a [LayOffRunId] are returned.
+		/// </summary>
+		/// <param name="weekEndDate"></param>
+		/// <param name="layoffId"></param>
+		/// <returns></returns>
+		public IEnumerable<CrewBossPayLine> Get(DateTime weekEndDate, int layoffId)
 		{
 			var formattedDate = weekEndDate.ToString("MM-dd-yyyy");
 			var query = $"{{{(int)CrewBossPayField.WeekEndDate}.IR.'{formattedDate}'}}";
+			if(layoffId > 0)
+			{
+				query += $"AND{{{(int)CrewBossPayField.LayoffRunId}.EX.{layoffId}}}";
+			}
+			else
+			{
+				query += $"AND{{{(int)CrewBossPayField.LayoffPay}.EX.0}}";
+			}
+
 			return Get(query);
+		}
+
+		/// <summary>
+		/// Creates a new API_ImportFromCSV request to the CrewBossPay table in Quickbase for the provided list of <c>CrewBossPayLine</c>s.
+		/// Records with <c>QuickBaseRecordId</c> values greater than 0 will be updated while those with a value of 0 will be added new.
+		/// </summary>
+		/// <param name="crewBossPayLines"></param>
+		/// <returns></returns>
+		public XElement Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
+		{
+			var clist = $"{(int)CrewBossPayField.RecordId}.{(int)CrewBossPayField.LayoffRunId}.{(int)CrewBossPayField.ShiftDate}.{(int)CrewBossPayField.Crew}.{(int)CrewBossPayField.CBEmployeeNumber}.{(int)CrewBossPayField.CountOfWorkers}.{(int)CrewBossPayField.HoursWorkedByCB}.{(int)CrewBossPayField.HourlyRate}";
+
+			// Build the CDATA string
+			var sb = new StringBuilder();
+			foreach (var line in crewBossPayLines)
+			{
+				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
+				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
+				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
+				sb.Append($"{line.Crew},");
+				sb.Append($"{line.EmployeeId},");
+				sb.Append($"{line.WorkerCount},");
+				sb.Append($"{line.HoursWorked},");
+				sb.Append($"{line.HourlyRate}\n");
+			}
+
+			// Create the request
+			var importResponse = _quickBaseConn.ImportFromCsv(
+				QuickBaseTable.CrewBossPay,
+				sb.ToString(),
+				clist,
+				percentageAsString: false,
+				skipFirstRow: false);
+
+			return importResponse;
 		}
 
 		// ToDo: Refactor this method so that it can handle request too large, and server busy errors.
@@ -39,14 +94,14 @@ namespace Payroll.Data.QuickBase
 			var slist = $"{(int)CrewBossPayField.RecordId}";
 
 			XElement doQuery;
-			for(int i = 0; i < count; i += _batchSize)
+			for(int i = 0; i < count; i += BatchSize)
 			{
 				doQuery = _quickBaseConn.DoQuery(
 					QuickBaseTable.CrewBossPay,
 					query,
 					clist,
 					slist,
-					options: $"num-{_batchSize}.skp-{(_batchSize * i)}.sortorder-A",
+					options: $"num-{BatchSize}.skp-{(BatchSize * i)}.sortorder-A",
 					includeRecordIds: true,
 					useFieldIds: true);
 
@@ -58,7 +113,7 @@ namespace Payroll.Data.QuickBase
 			// Return list
 			return crewBossPayLines;
 		}
-
+		
 		private IEnumerable<CrewBossPayLine> ConvertToCrewBossPayLines(XElement doQuery)
 		{
 			var crewBossPayLines = new List<CrewBossPayLine>();
@@ -113,11 +168,6 @@ namespace Payroll.Data.QuickBase
 		{
 			if (!int.TryParse(value, out int convertedValue)) return null;
 			return convertedValue;
-		}
-
-		public void Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
-		{
-			throw new NotImplementedException();
-		}
+		}		
 	}
 }

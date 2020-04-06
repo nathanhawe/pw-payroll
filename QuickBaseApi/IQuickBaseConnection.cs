@@ -5,7 +5,7 @@ namespace QuickBase.Api
 	public interface IQuickBaseConnection
 	{
 		public XElement DoQuery(
-			string applicationId,
+			string tableId,
 			string query = null,
 			string clist = null,
 			string slist = null,
@@ -18,7 +18,7 @@ namespace QuickBase.Api
 			bool queryIsName = false);
 
 		public XElement DoQuery(
-			string applicationId,
+			string tableId,
 			int qid,
 			string clist = null,
 			string slist = null,
@@ -30,6 +30,16 @@ namespace QuickBase.Api
 			string udata = null);
 
 		public XElement DoQueryCount(string tableId, string query, string udata = null);
-		
+
+		public XElement ImportFromCsv(
+			string tableId,
+			string cdata,
+			string clist,
+			string outputClist = null,
+			bool percentageAsString = false,
+			bool skipFirstRow = false,
+			int mergeFieldId = 0,
+			bool useUtcTime = false,
+			string udata = null);
 	}
 }
