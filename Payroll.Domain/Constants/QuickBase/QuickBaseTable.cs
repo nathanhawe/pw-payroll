@@ -18,5 +18,7 @@ namespace Payroll.Domain.Constants.QuickBase
 
 		public const string RanchSummaries = "bfbfeqpje";
 		public const string PlantSummaries = "bfb4hpupx";
+
+		public const string PslTrackingDaily = "bj2mtwbze";
 	}
 }
