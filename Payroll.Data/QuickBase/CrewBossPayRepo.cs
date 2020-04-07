@@ -63,7 +63,7 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
 				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
 				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
-				sb.Append($"{line.Crew},");
+				sb.Append($"{(line.Crew > 0 ? line.Crew.ToString() : "")},");
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{line.WorkerCount},");
 				sb.Append($"{line.HoursWorked},");

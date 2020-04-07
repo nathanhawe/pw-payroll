@@ -49,7 +49,7 @@ namespace Payroll.Data.QuickBase
 		/// Creates a new API_ImportFromCSV request to the Ranch Payroll table in Quickbase for the provided list of <c>RanchPayLine</c>s.
 		/// Records with <c>QuickBaseRecordId</c> values greater than 0 will be updated while those with a value of 0 will be added new.
 		/// </summary>
-		/// <param name="crewBossPayLines"></param>
+		/// <param name="ranchPayLines"></param>
 		/// <returns></returns>
 		public XElement Save(IEnumerable<RanchPayLine> ranchPayLines)
 		{
@@ -62,10 +62,10 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
 				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
 				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
-				sb.Append($"{line.Crew},");
+				sb.Append($"{(line.Crew > 0 ? line.Crew.ToString() : "")},");
 				sb.Append($"{line.EmployeeId},");
-				sb.Append($"{line.LaborCode},");
-				sb.Append($"{line.BlockId},");
+				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
+				sb.Append($"{(line.BlockId > 0 ? line.BlockId.ToString() : "")},");
 				sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.PayType},");
 				sb.Append($"{line.Pieces},");
