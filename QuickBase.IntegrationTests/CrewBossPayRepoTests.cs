@@ -46,7 +46,7 @@ namespace QuickBase.IntegrationTests
 			Print(temp);
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void ImportFromCSV()
 		{
 			var crewBossPayLines = new List<CrewBossPayLine>

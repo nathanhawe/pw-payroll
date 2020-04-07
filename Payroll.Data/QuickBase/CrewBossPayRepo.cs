@@ -124,7 +124,7 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
-		/// Returns a property formed clist string for the API_DoQuery call to the Crew Boss Pay table in Quickbase.
+		/// Returns a properly formatted clist string for the API_DoQuery call to the Crew Boss Pay table in Quickbase.
 		/// </summary>
 		/// <returns></returns>
 		private string GetDoQueryClist()

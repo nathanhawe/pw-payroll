@@ -159,7 +159,7 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
-		/// Returns a property formatted clist string for API_DoQuery calls to the Ranch Payroll Adjustment table in Quick Base.
+		/// Returns a properly formatted clist string for API_DoQuery calls to the Ranch Payroll Adjustment table in Quick Base.
 		/// </summary>
 		/// <returns></returns>
 		private string GetDoQueryClist()

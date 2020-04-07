@@ -47,7 +47,7 @@ namespace QuickBase.IntegrationTests
 			Print(temp);
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void ImportFromCSV()
 		{
 			var ranchPayLines = new List<RanchPayLine>
@@ -66,7 +66,7 @@ namespace QuickBase.IntegrationTests
 			Console.WriteLine(response);
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void ImportFromCSV_Update()
 		{
 			var ranchPayLines = new List<RanchPayLine>

@@ -7,6 +7,7 @@ namespace Payroll.Domain
 	public class RanchSummary : Record
 	{
 		public int BatchId { get; set; }
+		public int LayoffId { get; set; }
 		public string EmployeeId { get; set; }
 		public DateTime WeekEndDate { get; set; }
 		public decimal TotalHours { get; set; }
