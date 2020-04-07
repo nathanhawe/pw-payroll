@@ -1,6 +1,7 @@
 ﻿using Payroll.Domain;
 using Payroll.Domain.Constants.QuickBase;
 using QuickBase.Api;
+using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,15 +12,11 @@ namespace Payroll.Data.QuickBase
 	/// <summary>
 	/// Repository that exposes query and persistence methods against the Crew Boss Pay table in Quick Base.
 	/// </summary>
-	public class CrewBossPayRepo
+	public class CrewBossPayRepo : QuickBaseRepo<CrewBossPayLine>
 	{
-		private readonly IQuickBaseConnection _quickBaseConn;
-		public int BatchSize { get; } = 1000;
 
 		public CrewBossPayRepo(IQuickBaseConnection quickBaseConnection)
-		{
-			_quickBaseConn = quickBaseConnection ?? throw new ArgumentNullException(nameof(quickBaseConnection));
-		}
+			:base(quickBaseConnection) { }
 
 		/// <summary>
 		/// Queries the CrewBossPay table in Quick Base for all records with the provided <c>weekEndDate</c>.  If <c>layoffId</c>
@@ -32,18 +29,22 @@ namespace Payroll.Data.QuickBase
 		public IEnumerable<CrewBossPayLine> Get(DateTime weekEndDate, int layoffId)
 		{
 			var formattedDate = weekEndDate.ToString("MM-dd-yyyy");
-			var query = $"{{{(int)CrewBossPayField.WeekEndDate}.IR.'{formattedDate}'}}";
+			var query = $"{{{(int)CrewBossPayField.WeekEndDate}.{ComparisonOperator.IR}.'{formattedDate}'}}";
 			if(layoffId > 0)
 			{
-				query += $"AND{{{(int)CrewBossPayField.LayoffRunId}.EX.{layoffId}}}";
+				query += $"AND{{{(int)CrewBossPayField.LayoffRunId}.{ComparisonOperator.EX}.{layoffId}}}";
 			}
 			else
 			{
-				query += $"AND{{{(int)CrewBossPayField.LayoffPay}.EX.0}}";
+				query += $"AND{{{(int)CrewBossPayField.LayoffPay}.{ComparisonOperator.EX}.0}}";
 			}
 
-			return Get(query);
+			var clist = GetDoQueryClist();
+			var slist = $"{(int)CrewBossPayField.RecordId}";
+
+			return Get(QuickBaseTable.CrewBossPay, query, clist, slist, ConvertToCrewBossPayLines);
 		}
+				
 
 		/// <summary>
 		/// Creates a new API_ImportFromCSV request to the CrewBossPay table in Quickbase for the provided list of <c>CrewBossPayLine</c>s.
@@ -79,41 +80,13 @@ namespace Payroll.Data.QuickBase
 
 			return importResponse;
 		}
-
-		// ToDo: Refactor this method so that it can handle request too large, and server busy errors.
-		private IEnumerable<CrewBossPayLine> Get(string query)
-		{
-			var crewBossPayLines = new List<CrewBossPayLine>();
-
-			// Get the total query size so batching can be tracked
-			XElement doQueryCount = _quickBaseConn.DoQueryCount(QuickBaseTable.CrewBossPay, query);
-			if (!int.TryParse(doQueryCount.Element("numMatches")?.Value, out int count)) count = 0;
-
-			// Download records in batches
-			var clist = $"{(int)CrewBossPayField.CBEmployeeNumber}.{(int)CrewBossPayField.CBPayMethod}.{(int)CrewBossPayField.Crew}.{(int)CrewBossPayField.HoursWorkedByCB}.{(int)CrewBossPayField.LayoffRunId}.{(int)CrewBossPayField.ShiftDate}.{(int)CrewBossPayField.WeekEndDate}";
-			var slist = $"{(int)CrewBossPayField.RecordId}";
-
-			XElement doQuery;
-			for(int i = 0; i < count; i += BatchSize)
-			{
-				doQuery = _quickBaseConn.DoQuery(
-					QuickBaseTable.CrewBossPay,
-					query,
-					clist,
-					slist,
-					options: $"num-{BatchSize}.skp-{(BatchSize * i)}.sortorder-A",
-					includeRecordIds: true,
-					useFieldIds: true);
-
-				// Convert XElement response to new domain objects
-				crewBossPayLines.AddRange(ConvertToCrewBossPayLines(doQuery));
-			}
-
-			// Compare list with query count?
-			// Return list
-			return crewBossPayLines;
-		}
 		
+		/// <summary>
+		/// Converts an XElement object representing an API_DoQuery response from the Crew Boss Pay table in Quick Base into 
+		/// a collection of <c>CrewBossPayLine</c> objects.
+		/// </summary>
+		/// <param name="doQuery"></param>
+		/// <returns></returns>
 		private IEnumerable<CrewBossPayLine> ConvertToCrewBossPayLines(XElement doQuery)
 		{
 			var crewBossPayLines = new List<CrewBossPayLine>();
@@ -150,24 +123,22 @@ namespace Payroll.Data.QuickBase
 			return crewBossPayLines;
 		}
 
-		private DateTime ParseDate(string value)
+		/// <summary>
+		/// Returns a property formed clist string for the API_DoQuery call to the Crew Boss Pay table in Quickbase.
+		/// </summary>
+		/// <returns></returns>
+		private string GetDoQueryClist()
 		{
-			// Quick Base dates are returned as milliseconds since UNIX time in UTC.
-			if (!long.TryParse(value, out long milliseconds)) milliseconds = 0;
-			var offset = DateTimeOffset.FromUnixTimeMilliseconds(milliseconds);
-			return offset.UtcDateTime;
-		}
+			var sb = new StringBuilder();
+			sb.Append($"{(int)CrewBossPayField.CBEmployeeNumber}.");
+			sb.Append($"{(int)CrewBossPayField.CBPayMethod}.");
+			sb.Append($"{(int)CrewBossPayField.Crew}.");
+			sb.Append($"{(int)CrewBossPayField.HoursWorkedByCB}.");
+			sb.Append($"{(int)CrewBossPayField.LayoffRunId}.");
+			sb.Append($"{(int)CrewBossPayField.ShiftDate}.");
+			sb.Append($"{(int)CrewBossPayField.WeekEndDate}");
 
-		private decimal? ParseDecimal(string value)
-		{
-			if (!decimal.TryParse(value, out decimal convertedValue)) return null;
-			return convertedValue;
+			return sb.ToString();
 		}
-
-		private int? ParseInt(string value)
-		{
-			if (!int.TryParse(value, out int convertedValue)) return null;
-			return convertedValue;
-		}		
 	}
 }
