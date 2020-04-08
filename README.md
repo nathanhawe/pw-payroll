@@ -8,7 +8,8 @@ This application is currently in development.
 ## Get Started
 
 1. Restore nuget packages
-2. Add required app secrets using `dotnet user-secrets set "<Key>" "<Value>" --project payroll`
+2. Update the local instance of MSSQLLocalDB by opening the Package Manager Console and typing `Update-Database`
+3. Add required app secrets using `dotnet user-secrets set "<Key>" "<Value>" --project payroll`
 
 ### Secrets
 | Key | Description |
