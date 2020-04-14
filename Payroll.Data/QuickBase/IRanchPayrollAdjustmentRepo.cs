@@ -11,4 +11,4 @@ namespace Payroll.Data.QuickBase
 		public XElement Save(IEnumerable<RanchAdjustmentLine> ranchAdjustmentLines);
 	}
 }
-}
+

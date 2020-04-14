@@ -1,4 +1,5 @@
-﻿using Payroll.Domain;
+﻿using Payroll.Data.QuickBase;
+using Payroll.Domain;
 using Payroll.Domain.Constants;
 using Payroll.Service.Interface;
 using System;
@@ -34,31 +35,47 @@ namespace Payroll.Service
 		private PlantSummaryService _plantSummaryService;
 		private IRoundingService _roundingService;
 
+		// Repositories
+		private readonly IPslTrackingDailyRepo _pslTrackingDailyRepo;
+		private readonly ICrewBossPayRepo _crewBossPayRepo;
+		private readonly IRanchPayrollRepo _ranchPayrollRepo;
+		private readonly IRanchPayrollAdjustmentRepo _ranchPayrollAdjustmentRepo;
+		private readonly IRanchSummariesRepo _ranchSummariesRepo;
+		private readonly IPlantPayrollRepo _plantPayrollRepo;
+		private readonly IPlantPayrollAdjustmentRepo _plantPayrollAdjustmentRepo;
+		private readonly IPlantSummariesRepo _plantSummariesRepo;
+		
+
+
 		public TimeAndAttendanceService(CrewBossPayService crewBossPayService, PaidSickLeaveService paidSickLeaveService)
 		{
 			_crewBossPayService = crewBossPayService ?? throw new ArgumentNullException(nameof(crewBossPayService));
 			_paidSickLeaveService = paidSickLeaveService ?? throw new ArgumentNullException(nameof(paidSickLeaveService));
 
 		}
-		public void PerformCalculations(int batchId, string company)
+		public void PerformCalculations(int batchId)
 		{
-			switch (company)
+			var batch = _context.Batches.Where(x => x.Id == batchId).FirstOrDefault();
+			if (batch == null) throw new Exception($"The provided batch ID of '{batchId}' was not found in the database.");
+
+			switch (batch.Company)
 			{
-				case Company.Plants: PerformPlantCalculations(batchId); break;
-				case Company.Ranches: PerformRanchCalculations(batchId); break;
-				default: throw new Exception($"Unknown company value '{company}'.");
+				case Company.Plants: PerformPlantCalculations(batch); break;
+				case Company.Ranches: PerformRanchCalculations(batch); break;
+				default: throw new Exception($"Unknown company value '{batch.Company}'.");
 			}
 		}
 
-		public void PerformPlantCalculations(int batchId)
+		public void PerformPlantCalculations(Batch batch)
 		{
 			var company = Company.Plants;
 
 			/* Download Quick Base data */
+			CopyPlantDataFromQuickBase(batch);
 
 			/* Gross Calculations */
 			// Hourly
-			var hourlyLines = _context.PlantPayLines.Where(x => x.BatchId == batchId &&
+			var hourlyLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id &&
 				(
 					x.PayType == PayType.Regular
 					//|| x.PayType == PayType.HourlyPlusPieces
@@ -73,13 +90,13 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			// Pieces
-			var pieceLines = _context.PlantPayLines.Where(x => x.BatchId == batchId && x.PayType == PayType.Pieces).ToList();
+			var pieceLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && x.PayType == PayType.Pieces).ToList();
 			_grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
 			_context.UpdateRange(pieceLines);
 			_context.SaveChanges();
 
 			// Incentives!!!
-			var incentiveLines = _context.PlantPayLines.Where(x => x.BatchId == batchId && (
+			var incentiveLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && (
 				x.LaborCode == (int)PlantLaborCode.TallyTagWriter
 				|| (x.PayType == PayType.Pieces && !x.IsIncentiveDisqualified))).ToList();
 			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(incentiveLines);
@@ -87,101 +104,30 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			// Total
-			var payLines = _context.PlantPayLines.Where(x => x.BatchId == batchId).ToList();
+			var payLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList();
 			_totalGrossCalculator.CalculateTotalGross(payLines);
 			_context.UpdateRange(payLines);
 			_context.SaveChanges();
 
-			/*
-				Total Gross = [Pay Type]="41.1-Adjustment" and [41.1 Approval]=false,0,[Gross from Hours]+[Gross from Pieces]+[Other Gross]+[Gross from Incentive])
-				[Gross from Hours]
-					[Pay Type]="1-Regular" => 		([Hourly Rate]+[RoundingFix])*[Hours Worked]
-					[Pay Type]="49-Reporting Pay" => 	[Hourly Rate]*[Hours Worked]
-					[Pay Type]="41.1-Adjustment" =>		[Hourly Rate]*[Hours Worked]
-					[Pay Type]="48-Comp Time" =>		[Hourly Rate]*[Hours Worked]
-					[Pay Type]="7.2-Sick Leave" =>		[Hourly Rate]*[Hours Worked]
-					[Pay Type]="7.1-Holiday" =>		[Hourly Rate]*[Hours Worked]
-					[Pay Type]="7-Vacation" =>		[Hourly Rate]*[Hours Worked]
-					Else => 0
-					
-					[Hourly Rate]
-						[Pay Type]="7.2-Sick Leave" =?	[90 Day Hourly Rate]
-						[H-2A] =>			[H-2A Rate]
-						[Labor Code]=125 =>		[125 Rate]
-						[Labor Code]=151 =>		[151 Rate]
-						[Labor Code]=312 =>		[125 Rate]
-						[Labor Code]=535 =>		[535 Rate]
-						[Labor Code]=536 =>		[536 Rate]
-						[Labor Code]=537 =>		[537 Rate]
-						[Labor Code]=9503 =>		[503 Rate]
-						[Labor Code]=503 =>		[503 Rate]
-						ELSE =>				[EmployeeHourlyRateCalc]
-						
-						[90 Day Hourly Rate] lookup of PSL Tracking Daily: 90 Day Hourly Rate
-						[H-2A] checkbox lookup of Employee Master: H-2A (Employee Number)
-						[H-2A Rate] = 13.92
-						[125 Rate] = 
-							[Shift Date]<ToDate("5-27-2019") => If([EmployeeHourlyRateCalc]<12.5,12.5,[EmployeeHourlyRateCalc])
-							[H-2A]=true =>(If([Plant]=3,[H-2A Rate],If([EmployeeHourlyRateCalc]<13,13,[EmployeeHourlyRateCalc])))
-							[EmployeeHourlyRateCalc] < 13 => 13
-							ELSE [EmployeeHourlyRateCalc]
-						[151 Rate] = [EmployeeHourlyRateCalc] + 2
-						[535 Rate] = 
-							[Plant]=11 => [EmployeeHourlyRateCalc]
-							[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
-							ELSE [EmployeeHourlyRateCalc]
-						[536 Rate] = [EmployeeHourlyRateCalc] + 3
-						[537 Rate] = [EmployeeHourlyRateCalc] + 1.5
-						[503 Rate] =
-							[Shift Date]<ToDate("5-27-2019") => If([EmployeeHourlyRateCalc]<12,12,[EmployeeHourlyRateCalc])
-							If([EmployeeHourlyRateCalc]<13,13,[EmployeeHourlyRateCalc]))
-						[EmployeeHourlyRateCalc] = 
-							IsNull([Hourly Rate Override]) => (If([Employee Hourly Rate]<[Minimum Wage],[Minimum Wage],[Employee Hourly Rate]))
-							ELSE [Hourly Rate Override])
-						[Hourly Rate Override] is data entry
-						[Employee Hourly Rate] is lookup of Employee Master: Plants Hourly Rate
-						[Minimum Wage] (same as ranches formula)
-						
-					[Hours Worked] is data entry
-					[RoundingFix] = [Hours Worked]-Floor([Hours Worked]) > 0 => 0.01, ELSE 0
-				
-				[Gross from Incentive] = If([Labor Code]=555,[555 Rate]*[Hours Worked], ([BonusPieceRate]*[Pieces]))
-					[555 Rate] = 
-						If([Incentive Disqualified]=true,0,
-						[Plant]=3,2,
-						[Plant]=2,2,
-						[Plant]=4,2,0)
-						
-					[BonusPieceRate] = If(
-						[NonPrimaViolation]="Yes",0,
-						[Increased Rate]=true,[IncreasedRate]-[NonPrimaRate],[PrimaRate]-[NonPrimaRate])
-						
-					[NonPrimaViolation] is text data entry (expected to be "Yes" or "No"
-					[Increased Rate] is a checkbox data entry
-					[IncreasedRate] is currency data entry
-					[NonPrimaRate] is currency data entry
-					[PrimaRate] is currency data entry
-					[Incentive Disqualified] is a checkbox data entry
-			 */
 
 			/* PSL Requires hours and gross for regular, piece; also requires hours on Sick Leave pay types*/
 			// Perform PSL calculations
-			var startDate = _context.PlantPayLines.Where(x => x.BatchId == batchId).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
-			var endDate = _context.PlantPayLines.Where(x => x.BatchId == batchId).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
+			var startDate = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
+			var endDate = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
 
-			_paidSickLeaveService.UpdateTracking(batchId, company);
-			_paidSickLeaveService.CalculateNinetyDay(batchId, company, startDate, endDate);
+			_paidSickLeaveService.UpdateTracking(batch.Id, company);
+			_paidSickLeaveService.CalculateNinetyDay(batch.Id, company, startDate, endDate);
 
 			// Update PSL usage
-			_paidSickLeaveService.UpdateUsage(batchId, company);
+			_paidSickLeaveService.UpdateUsage(batch.Id, company);
 
 			// Set PSL rate and recalculate gross.
 			var paidSickLeaves = _context.PlantPayLines
 				.Where(x =>
-					x.BatchId == batchId
+					x.BatchId == batch.Id
 					&& x.PayType == PayType.SickLeave)
 				.ToList();
-			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batchId, Company.Plants, x.EmployeeId, x.ShiftDate));
+			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batch.Id, Company.Plants, x.EmployeeId, x.ShiftDate));
 			_grossFromHoursCalculator.CalculateGrossFromHours(paidSickLeaves);
 			_totalGrossCalculator.CalculateTotalGross(paidSickLeaves);
 			_context.SaveChanges();
@@ -192,7 +138,7 @@ namespace Payroll.Service
 			// Additionally it selects the last of plant sorting - I believe - on the Quick Base Record ID.
 			// This needs to be double checked before going to production and the actual rules for the calculation should be confirmed.
 			// The effective daily rate is not used in ranches but is used in plants for the purposes of minimum make up.
-			var dailySummaries = _dailySummaryCalculator.GetDailySummaries(batchId, company);
+			var dailySummaries = _dailySummaryCalculator.GetDailySummaries(batch.Id, company);
 
 			// Calculate OT/DT/7th Day Hours
 			// This uses the information in the daily summary to correctly calculate how many hours are over time and double time if any.
@@ -278,8 +224,8 @@ namespace Payroll.Service
 
 
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
-			//var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batchId && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
-			var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batchId && x.PayType == PayType.ReportingPay).ToList();
+			//var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
+			var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && x.PayType == PayType.ReportingPay).ToList();
 			reportingPayRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
@@ -289,7 +235,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.PlantPayLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)PlantLaborCode.RecoveryTime || x.LaborCode == (int)PlantLaborCode.NonProductiveTime)).ToList();
+			var nonProductiveRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && (x.LaborCode == (int)PlantLaborCode.RecoveryTime || x.LaborCode == (int)PlantLaborCode.NonProductiveTime)).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
@@ -301,10 +247,10 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			/* Calculate Adjustments */
-			CalculatePlantAdjustments(batchId, company);
+			CalculatePlantAdjustments(batch.Id, company);
 
 			/* Create Summaries */
-			var summaries = _plantSummaryService.CreateSummariesForBatch(batchId);
+			var summaries = _plantSummaryService.CreateSummariesForBatch(batch.Id);
 			_context.Add(summaries);
 			_context.SaveChanges();
 
@@ -312,6 +258,32 @@ namespace Payroll.Service
 			// Ranch Payroll Records
 			// Ranch Adjustment Records
 			// Ranch Summary Records
+		}
+
+		private void CopyPlantDataFromQuickBase(Batch batch)
+		{
+			// Plant Payroll
+			var plantPayLines = _plantPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
+			plantPayLines.ForEach(x => x.BatchId = batch.Id);
+
+			// Plant Adjustment
+			var plantAdjustmentLines = _plantPayrollAdjustmentRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
+			plantAdjustmentLines.ForEach(x => x.BatchId = batch.Id);
+
+			// Plant PSL Tracking
+			List<PaidSickLeave> paidSickLeaves = GetPaidSickLeaveTracking(batch.WeekEndDate, batch.Company);
+			paidSickLeaves.ForEach(x => x.BatchId = batch.Id);
+
+			
+			_context.AddRange(plantPayLines);
+			_context.AddRange(plantAdjustmentLines);
+			_context.AddRange(paidSickLeaves);
+			_context.SaveChanges();
+		}
+
+		private List<PaidSickLeave> GetPaidSickLeaveTracking(DateTime weekEndDate, string company)
+		{
+			return _pslTrackingDailyRepo.Get(weekEndDate.AddDays(-91), weekEndDate.AddDays(-1), company).ToList();
 		}
 
 		private void CalculatePlantAdjustments(int batchId, string company)
@@ -491,14 +463,15 @@ namespace Payroll.Service
 		}
 
 
-		public void PerformRanchCalculations(int batchId)
+		public void PerformRanchCalculations(Batch batch)
 		{
 			var company = Company.Ranches;
 
 			/* Download Quick Base data */
+			CopyRanchDataFromQuickBase(batch);
 
 			/* Crew Boss Calculations */
-			var crewBossPayLines = _crewBossPayService.CalculateCrewBossPay(batchId);
+			var crewBossPayLines = _crewBossPayService.CalculateCrewBossPay(batch.Id);
 
 			// Add crew boss pay lines to database.
 			_context.AddRange(crewBossPayLines);
@@ -507,7 +480,7 @@ namespace Payroll.Service
 
 			/* Gross Calculations */
 			// Hourly
-			var hourlyLines = _context.RanchPayLines.Where(x => x.BatchId == batchId &&
+			var hourlyLines = _context.RanchPayLines.Where(x => x.BatchId == batch.Id &&
 				(
 					x.PayType == PayType.Regular
 					|| x.PayType == PayType.HourlyPlusPieces
@@ -522,7 +495,7 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			// Pieces
-			var pieceLines = _context.RanchPayLines.Where(x => x.BatchId == batchId &&
+			var pieceLines = _context.RanchPayLines.Where(x => x.BatchId == batch.Id &&
 				(
 					x.PayType == PayType.Pieces
 					|| x.PayType == PayType.HourlyPlusPieces))
@@ -532,113 +505,29 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			// Total
-			var payLines = _context.RanchPayLines.Where(x => x.BatchId == batchId).ToList();
+			var payLines = _context.RanchPayLines.Where(x => x.BatchId == batch.Id).ToList();
 			_totalGrossCalculator.CalculateTotalGross(payLines);
 			_context.UpdateRange(payLines);
 			_context.SaveChanges();
 
-			/*
-				In Quick Base the final value of pay line is in the [Total Gross] field which is a formula field:
-					If([Pay Type]="41.1-Adjustment" and [41.1 Approval]=false,0,[Gross from Hours]+[Gross from Pieces]+[Other Gross])
-				[Gross from Hours]
-					Round((If([Pay Type]="4-Pieces",0,
-					[Pay Type]="1-Regular",[Hourly Rate]*[Hours Worked],
-					[Pay Type]="4.1-Hourly plus Pieces",[Hourly Rate]*[Hours Worked],
-					[Pay Type]="41.1-Adjustment",[Hourly Rate]*[Hours Worked],
-					[Pay Type]="49-Reporting Pay",[Hourly Rate]*[Hours Worked],
-					[Pay Type]="48-Comp Time",[Hourly Rate]*[Hours Worked],
-					[Pay Type]="7.2-Sick Leave",[Hourly Rate]*[Hours Worked],
-					[Pay Type]="7.1-Holiday",[Hourly Rate]*[Hours Worked],
-					[Pay Type]="7-Vacation",[Hourly Rate]*[Hours Worked],0)),0.01)
-					
-					[Hourly Rate]
-						If([Hourly Rate Override]>0,[Hourly Rate Override],
-						[Pay Type]="7.2-Sick Leave",[90 Day Hourly Rate],
-						[Labor Code]=103 => [LC103Rate] = If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14.25)
-						[Labor Code]=104 => [LC104Rate] = If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate]+1,15.25)
-						[Labor Code]=105 => [LC105Rate] = If([Crew]=65,If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14),If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],[Crew Labor Rate]))
-						[Labor Code]=116 => [LC116Rate] = 12
-						**[Labor Code]=117 => [LC117Rate] = NULL**
-						[Labor Code]=120 => [LC120Rate] = [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Labor Code]=380,0,
-						[Labor Code]=381,0,
-						[Crew]=1 => [CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=3 => [CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=7 => [CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=8 => [CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=15 => [CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=56 => [CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=57 => [CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=27 => [Crew27Rate] = [CulturalRate]+0.5
-						[Crew]=69 => [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-						[Crew]=75,[Crew Labor Rate],
-						[Crew]=76,[Crew Labor Rate],
-						[Crew]=223 and [Labor Code]=217,[GraftingRate],
-						[Crew]>100,[Crew Labor Rate],[CulturalRate])
-					[Hourly Rate Override] is a data entry field
-					[90 Day Hourly Rate] is a lookup value from PSL Tracking Daily: 90 Day Hourly Rate
-					[CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-					[CulturalRate_ExceptionCrews] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-					[Crew27Rate] = [CulturalRate]+0.5
-					[Crew Labor Rate] = If([Shift Date]<[Crew Labor Rate Change Date],13,14)
-					[GraftingRate] = If([Shift Date]>ToDate("2-1-2018"),15,14)
-					[Employee Hourly Rate] is a lookup value from Employee Master: Ranches Hourly Rate
-					[Crew Labor Rate Change Date] = ToDate("1-20-2020")
-					[PSL Tracking Daily: 90 Day Hourly Rate] = If(([90 Day Gross]/[90 Day Hours])>[Minimum Wage],([90 Day Gross]/[90 Day Hours]),[Minimum Wage])
-					[Employee Master: Ranches Hourly Rate] is a data entry field
-					
-					[Minimum Wage] (Ranch Payroll/PSL Tracking Daily) = If(
-						[Shift Date]<ToDate("7-1-2014"),ToNumber([Minimum_Wage]),
-						[Shift Date]<ToDate("1-1-2016"),ToNumber([Minimum_Wage_20140701]),
-						[Shift Date]<ToDate("1-1-2017"),ToNumber([Minimum_Wage_20160101]),
-						[Shift Date]<ToDate("1-1-2018"),ToNumber([Minimum_Wage_20170101]),
-						[Shift Date]<ToDate("1-1-2019"),ToNumber([Minimum_Wage_20180101]),
-						[Shift Date]<ToDate("1-1-2020"),ToNumber([Minimum_Wage_20190101]),
-						[Shift Date]<ToDate("1-1-2021"),ToNumber([Minimum_Wage_20200101]),
-						[Shift Date]<ToDate("1-1-2022"),ToNumber([Minimum_Wage_20210101]),
-						ToNumber([Minimum_Wage_20220101]))
-					
-					[Minimum_Wage] = 8.00
-					[Minimum_Wage_20140701] = 9.00
-					[Minimum_Wage_20160101] = 10.00
-					[Minimum_Wage_20170101] = 10.50
-					[Minimum_Wage_20180101] = 11.00
-					[Minimum_Wage_20190101] = 12.00
-					[Minimum_Wage_20200101] = 13.00
-					[Minimum_Wage_20210101] = 14.00
-					[Minimum_Wage_20220101] = 15.00
-					[Hours Worked] = If([Manual Input Hours Worked]=0,([Calculated Hours Worked]-[AutoLunchAmount]),[Manual Input Hours Worked])
-						[Calculated Hours Worked] is a data entry field
-						[AutoLunchAmount] = If([AutoLunch]="Yes",(If([Calculated Hours Worked]>6,0.5,0)),(If([AutoLunch]="Double",(If([Calculated Hours Worked]>6,1,0)),0)))
-							[AutoLunch] is a data entry field (select list)               
-				[Gross from Pieces]
-					If([Pay Type]="4-Pieces",[Pieces]*[Piece Rate],
-					[Pay Type]="4.1-Hourly plus Pieces",[Pieces]*[Piece Rate],0)
-					
-					[Pieces] is a data entry field
-					[Piece Rate] is a data entry field
-
-				[Other Gross] is a data entry field
-			 */
-
 			/* PSL Requires hours and gross for regular, piece, and CB pay types; also requires hours on Sick Leave pay types*/
 			// Perform PSL calculations
-			var startDate = _context.RanchPayLines.Where(x => x.BatchId == batchId).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
-			var endDate = _context.RanchPayLines.Where(x => x.BatchId == batchId).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
+			var startDate = _context.RanchPayLines.Where(x => x.BatchId == batch.Id).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
+			var endDate = _context.RanchPayLines.Where(x => x.BatchId == batch.Id).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
 
-			_paidSickLeaveService.UpdateTracking(batchId, company);
-			_paidSickLeaveService.CalculateNinetyDay(batchId, company, startDate, endDate);
+			_paidSickLeaveService.UpdateTracking(batch.Id, company);
+			_paidSickLeaveService.CalculateNinetyDay(batch.Id, company, startDate, endDate);
 
 			// Update PSL usage
-			_paidSickLeaveService.UpdateUsage(batchId, company);
+			_paidSickLeaveService.UpdateUsage(batch.Id, company);
 
 			// Set PSL rate and recalculate gross.
 			var paidSickLeaves = _context.RanchPayLines
 				.Where(x =>
-					x.BatchId == batchId
+					x.BatchId == batch.Id
 					&& x.PayType == PayType.SickLeave)
 				.ToList();
-			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batchId, Company.Ranches, x.EmployeeId, x.ShiftDate));
+			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batch.Id, Company.Ranches, x.EmployeeId, x.ShiftDate));
 			_grossFromHoursCalculator.CalculateGrossFromHours(paidSickLeaves);
 			_totalGrossCalculator.CalculateTotalGross(paidSickLeaves);
 			_context.SaveChanges();
@@ -649,7 +538,7 @@ namespace Payroll.Service
 			// Additionally it selects the last of Crew and last of FiveEight sorting - I believe - on the Quick Base Record ID.
 			// This needs to be double checked before going to production and the actual rules for the calculation should be confirmed.
 			// The effective daily rate is not used in ranches but is used in plants for the purposes of minimum make up.
-			var dailySummaries = _dailySummaryCalculator.GetDailySummaries(batchId, company);
+			var dailySummaries = _dailySummaryCalculator.GetDailySummaries(batch.Id, company);
 
 			// Calculate OT/DT/7th Day Hours
 			// This uses the information in the daily summary to correctly calculate how many hours are over time and double time if any.
@@ -747,7 +636,7 @@ namespace Payroll.Service
 
 
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
-			var reportingPayRecords = _context.RanchPayLines.Where(x => x.BatchId == batchId && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
+			var reportingPayRecords = _context.RanchPayLines.Where(x => x.BatchId == batch.Id && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
 			reportingPayRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries
@@ -762,7 +651,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
 			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.RanchPayLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
+			var nonProductiveRecords = _context.RanchPayLines.Where(x => x.BatchId == batch.Id && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries
@@ -780,10 +669,10 @@ namespace Payroll.Service
 
 
 			/* Calculate Adjustments */
-			CalculateRanchAdjustments(batchId, company);
+			CalculateRanchAdjustments(batch.Id, company);
 
 			/* Create Summaries */
-			var summaries = _ranchSummaryService.CreateSummariesForBatch(batchId);
+			var summaries = _ranchSummaryService.CreateSummariesForBatch(batch.Id);
 			_context.Add(summaries);
 			_context.SaveChanges();
 
@@ -791,6 +680,31 @@ namespace Payroll.Service
 			// Ranch Payroll Records
 			// Ranch Adjustment Records
 			// Ranch Summary Records
+		}
+
+		private void CopyRanchDataFromQuickBase(Batch batch)
+		{
+			// Crew Boss Pay
+			var crewBossPayLines = _crewBossPayRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
+			crewBossPayLines.ForEach(x => x.BatchId = batch.Id);
+
+			// Ranch Payroll
+			var ranchPayLines = _ranchPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
+			ranchPayLines.ForEach(x => x.BatchId = batch.Id);
+
+			// Ranch Adjustment
+			var ranchAdjustmentLines = _ranchPayrollAdjustmentRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
+			ranchAdjustmentLines.ForEach(x => x.BatchId = batch.Id);
+
+			// Ranch PSL Tracking
+			var paidSickLeaves = GetPaidSickLeaveTracking(batch.WeekEndDate, batch.Company);
+			paidSickLeaves.ForEach(x => x.BatchId = batch.Id);
+
+			_context.AddRange(crewBossPayLines);
+			_context.AddRange(ranchPayLines);
+			_context.AddRange(ranchAdjustmentLines);
+			_context.AddRange(paidSickLeaves);
+			_context.SaveChanges();
 		}
 
 		private void CalculateRanchAdjustments(int batchId, string company)
