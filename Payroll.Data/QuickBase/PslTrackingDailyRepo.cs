@@ -12,7 +12,7 @@ namespace Payroll.Data.QuickBase
 	/// <summary>
 	/// Repository that exposes query and persistence methods against the PSL Tracking Daily table in Quick Base.
 	/// </summary>
-	public class PslTrackingDailyRepo : QuickBaseRepo<PaidSickLeave>
+	public class PslTrackingDailyRepo : QuickBaseRepo<PaidSickLeave>, IPslTrackingDailyRepo
 	{
 		public PslTrackingDailyRepo(IQuickBaseConnection quickBaseConnection)
 			: base(quickBaseConnection) { }

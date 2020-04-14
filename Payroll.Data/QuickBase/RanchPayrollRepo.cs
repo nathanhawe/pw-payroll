@@ -12,7 +12,7 @@ namespace Payroll.Data.QuickBase
 	/// <summary>
 	/// Repository that exposes query and persistence methods against the Ranch Payroll table in Quick Base.
 	/// </summary>
-	public class RanchPayrollRepo : QuickBaseRepo<RanchPayLine>
+	public class RanchPayrollRepo : QuickBaseRepo<RanchPayLine>, IRanchPayrollRepo
 	{
 		public RanchPayrollRepo(IQuickBaseConnection quickBaseConnection)
 			: base(quickBaseConnection)	{ }

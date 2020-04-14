@@ -12,7 +12,7 @@ namespace Payroll.Data.QuickBase
 	/// <summary>
 	/// Repository that exposes query and persistence methods against the Crew Boss Pay table in Quick Base.
 	/// </summary>
-	public class CrewBossPayRepo : QuickBaseRepo<CrewBossPayLine>
+	public class CrewBossPayRepo : QuickBaseRepo<CrewBossPayLine>, ICrewBossPayRepo
 	{
 
 		public CrewBossPayRepo(IQuickBaseConnection quickBaseConnection)

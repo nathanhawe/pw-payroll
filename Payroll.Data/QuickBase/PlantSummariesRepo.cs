@@ -12,7 +12,7 @@ namespace Payroll.Data.QuickBase
 	/// <summary>
 	/// Repository that exposes query and persistence methods against the Plant Summaries table in Quick Base.
 	/// </summary>
-	public class PlantSummariesRepo : QuickBaseRepo<PlantSummary>
+	public class PlantSummariesRepo : QuickBaseRepo<PlantSummary>, IPlantSummariesRepo
 	{
 		public PlantSummariesRepo(IQuickBaseConnection quickBaseConnection)
 			: base(quickBaseConnection) { }
@@ -36,15 +36,15 @@ namespace Payroll.Data.QuickBase
 		/// <summary>
 		/// Creates a new API_ImportFromCSV request to the Plant Summaries table in Quickbase to create new records for the provided list of <c>PlantSummary</c>s.
 		/// </summary>
-		/// <param name="PlantSummaries"></param>
+		/// <param name="plantSummaries"></param>
 		/// <returns></returns>
-		public XElement Save(IEnumerable<PlantSummary> PlantSummaries)
+		public XElement Save(IEnumerable<PlantSummary> plantSummaries)
 		{
 			var clist = GetImportFromCsvClist();
 
 			// Build the CDATA string
 			var sb = new StringBuilder();
-			foreach (var line in PlantSummaries)
+			foreach (var line in plantSummaries)
 			{
 				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
 				sb.Append($"{line.EmployeeId},");
