@@ -317,6 +317,21 @@ namespace Payroll.UnitTest
 		#region Labor Code Tests
 
 		[TestMethod]
+		public void UnhandledLaborCode_ReturnsEmployeeHourlyRateCalc()
+		{
+			var laborCode = 0;
+
+			// Employee hourly rate calc returns Override
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M));
+
+			// Employee hourly rate calc returns Employee Hourly Rate
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M));
+
+			// Employee hourly rate calc returns Minimum Wage
+			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M));
+		}
+
+		[TestMethod]
 		public void LaborCode_125_Palletizing()
 		{
 			Rate125Tests((int)PlantLaborCode.Palletizing);
@@ -538,6 +553,44 @@ namespace Payroll.UnitTest
 
 			// Minimum Wage
 			Assert.AreEqual(18.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M));
+		}
+
+		[TestMethod]
+		public void LaborCode_602_Covid19PreScreening_Before20200427()
+		{
+			// Always returns the employee hourly rate
+			var laborCode = (int)PlantLaborCode.Covid19PreScreening;
+			var shiftDate = new DateTime(2020, 4, 26);
+
+			// Employee hourly rate calc returns Override
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: shiftDate));
+
+			// Employee hourly rate calc returns Employee Hourly Rate
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: shiftDate));
+
+			// Employee hourly rate calc return Minimum Wage
+			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: shiftDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_602_Covid19PreScreening_OnOrAfter20200427()
+		{
+			// Always returns 1.5 + [EmployeeHourlyRateCalc]
+			var laborCode = (int)PlantLaborCode.Covid19PreScreening;
+			var startDate = new DateTime(2020, 4, 27);
+			var endDate = startDate.AddYears(5);
+
+			// Employee hourly rate calc returns Override
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: startDate));
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: endDate));
+
+			// Employee hourly rate calc returns Employee Hourly Rate
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Employee hourly rate calc return Minimum Wage
+			Assert.AreEqual(17.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(17.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
 		}
 
 		[TestMethod]

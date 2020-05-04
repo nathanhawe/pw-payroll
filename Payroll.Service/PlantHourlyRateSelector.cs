@@ -110,7 +110,6 @@ namespace Payroll.Service
 
 			if (laborCode == (int)PlantLaborCode.Palletizing)
 			{
-				
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
@@ -118,37 +117,48 @@ namespace Payroll.Service
 			{
 				return Rate151(shiftDate, plant, calculatedEmployeeRate);
 			}
+			
 			if (laborCode == (int)PlantLaborCode.ReceivingAndMarkingGrapes)
 			{
 				// Same as 125
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
+			
 			if (laborCode == (int)PlantLaborCode.NightSanitation)
 			{
 				return Rate535(shiftDate, plant, calculatedEmployeeRate, minimumWage, H2ARate);
 			}
+			
 			if (laborCode == (int)PlantLaborCode.NightShiftSupervision)
 			{
 				// [536 Rate] = [EmployeeHourlyRateCalc] + 3
 				return (calculatedEmployeeRate + 3M);
 			}
+			
 			if (laborCode == (int)PlantLaborCode.NightShiftAuditor)
 			{
 				// [537 Rate] = [EmployeeHourlyRateCalc] + 1.5
 				return (calculatedEmployeeRate + 1.5M);
 			}
+			
 			if (laborCode == (int)PlantLaborCode.Receiving_Break)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
+			
 			if (laborCode == (int)PlantLaborCode.ReceivingFreshFruit)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
+			if (laborCode == (int)PlantLaborCode.Covid19PreScreening)
+			{
+				return Rate602(shiftDate, calculatedEmployeeRate);
+			}
+
 			return EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 		}
-		
+
 		/// <summary>
 		/// Returns the calculated rate for Palletizer.
 		/// </summary>
@@ -295,6 +305,24 @@ namespace Payroll.Service
 				{
 					return Math.Max(calculatedEmployeeRate, 14.77M);
 				}
+			}
+		}
+
+		/// <summary>
+		/// Returns the calculated rate for COVID-19 Pre-Screening
+		/// </summary>
+		/// <param name="shiftDate"></param>
+		/// <param name="calculatedEmployeeRate"></param>
+		/// <returns></returns>
+		private decimal Rate602(DateTime shiftDate, decimal calculatedEmployeeRate)
+		{
+			if (shiftDate < new DateTime(2020, 4, 27))
+			{
+				return calculatedEmployeeRate;
+			}
+			else
+			{
+				return calculatedEmployeeRate + 1.5M;
 			}
 		}
 
