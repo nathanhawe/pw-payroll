@@ -173,6 +173,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.MinimumAssurance_WeeklyOverTime));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Vacation));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Holiday));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Bereavement));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.SickLeave));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.WeeklyOverTime));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Adjustment));
@@ -316,6 +317,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Pieces));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Vacation));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Holiday));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Bereavement));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee3", shiftDate: new DateTime(2020, 2, 19), hoursWorked: .5M, totalGross: (7.5M + 0 + 0), payType: PayType.Adjustment));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee3", shiftDate: new DateTime(2020, 2, 19), hoursWorked: .5M, totalGross: (7.5M + 0 + 0), payType: PayType.WeeklyOverTime));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee3", shiftDate: new DateTime(2020, 2, 19), hoursWorked: .5M, totalGross: (7.5M + 0 + 0), payType: PayType.MinimumAssurance));
@@ -649,6 +651,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.MinimumAssurance_WeeklyOverTime));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Vacation));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Holiday));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Bereavement));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.SickLeave));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.WeeklyOverTime));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee6", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 11, totalGross: (0 + 0 + 123.45M), payType: PayType.Adjustment));
@@ -799,6 +802,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Pieces));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Vacation));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Holiday));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 18), hoursWorked: 4, totalGross: (60 + 0 + 0), payType: PayType.Bereavement));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee3", shiftDate: new DateTime(2020, 2, 19), hoursWorked: .5M, totalGross: (7.5M + 0 + 0), payType: PayType.Adjustment));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee3", shiftDate: new DateTime(2020, 2, 19), hoursWorked: .5M, totalGross: (7.5M + 0 + 0), payType: PayType.WeeklyOverTime));
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee3", shiftDate: new DateTime(2020, 2, 19), hoursWorked: .5M, totalGross: (7.5M + 0 + 0), payType: PayType.MinimumAssurance));
