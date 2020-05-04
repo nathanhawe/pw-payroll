@@ -55,7 +55,13 @@ namespace Payroll.UnitTest
 				new WorkerCountTest { WorkerCountThreshold = 33, ExpectedWage = 23M },
 				new WorkerCountTest { WorkerCountThreshold = 34, ExpectedWage = 23.5M },
 				new WorkerCountTest { WorkerCountThreshold = 35, ExpectedWage = 24M },
-				new WorkerCountTest { WorkerCountThreshold = 36, ExpectedWage = 24.5M }
+				new WorkerCountTest { WorkerCountThreshold = 36, ExpectedWage = 24.5M },
+				new WorkerCountTest { WorkerCountThreshold = 37, ExpectedWage = 24.5M },
+				new WorkerCountTest { WorkerCountThreshold = 38, ExpectedWage = 24.5M },
+				new WorkerCountTest { WorkerCountThreshold = 39, ExpectedWage = 24.5M },
+				new WorkerCountTest { WorkerCountThreshold = 40, ExpectedWage = 24.5M },
+				new WorkerCountTest { WorkerCountThreshold = 100, ExpectedWage = 24.5M }
+
 			};
 
 			foreach (var test in tests)
