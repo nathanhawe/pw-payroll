@@ -83,7 +83,8 @@ namespace Payroll.Service
 					|| x.PayType == PayType.ReportingPay
 					|| x.PayType == PayType.CompTime
 					|| x.PayType == PayType.Vacation
-					|| x.PayType == PayType.Holiday))
+					|| x.PayType == PayType.Holiday
+					|| x.PayType == PayType.Bereavement))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
 			_context.UpdateRange(hourlyLines);
@@ -302,7 +303,8 @@ namespace Payroll.Service
 					|| x.PayType == PayType.CompTime
 					|| x.PayType == PayType.Vacation
 					|| x.PayType == PayType.Holiday
-					|| x.PayType == PayType.SickLeave))
+					|| x.PayType == PayType.SickLeave
+					|| x.PayType == PayType.Bereavement))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
 			_context.UpdateRange(hourlyLines);
@@ -488,7 +490,8 @@ namespace Payroll.Service
 					|| x.PayType == PayType.ReportingPay
 					|| x.PayType == PayType.CompTime
 					|| x.PayType == PayType.Vacation
-					|| x.PayType == PayType.Holiday))
+					|| x.PayType == PayType.Holiday
+					|| x.PayType == PayType.Bereavement))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
 			_context.UpdateRange(hourlyLines);
@@ -724,7 +727,8 @@ namespace Payroll.Service
 					|| x.PayType == PayType.CompTime
 					|| x.PayType == PayType.Vacation
 					|| x.PayType == PayType.Holiday
-					|| x.PayType == PayType.SickLeave))
+					|| x.PayType == PayType.SickLeave
+					|| x.PayType == PayType.Bereavement))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
 			_context.UpdateRange(hourlyLines);

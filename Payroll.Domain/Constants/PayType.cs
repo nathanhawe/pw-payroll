@@ -20,6 +20,7 @@ namespace Payroll.Domain.Constants
 		public const string Vacation = "7-Vacation";
 		public const string Holiday = "7.1-Holiday";
 		public const string SickLeave = "7.2-Sick Leave";
+		public const string Bereavement = "7.3-Bereavement";
 		public const string CBDaily = "8.1-CB Daily Rate";
 		public const string CBPerWorker = "8.2-CB Per Worker Rate";
 		public const string CBHourlyTrees = "8.3-CB Hourly Trees";

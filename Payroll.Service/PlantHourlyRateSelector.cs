@@ -96,6 +96,7 @@ namespace Payroll.Service
 				&& payType != PayType.CompTime 
 				&& payType != PayType.ReportingPay
 				&& payType != PayType.Holiday
+				&& payType != PayType.Bereavement
 				&& payType != PayType.Vacation
 				&& payType != PayType.SpecialAdjustment)
 			{

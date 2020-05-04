@@ -157,6 +157,12 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void PayTypeBereavement_ReturnsNonZero()
+		{
+			Assert.IsTrue(0 < DefaultTest(payType: Payroll.Domain.Constants.PayType.Bereavement));
+		}
+
+		[TestMethod]
 		public void PayTypeSickLeave_ReturnsZero()
 		{
 			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.SickLeave));
