@@ -10,7 +10,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Creates weekly summaries from ranch daily summaries.
 	/// </summary>
-	public class RanchWeeklySummaryCalculator
+	public class RanchWeeklySummaryCalculator : IRanchWeeklySummaryCalculator
 	{
 		private readonly IRoundingService _roundingService = new RoundingService();
 

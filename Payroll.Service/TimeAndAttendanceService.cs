@@ -12,28 +12,10 @@ namespace Payroll.Service
 	/// <summary>
 	/// Manages the calculation workflow
 	/// </summary>
-	public class TimeAndAttendanceService
+	public class TimeAndAttendanceService : ITimeAndAttendanceService
 	{
-		private Data.PayrollContext _context;
-
-		private CrewBossPayService _crewBossPayService;
-		private PaidSickLeaveService _paidSickLeaveService;
-		private GrossFromHoursCalculator _grossFromHoursCalculator;
-		private GrossFromPiecesCalculator _grossFromPiecesCalculator;
-		private GrossFromIncentiveCalculator _grossFromIncentiveCalculator;
-		private TotalGrossCalculator _totalGrossCalculator;
-		private DailySummaryCalculator _dailySummaryCalculator;
-		private RanchWeeklySummaryCalculator _ranchWeeklySummaryCalculator;
-		private PlantWeeklySummaryCalculator _plantWeeklySummaryCalculator;
-		private RanchDailyOTDTHoursCalculator _ranchDailyOverTimeHoursCalculator;
-		private PlantDailyOTDTHoursCalculator _plantDailyOTDTHoursCalculator;
-		private RanchWeeklyOTHoursCalculator _ranchWeeklyOverTimeHoursCalculator;
-		private PlantWeeklyOTHoursCalculator _plantWeeklyOverTimeHoursCalculator;
-		private RanchMinimumMakeUpCalculator _ranchMinimumMakeUpCalculator;
-		private PlantMinimumMakeUpCalculator _plantMinimumMakeUpCalculator;
-		private RanchSummaryService _ranchSummaryService;
-		private PlantSummaryService _plantSummaryService;
-		private IRoundingService _roundingService;
+		// Database context
+		private readonly Data.PayrollContext _context;
 
 		// Repositories
 		private readonly IPslTrackingDailyRepo _pslTrackingDailyRepo;
@@ -44,15 +26,88 @@ namespace Payroll.Service
 		private readonly IPlantPayrollRepo _plantPayrollRepo;
 		private readonly IPlantPayrollAdjustmentRepo _plantPayrollAdjustmentRepo;
 		private readonly IPlantSummariesRepo _plantSummariesRepo;
-		
 
+		// Services
+		private readonly IGrossFromHoursCalculator _grossFromHoursCalculator;
+		private readonly IGrossFromPiecesCalculator _grossFromPiecesCalculator;
+		private readonly IGrossFromIncentiveCalculator _grossFromIncentiveCalculator;
+		private readonly ITotalGrossCalculator _totalGrossCalculator;
+		private readonly IDailySummaryCalculator _dailySummaryCalculator;
+		private readonly IRoundingService _roundingService;
 
-		public TimeAndAttendanceService(CrewBossPayService crewBossPayService, PaidSickLeaveService paidSickLeaveService)
+		private readonly IPaidSickLeaveService _paidSickLeaveService;
+		private readonly ICrewBossPayService _crewBossPayService;
+		private readonly IRanchDailyOTDTHoursCalculator _ranchDailyOTDTHoursCalculator;
+		private readonly IRanchWeeklySummaryCalculator _ranchWeeklySummaryCalculator;
+		private readonly IRanchWeeklyOTHoursCalculator _ranchWeeklyOverTimeHoursCalculator;
+		private readonly IRanchMinimumMakeUpCalculator _ranchMinimumMakeUpCalculator;
+		private readonly IRanchSummaryService _ranchSummaryService;
+
+		private readonly IPlantDailyOTDTHoursCalculator _plantDailyOTDTHoursCalculator;
+		private readonly IPlantWeeklySummaryCalculator _plantWeeklySummaryCalculator;
+		private readonly IPlantWeeklyOTHoursCalculator _plantWeeklyOverTimeHoursCalculator;
+		private readonly IPlantMinimumMakeUpCalculator _plantMinimumMakeUpCalculator;
+		private readonly IPlantSummaryService _plantSummaryService;
+
+		public TimeAndAttendanceService(
+			Data.PayrollContext payrollContext,
+			IPslTrackingDailyRepo pslTrackingDailyRepo,
+			ICrewBossPayRepo crewBossPayRepo,
+			IRanchPayrollRepo ranchPayrollRepo,
+			IRanchPayrollAdjustmentRepo ranchPayrollAdjustmentRepo,
+			IRanchSummariesRepo ranchSummariesRepo,
+			IPlantPayrollRepo plantPayrollRepo,
+			IPlantPayrollAdjustmentRepo plantPayrollAdjustmentRepo,
+			IPlantSummariesRepo plantSummariesRepo,
+			IGrossFromHoursCalculator grossFromHoursCalculator,
+			IGrossFromPiecesCalculator grossFromPiecesCalculator,
+			IGrossFromIncentiveCalculator grossFromIncentiveCalculator,
+			ITotalGrossCalculator totalGrossCalculator,
+			IDailySummaryCalculator dailySummaryCalculator,
+			IRoundingService roundingService,
+			IPaidSickLeaveService paidSickLeaveService,
+			ICrewBossPayService crewBossPayService,
+			IRanchDailyOTDTHoursCalculator ranchDailyOTDTHoursCalculator,
+			IRanchWeeklySummaryCalculator ranchWeeklySummaryCalculator,
+			IRanchWeeklyOTHoursCalculator ranchWeeklyOTHoursCalculator,
+			IRanchMinimumMakeUpCalculator ranchMinimumMakeUpCalculator,
+			IRanchSummaryService ranchSummaryService,
+			IPlantDailyOTDTHoursCalculator plantDailyOTDTHoursCalculator,
+			IPlantWeeklySummaryCalculator plantWeeklySummaryCalculator,
+			IPlantWeeklyOTHoursCalculator plantWeeklyOTHoursCalculator,
+			IPlantMinimumMakeUpCalculator plantMinimumMakeUpCalculator,
+			IPlantSummaryService plantSummaryService)
 		{
-			_crewBossPayService = crewBossPayService ?? throw new ArgumentNullException(nameof(crewBossPayService));
+			_context = payrollContext ?? throw new ArgumentNullException(nameof(payrollContext));
+			_pslTrackingDailyRepo = pslTrackingDailyRepo ?? throw new ArgumentNullException(nameof(pslTrackingDailyRepo));
+			_crewBossPayRepo = crewBossPayRepo ?? throw new ArgumentNullException(nameof(crewBossPayRepo));
+			_ranchPayrollRepo = ranchPayrollRepo ?? throw new ArgumentNullException(nameof(ranchPayrollRepo));
+			_ranchPayrollAdjustmentRepo = ranchPayrollAdjustmentRepo ?? throw new ArgumentNullException(nameof(ranchPayrollAdjustmentRepo));
+			_ranchSummariesRepo = ranchSummariesRepo ?? throw new ArgumentNullException(nameof(ranchSummariesRepo));
+			_plantPayrollRepo = plantPayrollRepo ?? throw new ArgumentNullException(nameof(plantPayrollRepo));
+			_plantPayrollAdjustmentRepo = plantPayrollAdjustmentRepo ?? throw new ArgumentNullException(nameof(plantPayrollAdjustmentRepo));
+			_plantSummariesRepo = plantSummariesRepo ?? throw new ArgumentNullException(nameof(plantSummariesRepo));
+			_grossFromHoursCalculator = grossFromHoursCalculator ?? throw new ArgumentNullException(nameof(grossFromHoursCalculator));
+			_grossFromPiecesCalculator = grossFromPiecesCalculator ?? throw new ArgumentNullException(nameof(grossFromPiecesCalculator));
+			_grossFromIncentiveCalculator = grossFromIncentiveCalculator ?? throw new ArgumentNullException(nameof(grossFromIncentiveCalculator));
+			_totalGrossCalculator = totalGrossCalculator ?? throw new ArgumentNullException(nameof(totalGrossCalculator));
+			_dailySummaryCalculator = dailySummaryCalculator ?? throw new ArgumentNullException(nameof(dailySummaryCalculator));
+			_roundingService = roundingService ?? throw new ArgumentNullException(nameof(roundingService));
 			_paidSickLeaveService = paidSickLeaveService ?? throw new ArgumentNullException(nameof(paidSickLeaveService));
+			_crewBossPayService = crewBossPayService ?? throw new ArgumentNullException(nameof(crewBossPayService));
+			_ranchDailyOTDTHoursCalculator = ranchDailyOTDTHoursCalculator ?? throw new ArgumentNullException(nameof(ranchDailyOTDTHoursCalculator));
+			_ranchWeeklySummaryCalculator = ranchWeeklySummaryCalculator ?? throw new ArgumentNullException(nameof(ranchWeeklySummaryCalculator));
+			_ranchWeeklyOverTimeHoursCalculator = ranchWeeklyOTHoursCalculator ?? throw new ArgumentNullException(nameof(ranchWeeklyOTHoursCalculator));
+			_ranchMinimumMakeUpCalculator = ranchMinimumMakeUpCalculator ?? throw new ArgumentNullException(nameof(ranchMinimumMakeUpCalculator));
+			_ranchSummaryService = ranchSummaryService ?? throw new ArgumentNullException(nameof(ranchSummaryService));
+			_plantDailyOTDTHoursCalculator = plantDailyOTDTHoursCalculator ?? throw new ArgumentNullException(nameof(plantDailyOTDTHoursCalculator));
+			_plantWeeklySummaryCalculator = plantWeeklySummaryCalculator ?? throw new ArgumentNullException(nameof(plantWeeklySummaryCalculator));
+			_plantWeeklyOverTimeHoursCalculator = plantWeeklyOTHoursCalculator ?? throw new ArgumentNullException(nameof(plantWeeklyOTHoursCalculator));
+			_plantMinimumMakeUpCalculator = plantMinimumMakeUpCalculator ?? throw new ArgumentNullException(nameof(plantMinimumMakeUpCalculator));
+			_plantSummaryService = plantSummaryService ?? throw new ArgumentNullException(nameof(plantSummaryService));
 
 		}
+
 		public void PerformCalculations(int batchId)
 		{
 			var batch = _context.Batches.Where(x => x.Id == batchId).FirstOrDefault();
@@ -66,7 +121,7 @@ namespace Payroll.Service
 			}
 		}
 
-		public void PerformPlantCalculations(Batch batch)
+		private void PerformPlantCalculations(Batch batch)
 		{
 			var company = Company.Plants;
 
@@ -155,7 +210,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.MinimumAssurance,
-				OtherGross = x.Gross
+				OtherGross = x.Gross,
+				BatchId = batch.Id
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
 			_context.AddRange(minimumMakeUpRecords);
@@ -178,6 +234,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
+				BatchId = batch.Id
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -195,6 +252,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
+				BatchId = batch.Id
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
@@ -212,7 +270,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours
+				HoursWorked = x.OverTimeHours,
+				BatchId = batch.Id
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
@@ -252,7 +311,7 @@ namespace Payroll.Service
 
 			/* Create Summaries */
 			var summaries = _plantSummaryService.CreateSummariesForBatch(batch.Id);
-			_context.Add(summaries);
+			_context.AddRange(summaries);
 			_context.SaveChanges();
 
 			/* Update records to Quick Base */
@@ -289,8 +348,6 @@ namespace Payroll.Service
 
 		private void CalculatePlantAdjustments(int batchId, string company)
 		{
-			DateTime weekendOfAdjustmentPaid = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId).OrderByDescending(x => x.WeekEndOfAdjustmentPaid).FirstOrDefault()?.WeekEndOfAdjustmentPaid ?? new DateTime(2000, 1, 1);
-
 			/* Gross Calculations */
 			// Hourly
 			// Include sick leave to be calculated as we expect to be provided an "Old Hourly Rate" instead of figuring
@@ -332,7 +389,7 @@ namespace Payroll.Service
 			// Additionally it selects the last of plant sorting - I believe - on the Quick Base Record ID.
 			// This needs to be double checked before going to production and the actual rules for the calculation should be confirmed.
 			// The effective daily rate is not used in ranches but is used in plants for the purposes of minimum make up.
-			var dailySummaries = _dailySummaryCalculator.GetDailySummaries(batchId, company);
+			var dailySummaries = _dailySummaryCalculator.GetDailySummariesFromAdjustments(batchId, company);
 
 			// Calculate OT/DT/7th Day Hours
 			// This uses the information in the daily summary to correctly calculate how many hours are over time and double time if any.
@@ -348,7 +405,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.MinimumAssurance,
-				OtherGross = x.Gross
+				OtherGross = x.Gross,
+				BatchId = batchId
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
 			_context.AddRange(minimumMakeUpRecords);
@@ -371,6 +429,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
+				BatchId = batchId
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -388,6 +447,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
+				BatchId = batchId
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
@@ -405,7 +465,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours
+				HoursWorked = x.OverTimeHours,
+				BatchId = batchId
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
@@ -444,20 +505,23 @@ namespace Payroll.Service
 			/* Create new Plant Payroll Lines for all adjustments */
 			var adjustmentLines = _context.PlantAdjustmentLines
 				.Where(x => x.BatchId == batchId)
-				.GroupBy(x => new { x.EmployeeId, x.WeekEndDate }, (key, group) => new
+				.GroupBy(x => new { x.EmployeeId, x.WeekEndDate, x.IsOriginal }, (key, group) => new
+				{
+					key.EmployeeId,
+					key.WeekEndDate,
+					key.IsOriginal,
+					Gross = group.Sum(s => s.TotalGross)
+				})
+				.ToList()
+				.GroupBy(x => new { x.EmployeeId, x.WeekEndDate }, (key, group) => new PlantPayLine
 				{
 					EmployeeId = key.EmployeeId,
 					WeekEndDate = key.WeekEndDate,
-					Gross = group.Select(g => g.TotalGross * (g.IsOriginal ? -1 : 1)).Sum()
-				})
-				.Select(x => new PlantPayLine
-				{
-					EmployeeId = x.EmployeeId,
-					WeekEndDate = x.WeekEndDate,
-					ShiftDate = x.WeekEndDate,
+					ShiftDate = key.WeekEndDate,
 					PayType = PayType.Adjustment,
-					OtherGross = x.Gross,
-					TotalGross = x.Gross
+					OtherGross = group.Sum(s => s.Gross * (s.IsOriginal ? -1 : 1)),
+					TotalGross = group.Sum(s => s.Gross * (s.IsOriginal ? -1 : 1)),
+					BatchId = batchId
 				})
 				.ToList();
 			_context.AddRange(adjustmentLines);
@@ -465,7 +529,7 @@ namespace Payroll.Service
 		}
 
 
-		public void PerformRanchCalculations(Batch batch)
+		private void PerformRanchCalculations(Batch batch)
 		{
 			var company = Company.Ranches;
 
@@ -545,7 +609,7 @@ namespace Payroll.Service
 
 			// Calculate OT/DT/7th Day Hours
 			// This uses the information in the daily summary to correctly calculate how many hours are over time and double time if any.
-			_ranchDailyOverTimeHoursCalculator.SetDailyOTDTHours(dailySummaries);
+			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
 
 			// Create Weekly Summaries groups all of the daily summaries by Employee, Week End Date, and Minimum Wage and summarizes the
 			// different types of hours for the week.  This information is used to figure out the effective hourly rate and create minimum
@@ -561,7 +625,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.MinimumAssurance,
-				OtherGross = x.Gross
+				OtherGross = x.Gross,
+				BatchId = batch.Id
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
 			_context.AddRange(minimumMakeUpRecords);
@@ -577,6 +642,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
+				BatchId = batch.Id
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -599,6 +665,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
+				BatchId = batch.Id
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
@@ -621,7 +688,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours
+				HoursWorked = x.OverTimeHours,
+				BatchId = batch.Id
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
@@ -676,7 +744,7 @@ namespace Payroll.Service
 
 			/* Create Summaries */
 			var summaries = _ranchSummaryService.CreateSummariesForBatch(batch.Id);
-			_context.Add(summaries);
+			_context.AddRange(summaries);
 			_context.SaveChanges();
 
 			/* Update records to Quick Base */
@@ -760,7 +828,7 @@ namespace Payroll.Service
 
 			// Calculate OT/DT/7th Day Hours
 			// This uses the information in the daily summary to correctly calculate how many hours are over time and double time if any.
-			_ranchDailyOverTimeHoursCalculator.SetDailyOTDTHours(dailySummaries);
+			_ranchDailyOTDTHoursCalculator.SetDailyOTDTHours(dailySummaries);
 
 			// Create Weekly Summaries groups all of the daily summaries by Employee, Week End Date, and Minimum Wage and summarizes the
 			// different types of hours for the week.  This information is used to figure out the effective hourly rate and create minimum
@@ -776,7 +844,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.MinimumAssurance,
-				OtherGross = x.Gross
+				OtherGross = x.Gross,
+				BatchId = batchId
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
 			_context.AddRange(minimumMakeUpRecords);
@@ -792,6 +861,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
+				BatchId = batchId
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -814,6 +884,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
+				BatchId = batchId
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
@@ -836,7 +907,8 @@ namespace Payroll.Service
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours
+				HoursWorked = x.OverTimeHours,
+				BatchId = batchId
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
@@ -890,20 +962,23 @@ namespace Payroll.Service
 			/* Create new Ranch Payroll Lines for all adjustments */
 			var adjustmentLines = _context.RanchAdjustmentLines
 				.Where(x => x.BatchId == batchId)
-				.GroupBy(x => new { x.EmployeeId, x.WeekEndDate }, (key, group) => new
+				.GroupBy(x => new { x.EmployeeId, x.WeekEndDate, x.IsOriginal }, (key, group) => new
+				{
+					key.EmployeeId,
+					key.WeekEndDate,
+					key.IsOriginal,
+					Gross = group.Sum(s => s.TotalGross)
+				})
+				.ToList()
+				.GroupBy(x => new { x.EmployeeId, x.WeekEndDate }, (key, group) => new RanchPayLine
 				{
 					EmployeeId = key.EmployeeId,
 					WeekEndDate = key.WeekEndDate,
-					Gross = group.Select(g => g.TotalGross * (g.IsOriginal ? -1 : 1)).Sum()
-				})
-				.Select(x => new RanchPayLine
-				{
-					EmployeeId = x.EmployeeId,
-					WeekEndDate = x.WeekEndDate,
-					ShiftDate = x.WeekEndDate,
+					ShiftDate = key.WeekEndDate,
 					PayType = PayType.Adjustment,
-					OtherGross = x.Gross,
-					TotalGross = x.Gross
+					OtherGross = group.Sum(s => s.Gross * (s.IsOriginal ? -1 : 1)),
+					TotalGross = group.Sum(s => s.Gross * (s.IsOriginal ? -1 : 1)),
+					BatchId = batchId
 				})
 				.ToList();
 			_context.AddRange(adjustmentLines);

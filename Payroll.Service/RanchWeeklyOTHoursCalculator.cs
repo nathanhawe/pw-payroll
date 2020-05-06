@@ -11,7 +11,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs weekly over time calculations for ranch weekly summaries.
 	/// </summary>
-	public class RanchWeeklyOTHoursCalculator : IWeeklyOTHoursCalculator
+	public class RanchWeeklyOTHoursCalculator : IRanchWeeklyOTHoursCalculator
 	{
 		private readonly IRoundingService _roundingService;
 

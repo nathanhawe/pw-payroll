@@ -5,7 +5,6 @@ using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Payroll.Service
 {
@@ -13,7 +12,7 @@ namespace Payroll.Service
 	/// Exposes database interactions with the PaidSickLeave table and performs 
 	/// PSL calculations.
 	/// </summary>
-	public class PaidSickLeaveService
+	public class PaidSickLeaveService : IPaidSickLeaveService
 	{
 		private readonly PayrollContext _context;
 		private readonly IRoundingService _roundingService;
@@ -89,24 +88,36 @@ namespace Payroll.Service
 			// For each PSL within startDate and endDate, figure out 90 day hour and gross totals
 			for (DateTime calculatingDate = startDate; calculatingDate <= endDate; calculatingDate = calculatingDate.AddDays(1))
 			{
-				// Retrieve all lines from 1 to 91 days in the past
-				// Group by EmployeeID, sum HoursWorked and TotalGross
-				tempPsl = _context.PaidSickLeaves
-					.Where(x =>
-						x.BatchId == batchId
-						&& x.Company == company
-						&& x.ShiftDate >= calculatingDate.AddDays(-91)
-						&& x.ShiftDate < calculatingDate
-						&& !x.IsDeleted)
+				tempPsl = (
+					from psl in _context.PaidSickLeaves
+					join sub in _context.PaidSickLeaves on new { psl.BatchId, psl.Company, psl.EmployeeId, ShiftDate = calculatingDate } equals new { sub.BatchId, sub.Company, sub.EmployeeId, sub.ShiftDate } into j
+					from sub in j.DefaultIfEmpty()
+					where
+						psl.BatchId == batchId
+						&& psl.Company == company
+						&& psl.ShiftDate >= calculatingDate.AddDays(-91)
+						&& psl.ShiftDate < calculatingDate
+						&& psl.IsDeleted == false
+					select new
+					{
+						psl.EmployeeId,
+						psl.ShiftDate,
+						psl.Hours,
+						psl.Gross,
+						sub.Id
+					})
 					.GroupBy(g => new { g.EmployeeId }, (key, group) => new PaidSickLeave
 					{
+						BatchId = batchId,
 						EmployeeId = key.EmployeeId,
 						ShiftDate = calculatingDate,
 						Company = company,
 						NinetyDayHours = group.Sum(x => x.Hours),
-						NinetyDayGross = group.Sum(x => x.Gross)
+						NinetyDayGross = group.Sum(x => x.Gross),
+						Id = group.Max(x => x.Id)
 					})
 					.ToList();
+
 				paidSickLeaves.AddRange(tempPsl);
 			}
 
@@ -145,20 +156,12 @@ namespace Payroll.Service
 		/// <param name="type"></param>
 		private void UpdateOrInsert(List<PaidSickLeave> paidSickLeaves, UpdateOrInsertType type)
 		{
-			var toUpdate = new List<PaidSickLeave>();
-			var toInsert = new List<PaidSickLeave>();
 			PaidSickLeave existingSickLeave;
 
 			foreach (var psl in paidSickLeaves)
 			{
-				existingSickLeave = _context.PaidSickLeaves
-					.Where(x =>
-						x.EmployeeId == psl.EmployeeId
-						&& x.ShiftDate == psl.ShiftDate
-						&& x.Company == psl.Company
-						&& !x.IsDeleted)
-					.FirstOrDefault();
-
+				existingSickLeave = (psl.Id > 0 ? _context.PaidSickLeaves.Find(psl.Id) : null);
+				
 				if (existingSickLeave != null)
 				{
 					if (type == UpdateOrInsertType.Tracking || type == UpdateOrInsertType.All)
@@ -194,30 +197,44 @@ namespace Payroll.Service
 		{
 			// Retrieve ranch paylines with Regular, Pieces, Hourly Plus Pieces, and Crew Boss pay types
 			// Group all pay lines by employee and date, sum hours, sum gross.
-			var paidSickLeaves = _context.RanchPayLines
-					.Where(x => x.BatchId == batchId &&
-						(
-							x.PayType == PayType.Regular
-							|| x.PayType == PayType.Pieces
-							|| x.PayType == PayType.HourlyPlusPieces
-							|| x.PayType == PayType.CBCommission
-							|| x.PayType == PayType.CBDaily
-							|| x.PayType == PayType.CBHourlyTrees
-							|| x.PayType == PayType.CBHourlyVines
-							|| x.PayType == PayType.CBPerWorker
-							|| x.PayType == PayType.CBSouthDaily
-							|| x.PayType == PayType.CBSouthHourly)
-						&& !x.IsDeleted)
-					.GroupBy(g => new { g.EmployeeId, g.ShiftDate }, (key, group) => new PaidSickLeave
-					{
-						BatchId = batchId,
-						EmployeeId = key.EmployeeId,
-						ShiftDate = key.ShiftDate,
-						Hours = group.Sum(x => x.HoursWorked),
-						Gross = group.Sum(x => x.TotalGross),
-						Company = Company.Ranches
-					})
-					.ToList();
+			var paidSickLeaves = (
+				from payLine in _context.RanchPayLines
+				join psl in _context.PaidSickLeaves on new { payLine.BatchId, payLine.EmployeeId, payLine.ShiftDate, IsDeleted = false } equals new { psl.BatchId, psl.EmployeeId, psl.ShiftDate, psl.IsDeleted } into j
+				from psl in j.DefaultIfEmpty()
+				where
+					payLine.BatchId == batchId
+					&& (
+						payLine.PayType == PayType.Regular
+						|| payLine.PayType == PayType.Pieces
+						|| payLine.PayType == PayType.HourlyPlusPieces
+						|| payLine.PayType == PayType.CBCommission
+						|| payLine.PayType == PayType.CBDaily
+						|| payLine.PayType == PayType.CBHourlyTrees
+						|| payLine.PayType == PayType.CBHourlyVines
+						|| payLine.PayType == PayType.CBPerWorker
+						|| payLine.PayType == PayType.CBSouthDaily
+						|| payLine.PayType == PayType.CBSouthHourly
+						)
+					&& payLine.IsDeleted == false
+				select new
+				{
+					payLine.EmployeeId,
+					payLine.ShiftDate,
+					payLine.HoursWorked,
+					payLine.TotalGross,
+					PaidSickLeaveId = psl.Id
+				})
+				.GroupBy(g => new { g.EmployeeId, g.ShiftDate }, (key, group) => new PaidSickLeave
+				{
+					BatchId = batchId,
+					EmployeeId = key.EmployeeId,
+					ShiftDate = key.ShiftDate,
+					Hours = group.Sum(x => x.HoursWorked),
+					Gross = group.Sum(x => x.TotalGross),
+					Id = group.Max(x => x.PaidSickLeaveId),
+					Company = Company.Ranches
+				})
+				.ToList();
 
 			UpdateOrInsert(paidSickLeaves, UpdateOrInsertType.Tracking);
 		}
@@ -230,22 +247,37 @@ namespace Payroll.Service
 		{
 			// Retrieve plant paylines with Regular and Pieces pay types only.
 			// Group all pay lines by employee and date, sum hours, sum gross.
-			var paidSickLeaves = _context.PlantPayLines
-					.Where(x => x.BatchId == batchId &&
-						(
-							x.PayType == PayType.Regular
-							|| x.PayType == PayType.Pieces)
-						&& !x.IsDeleted)
-					.GroupBy(g => new { g.EmployeeId, g.ShiftDate }, (key, group) => new PaidSickLeave
-					{
-						BatchId = batchId,
-						EmployeeId = key.EmployeeId,
-						ShiftDate = key.ShiftDate,
-						Hours = group.Sum(x => x.HoursWorked),
-						Gross = group.Sum(x => x.TotalGross),
-						Company = Company.Plants
-					})
-					.ToList();
+			var paidSickLeaves = (
+				from payLine in _context.PlantPayLines
+				join psl in _context.PaidSickLeaves on new { payLine.BatchId, payLine.EmployeeId, payLine.ShiftDate, IsDeleted = false } equals new { psl.BatchId, psl.EmployeeId, psl.ShiftDate, psl.IsDeleted } into j
+				from psl in j.DefaultIfEmpty()
+				where
+					payLine.BatchId == batchId
+					&& (
+						payLine.PayType == PayType.Regular
+						|| payLine.PayType == PayType.Pieces
+						)
+					&& payLine.IsDeleted == false
+				select new
+				{
+					payLine.EmployeeId,
+					payLine.ShiftDate,
+					payLine.HoursWorked,
+					payLine.TotalGross,
+					PaidSickLeaveId = psl.Id
+				})
+				.GroupBy(g => new { g.EmployeeId, g.ShiftDate }, (key, group) => new PaidSickLeave
+				{
+					BatchId = batchId,
+					EmployeeId = key.EmployeeId,
+					ShiftDate = key.ShiftDate,
+					Hours = group.Sum(x => x.HoursWorked),
+					Gross = group.Sum(x => x.TotalGross),
+					Id = group.Max(x => x.PaidSickLeaveId),
+					Company = Company.Plants
+				})
+				.ToList();
+
 
 			UpdateOrInsert(paidSickLeaves, UpdateOrInsertType.Tracking);
 		}
@@ -256,19 +288,28 @@ namespace Payroll.Service
 		/// <param name="batchId"></param>
 		private void UpdateRanchUsage(int batchId)
 		{
-			// Retrieve ranch paylines with Sick Leave as the pay type
-			// Group by employee and shift date, sum hours worked.
-			var paidSickLeaves = _context.RanchPayLines
-				.Where(x =>
-					x.BatchId == batchId
-					&& x.PayType == PayType.SickLeave
-					&& !x.IsDeleted)
+			var paidSickLeaves = (
+				from payLine in _context.RanchPayLines
+				join psl in _context.PaidSickLeaves on new { payLine.BatchId, payLine.EmployeeId, payLine.ShiftDate, IsDeleted = false } equals new { psl.BatchId, psl.EmployeeId, psl.ShiftDate, psl.IsDeleted } into j
+				from psl in j.DefaultIfEmpty()
+				where
+					payLine.BatchId == batchId
+					&& payLine.PayType == PayType.SickLeave
+					&& payLine.IsDeleted == false
+				select new
+				{
+					payLine.EmployeeId,
+					payLine.ShiftDate,
+					payLine.HoursWorked,
+					PaidSickLeaveId = psl.Id
+				})
 				.GroupBy(g => new { g.EmployeeId, g.ShiftDate }, (key, group) => new PaidSickLeave
 				{
 					BatchId = batchId,
 					EmployeeId = key.EmployeeId,
 					ShiftDate = key.ShiftDate,
 					HoursUsed = group.Sum(x => x.HoursWorked),
+					Id = group.Max(x => x.PaidSickLeaveId),
 					Company = Company.Ranches
 				})
 				.ToList();
@@ -282,25 +323,33 @@ namespace Payroll.Service
 		/// <param name="batchId"></param>
 		private void UpdatePlantUsage(int batchId)
 		{
-			// Retrieve plant paylines with Sick Leave as the pay type
-			// Group by employee and shift date, sum hours worked.
-			var paidSickLeaves = _context.PlantPayLines
-				.Where(x =>
-					x.BatchId == batchId
-					&& x.PayType == PayType.SickLeave
-					&& !x.IsDeleted)
+			var paidSickLeaves = (
+				from payLine in _context.PlantPayLines
+				join psl in _context.PaidSickLeaves on new { payLine.BatchId, payLine.EmployeeId, payLine.ShiftDate, IsDeleted = false } equals new { psl.BatchId, psl.EmployeeId, psl.ShiftDate, psl.IsDeleted } into j
+				from psl in j.DefaultIfEmpty()
+				where
+					payLine.BatchId == batchId
+					&& payLine.PayType == PayType.SickLeave
+					&& payLine.IsDeleted == false
+				select new
+				{
+					payLine.EmployeeId,
+					payLine.ShiftDate,
+					payLine.HoursWorked,
+					PaidSickLeaveId = psl.Id
+				})
 				.GroupBy(g => new { g.EmployeeId, g.ShiftDate }, (key, group) => new PaidSickLeave
 				{
 					BatchId = batchId,
 					EmployeeId = key.EmployeeId,
 					ShiftDate = key.ShiftDate,
 					HoursUsed = group.Sum(x => x.HoursWorked),
+					Id = group.Max(x => x.PaidSickLeaveId),
 					Company = Company.Plants
 				})
 				.ToList();
 
 			UpdateOrInsert(paidSickLeaves, UpdateOrInsertType.Usage);
 		}
-
 	}
 }

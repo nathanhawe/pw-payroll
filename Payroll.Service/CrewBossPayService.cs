@@ -11,17 +11,17 @@ namespace Payroll.Service
 	/// <summary>
 	/// Process crew boss pay.
 	/// </summary>
-	public class CrewBossPayService
+	public class CrewBossPayService : Interface.ICrewBossPayService
 	{
 		private readonly PayrollContext _context;
-		private readonly CrewBossWageSelector _wageSelector;
+		private readonly ICrewBossWageSelector _wageSelector;
 		private readonly IRoundingService _roundingService;
 
 		public decimal SouthDailyPay { get; } = 170.05M;
 
 		public CrewBossPayService(
 			PayrollContext context, 
-			CrewBossWageSelector wageSelector, 
+			ICrewBossWageSelector wageSelector, 
 			IRoundingService roundingService)
 		{
 			_context = context ?? throw new ArgumentNullException(nameof(context));

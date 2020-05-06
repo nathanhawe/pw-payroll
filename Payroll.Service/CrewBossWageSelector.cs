@@ -9,7 +9,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Retrieves crew boss wages based on worker count.
 	/// </summary>
-	public class CrewBossWageSelector
+	public class CrewBossWageSelector : Interface.ICrewBossWageSelector
 	{
 		private readonly PayrollContext _context;
 

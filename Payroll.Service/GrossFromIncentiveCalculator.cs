@@ -10,7 +10,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs incentive gross calculation on plant pay lines.
 	/// </summary>
-	public class GrossFromIncentiveCalculator
+	public class GrossFromIncentiveCalculator : IGrossFromIncentiveCalculator
 	{
 		private readonly IRoundingService _roundingService;
 

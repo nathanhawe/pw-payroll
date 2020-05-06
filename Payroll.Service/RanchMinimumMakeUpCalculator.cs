@@ -9,7 +9,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs minimum make up calculations for ranch weekly summaries.
 	/// </summary>
-	public class RanchMinimumMakeUpCalculator
+	public class RanchMinimumMakeUpCalculator : IRanchMinimumMakeUpCalculator
 	{
 		private readonly IRoundingService _roundingService;
 

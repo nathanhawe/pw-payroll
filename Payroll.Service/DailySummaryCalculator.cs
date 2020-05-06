@@ -12,7 +12,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Creates <c>DailySummary</c> objects.
 	/// </summary>
-	public class DailySummaryCalculator
+	public class DailySummaryCalculator : IDailySummaryCalculator
 	{
 		private readonly PayrollContext _context;
 		private readonly IMinimumWageService _minimumWageService;

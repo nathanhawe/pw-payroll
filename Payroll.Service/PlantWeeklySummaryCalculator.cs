@@ -10,7 +10,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Creates weekly summaries from plant daily summaries.
 	/// </summary>
-	public class PlantWeeklySummaryCalculator
+	public class PlantWeeklySummaryCalculator : IPlantWeeklySummaryCalculator
 	{
 		private readonly IRoundingService _roundingService;
 

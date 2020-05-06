@@ -9,7 +9,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Perform pieces gross calculation for pay and adjustment lines.
 	/// </summary>
-	public class GrossFromPiecesCalculator
+	public class GrossFromPiecesCalculator : IGrossFromPiecesCalculator
 	{
 		private readonly IRoundingService _roundingService;
 

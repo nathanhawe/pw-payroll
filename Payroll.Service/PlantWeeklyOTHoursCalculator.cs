@@ -9,7 +9,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs weekly over time hours calculations for plant weekly summaries.
 	/// </summary>
-	public class PlantWeeklyOTHoursCalculator : IWeeklyOTHoursCalculator
+	public class PlantWeeklyOTHoursCalculator : IPlantWeeklyOTHoursCalculator
 	{
 		private decimal WeeklyOverTimeThreshold { get; } = 40M;
 		private readonly IRoundingService _roundingService;

@@ -11,7 +11,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs daily over time and double time calculations for ranch pay and adjustment daily summaries.
 	/// </summary>
-	public class RanchDailyOTDTHoursCalculator : IDailyOTDTHoursCalculator
+	public class RanchDailyOTDTHoursCalculator : IRanchDailyOTDTHoursCalculator
 	{
 		public decimal OfficeRegularOverTimeThreshold { get; } = 8;
 		public decimal OfficeRegularDoubleTimeThreshold { get; } = 12;

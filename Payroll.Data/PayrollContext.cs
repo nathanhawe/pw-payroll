@@ -1,21 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Payroll.Domain;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Payroll.Data
 {
 	public class PayrollContext : DbContext
 	{
-		public PayrollContext()
-		{
-
-		}
-		public PayrollContext(DbContextOptions<PayrollContext> options)
-			: base(options)
-		{
-
-		}
-
 		private DateTime DefaultDate { get; set; } = new DateTime(2000, 1, 1);
 
 		public DbSet<Batch> Batches { get; set; }
@@ -30,6 +22,53 @@ namespace Payroll.Data
 		public DbSet<PlantPayLine> PlantPayLines { get; set; }
 		public DbSet<PlantAdjustmentLine> PlantAdjustmentLines { get; set; }
 		public DbSet<PlantSummary> PlantSummaries { get; set; }
+
+		public PayrollContext()
+		{
+
+		}
+		public PayrollContext(DbContextOptions<PayrollContext> options)
+			: base(options)
+		{
+
+		}
+
+		public override int SaveChanges(bool acceptAllChangesOnSuccess)
+		{
+			SetRecordHeaders();
+			return base.SaveChanges(acceptAllChangesOnSuccess);
+		}
+
+		public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+		{
+			SetRecordHeaders();
+			return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+		}
+
+		protected void SetRecordHeaders()
+		{
+			var entries = ChangeTracker.Entries();
+			var utcNow = DateTime.UtcNow;
+
+			foreach(var entry in entries)
+			{
+				if(entry.Entity is Record trackable)
+				{
+					switch (entry.State)
+					{
+						case EntityState.Modified:
+							trackable.DateModified = utcNow;
+							entry.Property(nameof(trackable.DateCreated)).IsModified = false;
+							break;
+						case EntityState.Added:
+							trackable.DateCreated = utcNow;
+							trackable.DateModified = utcNow;
+							break;
+					}
+				}
+			}
+
+		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

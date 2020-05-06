@@ -10,7 +10,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Generates ranch summaries.
 	/// </summary>
-	public class RanchSummaryService
+	public class RanchSummaryService : Interface.IRanchSummaryService
 	{
 		private readonly PayrollContext _context;
 

@@ -10,7 +10,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs gross from hours worked calculations on pay and adjustment lines.
 	/// </summary>
-	public class GrossFromHoursCalculator
+	public class GrossFromHoursCalculator : IGrossFromHoursCalculator
 	{
 		private readonly IRanchHourlyRateSelector _ranchHourlyRateSelector;
 		private readonly IPlantHourlyRateSelector _plantHourlyRateSelector;

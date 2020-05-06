@@ -9,7 +9,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs minimum make up calculations for plant daily summaries.
 	/// </summary>
-	public class PlantMinimumMakeUpCalculator
+	public class PlantMinimumMakeUpCalculator : IPlantMinimumMakeUpCalculator
 	{
 		private readonly IRoundingService _roundingService;
 

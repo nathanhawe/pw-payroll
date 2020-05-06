@@ -54,7 +54,7 @@ namespace Payroll.Data.QuickBase
 		/// <returns></returns>
 		public XElement Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
 		{
-			var clist = $"{(int)CrewBossPayField.RecordId}.{(int)CrewBossPayField.LayoffRunId}.{(int)CrewBossPayField.ShiftDate}.{(int)CrewBossPayField.Crew}.{(int)CrewBossPayField.CBEmployeeNumber}.{(int)CrewBossPayField.CountOfWorkers}.{(int)CrewBossPayField.HoursWorkedByCB}.{(int)CrewBossPayField.HourlyRate}";
+			var clist = $"{(int)CrewBossPayField.RecordId}.{(int)CrewBossPayField.LayoffRunId}.{(int)CrewBossPayField.ShiftDate}.{(int)CrewBossPayField.Crew}.{(int)CrewBossPayField.EmployeeNumber}.{(int)CrewBossPayField.CountOfWorkers}.{(int)CrewBossPayField.HoursWorkedByCB}.{(int)CrewBossPayField.HourlyRate}";
 
 			// Build the CDATA string
 			var sb = new StringBuilder();
@@ -107,7 +107,7 @@ namespace Payroll.Data.QuickBase
 					
 					switch (fieldId)
 					{
-						case (int)CrewBossPayField.CBEmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)CrewBossPayField.EmployeeNumber: temp.EmployeeId = field.Value; break;
 						case (int)CrewBossPayField.CBPayMethod: temp.PayMethod = field.Value; break;
 						//case (int)CrewBossPayField.CountOfWorkers: temp.WorkerCount = ParseInt(field.Value) ?? 0; break;
 						case (int)CrewBossPayField.Crew: temp.Crew = ParseInt(field.Value) ?? 0; break;
@@ -130,7 +130,7 @@ namespace Payroll.Data.QuickBase
 		private string GetDoQueryClist()
 		{
 			var sb = new StringBuilder();
-			sb.Append($"{(int)CrewBossPayField.CBEmployeeNumber}.");
+			sb.Append($"{(int)CrewBossPayField.EmployeeNumber}.");
 			sb.Append($"{(int)CrewBossPayField.CBPayMethod}.");
 			sb.Append($"{(int)CrewBossPayField.Crew}.");
 			sb.Append($"{(int)CrewBossPayField.HoursWorkedByCB}.");

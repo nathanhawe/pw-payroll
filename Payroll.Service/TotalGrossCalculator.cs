@@ -2,16 +2,15 @@
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Payroll.Service
 {
 	/// <summary>
 	/// Performs total gross calculations on pay and adjustment lines.
 	/// </summary>
-	public class TotalGrossCalculator
+	public class TotalGrossCalculator : ITotalGrossCalculator
 	{
-		private IRoundingService _roundingService;
+		private readonly IRoundingService _roundingService;
 
 		public TotalGrossCalculator(IRoundingService roundingService)
 		{

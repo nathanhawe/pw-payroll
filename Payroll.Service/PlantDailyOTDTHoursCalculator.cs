@@ -10,7 +10,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Performs over time and double time hours calculation for plant pay and adjustment lines.
 	/// </summary>
-	public class PlantDailyOTDTHoursCalculator : IDailyOTDTHoursCalculator
+	public class PlantDailyOTDTHoursCalculator : IPlantDailyOTDTHoursCalculator
 	{
 		public decimal RegularOverTimeThreshold { get; } = 8;
 		public decimal RegularDoubleTimeThreshold { get; } = 12;

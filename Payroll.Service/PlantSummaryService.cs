@@ -10,7 +10,7 @@ namespace Payroll.Service
 	/// <summary>
 	/// Generates Plant Summaries
 	/// </summary>
-	public class PlantSummaryService
+	public class PlantSummaryService : Interface.IPlantSummaryService
 	{
 		private readonly PayrollContext _context;
 
