@@ -209,6 +209,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Plant = x.Crew,
 				PayType = PayType.MinimumAssurance,
 				OtherGross = x.Gross,
 				BatchId = batch.Id
@@ -232,6 +233,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Plant = x.Crew,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
 				BatchId = batch.Id
@@ -250,6 +252,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Plant = x.Crew,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
 				BatchId = batch.Id
@@ -269,6 +272,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
+				Plant = x.Crew,
 				PayType = PayType.WeeklyOverTime,
 				HoursWorked = x.OverTimeHours,
 				BatchId = batch.Id
@@ -348,6 +352,8 @@ namespace Payroll.Service
 
 		private void CalculatePlantAdjustments(int batchId, string company)
 		{
+			DateTime weekendOfAdjustmentPaid = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId).OrderByDescending(x => x.WeekEndOfAdjustmentPaid).FirstOrDefault()?.WeekEndOfAdjustmentPaid ?? new DateTime(2000, 1, 1);
+
 			/* Gross Calculations */
 			// Hourly
 			// Include sick leave to be calculated as we expect to be provided an "Old Hourly Rate" instead of figuring
@@ -404,9 +410,11 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Plant = x.Crew,
 				PayType = PayType.MinimumAssurance,
 				OtherGross = x.Gross,
-				BatchId = batchId
+				BatchId = batchId,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
 			_context.AddRange(minimumMakeUpRecords);
@@ -427,9 +435,11 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Plant = x.Crew,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
-				BatchId = batchId
+				BatchId = batchId,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -445,8 +455,10 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Plant = x.Crew,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid,
 				BatchId = batchId
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
@@ -464,9 +476,11 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
+				Plant = x.Crew,
 				PayType = PayType.WeeklyOverTime,
 				HoursWorked = x.OverTimeHours,
-				BatchId = batchId
+				BatchId = batchId,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
@@ -624,6 +638,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Crew = x.Crew,
 				PayType = PayType.MinimumAssurance,
 				OtherGross = x.Gross,
 				BatchId = batch.Id
@@ -640,6 +655,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Crew = x.Crew,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
 				BatchId = batch.Id
@@ -663,6 +679,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Crew = x.Crew,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
 				BatchId = batch.Id
@@ -687,6 +704,7 @@ namespace Payroll.Service
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
+				Crew = x.Crew,
 				PayType = PayType.WeeklyOverTime,
 				HoursWorked = x.OverTimeHours,
 				BatchId = batch.Id
@@ -799,7 +817,7 @@ namespace Payroll.Service
 					|| x.PayType == PayType.Bereavement))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
-			_context.UpdateRange(hourlyLines);
+			_context.RanchAdjustmentLines.UpdateRange(hourlyLines);
 			_context.SaveChanges();
 
 			// Pieces
@@ -809,13 +827,13 @@ namespace Payroll.Service
 					|| x.PayType == PayType.HourlyPlusPieces))
 				.ToList();
 			_grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
-			_context.UpdateRange(pieceLines);
+			_context.RanchAdjustmentLines.UpdateRange(pieceLines);
 			_context.SaveChanges();
 
 			// Total
 			var payLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal).ToList();
 			_totalGrossCalculator.CalculateTotalGross(payLines);
-			_context.UpdateRange(payLines);
+			_context.RanchAdjustmentLines.UpdateRange(payLines);
 			_context.SaveChanges();
 
 
@@ -838,30 +856,34 @@ namespace Payroll.Service
 			// Minimum Make Up is made by comparing the effective rate against minimum wage.  If minimum wage is greater than the effective rate, the difference
 			// should be used to create a minimum make up line and the higher of the two rates is used for OT, DT, etc.  When a week has multiple minimum wages, the
 			// the effective rate calculated against the higher minimum wage should be used as the weekly effective rate.
-			var minimumMakeUpRecords = _ranchMinimumMakeUpCalculator.GetMinimumMakeUps(weeklySummaries).Select(x => new RanchPayLine
+			var minimumMakeUpRecords = _ranchMinimumMakeUpCalculator.GetMinimumMakeUps(weeklySummaries).Select(x => new RanchAdjustmentLine
 			{
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Crew = x.Crew,
 				PayType = PayType.MinimumAssurance,
 				OtherGross = x.Gross,
-				BatchId = batchId
+				BatchId = batchId,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
-			_context.AddRange(minimumMakeUpRecords);
+			_context.RanchAdjustmentLines.AddRange(minimumMakeUpRecords);
 
 			/* WOT Hours */
 			var weeklyOt = _ranchWeeklyOverTimeHoursCalculator.GetWeeklyOTHours(weeklySummaries);
 
 			/* OT/DT Gross (Requires effective weekly rate) */
-			var overTimeRecords = dailySummaries.Where(x => x.OverTimeHours > 0).Select(x => new RanchPayLine
+			var overTimeRecords = dailySummaries.Where(x => x.OverTimeHours > 0).Select(x => new RanchAdjustmentLine
 			{
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Crew = x.Crew,
 				PayType = PayType.OverTime,
 				HoursWorked = x.OverTimeHours,
-				BatchId = batchId
+				BatchId = batchId,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -875,16 +897,18 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
-			_context.AddRange(overTimeRecords);
+			_context.RanchAdjustmentLines.AddRange(overTimeRecords);
 
-			var doubleTimeRecords = dailySummaries.Where(x => x.DoubleTimeHours > 0).Select(x => new RanchPayLine
+			var doubleTimeRecords = dailySummaries.Where(x => x.DoubleTimeHours > 0).Select(x => new RanchAdjustmentLine
 			{
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.ShiftDate,
+				Crew = x.Crew,
 				PayType = PayType.DoubleTime,
 				HoursWorked = x.DoubleTimeHours,
-				BatchId = batchId
+				BatchId = batchId,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
@@ -898,17 +922,19 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
-			_context.AddRange(doubleTimeRecords);
+			_context.RanchAdjustmentLines.AddRange(doubleTimeRecords);
 
 			/* WOT Gross (Requires effective weekly rate) */
-			var weeklyOverTimeRecords = weeklyOt.Where(x => x.OverTimeHours > 0).Select(x => new RanchPayLine
+			var weeklyOverTimeRecords = weeklyOt.Where(x => x.OverTimeHours > 0).Select(x => new RanchAdjustmentLine
 			{
 				EmployeeId = x.EmployeeId,
 				WeekEndDate = x.WeekEndDate,
 				ShiftDate = x.WeekEndDate,
+				Crew = x.Crew,
 				PayType = PayType.WeeklyOverTime,
 				HoursWorked = x.OverTimeHours,
-				BatchId = batchId
+				BatchId = batchId,
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
@@ -922,7 +948,7 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
-			_context.AddRange(weeklyOverTimeRecords);
+			_context.RanchAdjustmentLines.AddRange(weeklyOverTimeRecords);
 
 
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
@@ -981,7 +1007,7 @@ namespace Payroll.Service
 					BatchId = batchId
 				})
 				.ToList();
-			_context.AddRange(adjustmentLines);
+			_context.RanchPayLines.AddRange(adjustmentLines);
 			_context.SaveChanges();
 		}
 	}

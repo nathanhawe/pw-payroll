@@ -172,7 +172,8 @@ namespace Payroll.Service
 						|| x.PayType == PayType.CBHourlyVines
 						|| x.PayType == PayType.CBSouthDaily
 						|| x.PayType == PayType.CBSouthHourly
-						|| x.PayType == PayType.CBCommission))
+						|| x.PayType == PayType.CBCommission)
+					&& !x.IsOriginal)
 				.Select(x => new CommonLineProperties
 				{
 					EmployeeId = x.EmployeeId,
@@ -251,7 +252,8 @@ namespace Payroll.Service
 					x.BatchId == batchId
 					&& (
 						x.PayType == PayType.Regular
-						|| x.PayType == PayType.Pieces))
+						|| x.PayType == PayType.Pieces)
+					&& !x.IsOriginal)
 				.Select(x => new CommonLineProperties
 				{
 					EmployeeId = x.EmployeeId,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Payroll.Domain
 {
@@ -13,8 +14,14 @@ namespace Payroll.Domain
 		public string EmployeeId { get; set; }
 		public string PayMethod { get; set; }
 		public int WorkerCount { get; set; }
+
+		[Column(TypeName = "decimal(18,2)")]
 		public decimal HoursWorked { get; set; }
+		
+		[Column(TypeName = "decimal(18,2)")]
 		public decimal HourlyRate { get; set; }
+
+		[Column(TypeName = "decimal(18,2)")]
 		public decimal Gross { get; set; }
 	}
 }
