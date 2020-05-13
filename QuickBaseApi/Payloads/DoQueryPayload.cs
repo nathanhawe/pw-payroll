@@ -18,7 +18,7 @@ namespace QuickBase.Api.Payloads
 		public bool ReturnPercentageAsString { get; set; }
 		public bool IncludeRecordIds { get; set; }
 		public bool? UseFieldIds { get; set; }
-
+		
 		public DoQueryPayload(
 			string userToken, 
 			string query, 
@@ -75,6 +75,12 @@ namespace QuickBase.Api.Payloads
 		}
 
 		public override QuickBaseAction Action => Constants.QuickBaseAction.API_DoQuery;
+
+		public override string ToString()
+		{
+			return $"DoQueryPayload - action:'{Action}', udata:'{Udata}', query:'{Query}', queryName:'{QueryName}', qid:'{Qid}', clist:'{Clist}', slist:'{Slist}', " +
+				$"options: '{Options}', fmt: '{Fmt}', returnPercentageAsString:'{ReturnPercentageAsString}', includeRid:'{IncludeRecordIds}', useFieldId:'{UseFieldIds}'.";
+		}
 
 		internal override string GetXmlString()
 		{

@@ -26,6 +26,8 @@ namespace Payroll.Controllers
 		[HttpGet]
 		public IEnumerable<WeatherForecast> Get()
 		{
+			_logger.Log(LogLevel.Information, "{UserName} - ({userId}) called WeatherForecastContoller.Get(). {Claims}", User.Identity.Name, User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value, User.Claims);
+			
 			var rng = new Random();
 			return Enumerable.Range(1, 5).Select(index => new WeatherForecast
 			{

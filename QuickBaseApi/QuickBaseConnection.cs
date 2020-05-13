@@ -1,4 +1,5 @@
-﻿using QuickBase.Api.Exceptions;
+﻿using Microsoft.Extensions.Logging;
+using QuickBase.Api.Exceptions;
 using System;
 using System.IO;
 using System.Net;
@@ -9,13 +10,17 @@ namespace QuickBase.Api
 {
 	public class QuickBaseConnection : IQuickBaseConnection
 	{
+		private readonly ILogger<QuickBaseConnection> _logger;
+
 		public string Realm { get; set; }
 		public string UserToken { get; set; }
+		
 
-		public QuickBaseConnection(string realm, string userToken)
+		public QuickBaseConnection(string realm, string userToken, ILogger<QuickBaseConnection> logger)
 		{
 			Realm = realm ?? throw new ArgumentNullException(nameof(realm));
 			UserToken = userToken ?? throw new ArgumentNullException(nameof(userToken));
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
 		public XElement DoQuery(
@@ -114,6 +119,7 @@ namespace QuickBase.Api
 
 		private XElement Post(Uri uri, Payloads.Payload payLoad)
 		{
+			_logger.Log(LogLevel.Information, "Posting to {Uri} - {Payload}", uri, payLoad);
 			var request = WebRequest.Create(uri);
 			var data = payLoad.GetXmlString();
 			byte[] byteArray = Encoding.UTF8.GetBytes(data);

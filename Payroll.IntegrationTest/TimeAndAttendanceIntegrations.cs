@@ -27,7 +27,8 @@ namespace Payroll.IntegrationTest
 			var configuration = ConfigurationHelper.GetIConfigurationRoot();
 			var realm = configuration["QuickBase:Realm"];
 			var userToken = configuration["QuickBase:UserToken"];
-			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken);
+			var logger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, logger);
 
 			// Repositories
 			var pslTrackingDailyRepo = new PslTrackingDailyRepo(quickBaseConnection);
@@ -122,7 +123,8 @@ namespace Payroll.IntegrationTest
 			var configuration = ConfigurationHelper.GetIConfigurationRoot();
 			var realm = configuration["QuickBase:Realm"];
 			var userToken = configuration["QuickBase:UserToken"];
-			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken);
+			var logger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, logger);
 
 			// Repositories
 			var pslTrackingDailyRepo = new PslTrackingDailyRepo(quickBaseConnection);

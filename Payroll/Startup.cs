@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Payroll.Data;
+using Payroll.Infrastructure.Middleware;
 
 namespace Payroll
 {
@@ -31,6 +32,11 @@ namespace Payroll
 			services.AddDbContext<PayrollContext>(opt =>
 				opt.UseSqlServer(Configuration.GetConnectionString("PayrollConnection"))
 			);
+			
+			services.AddScoped<QuickBase.Api.IQuickBaseConnection>(x =>
+				ActivatorUtilities.CreateInstance<QuickBase.Api.QuickBaseConnection>(x, Configuration["QuickBase:Realm"], Configuration["QuickBase:UserToken"])
+			);
+			services.AddScoped<Payroll.Data.QuickBase.ICrewBossPayRepo, Payroll.Data.QuickBase.CrewBossPayRepo>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,8 +44,9 @@ namespace Payroll
 		{
 			if (env.IsDevelopment())
 			{
-				app.UseDeveloperExceptionPage();
+				//app.UseDeveloperExceptionPage();
 			}
+			app.UseApiExceptionHandler();
 
 			app.UseHttpsRedirection();
 

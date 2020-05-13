@@ -28,8 +28,9 @@ namespace QuickBase.IntegrationTests
 
 			var realm = _configuration["QuickBase:Realm"];
 			var userToken = _configuration["QuickBase:UserToken"];
+			var logger = new MockLogger<QuickBaseConnection>();
 
-			_quickBaseConn = new QuickBaseConnection(realm, userToken);
+			_quickBaseConn = new QuickBaseConnection(realm, userToken, logger);
 			_repo = new RanchPayrollRepo(_quickBaseConn);
 		}
 

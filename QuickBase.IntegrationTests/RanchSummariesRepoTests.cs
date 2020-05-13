@@ -28,8 +28,8 @@ namespace QuickBase.IntegrationTests
 
 			var realm = _configuration["QuickBase:Realm"];
 			var userToken = _configuration["QuickBase:UserToken"];
-
-			_quickBaseConn = new QuickBaseConnection(realm, userToken);
+			var logger = new MockLogger<QuickBaseConnection>();
+			_quickBaseConn = new QuickBaseConnection(realm, userToken, logger);
 			_repo = new RanchSummariesRepo(_quickBaseConn);
 		}
 

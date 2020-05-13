@@ -25,8 +25,9 @@ namespace QuickBase.IntegrationTests
 			var dbid = "be7eyypdu";
 			var realm = Configuration["QuickBase:Realm"];
 			var userToken = Configuration["QuickBase:UserToken"];
+			var logger = new MockLogger<QuickBaseConnection>();
 
-			var qb = new QuickBaseConnection(realm, userToken);
+			var qb = new QuickBaseConnection(realm, userToken, logger);
 			Console.WriteLine(qb.DoQueryCount(dbid, "{3.GT.0}", "DoQueryCount_CrewBossPay"));
 		}
 
@@ -36,8 +37,9 @@ namespace QuickBase.IntegrationTests
 			var dbid = "be7eyypdu";
 			var realm = Configuration["QuickBase:Realm"];
 			var userToken = Configuration["QuickBase:UserToken"];
+			var logger = new MockLogger<QuickBaseConnection>();
 
-			var qb = new QuickBaseConnection(realm, userToken);
+			var qb = new QuickBaseConnection(realm, userToken, logger);
 			Console.WriteLine(qb.DoQuery(dbid, "{9.IR.2020-03-28}", "3.6.7.8", "6", "num-2.sortorder-D.skp-2", ""));
 		}
 
@@ -47,8 +49,9 @@ namespace QuickBase.IntegrationTests
 			var dbid = "be7eyypdu";
 			var realm = Configuration["QuickBase:Realm"];
 			var userToken = Configuration["QuickBase:UserToken"];
+			var logger = new MockLogger<QuickBaseConnection>();
 
-			var qb = new QuickBaseConnection(realm, userToken);
+			var qb = new QuickBaseConnection(realm, userToken, logger);
 			Console.WriteLine(qb.DoQuery(dbid, "CB worked less than 6 Hours and not on Hourly Rate", "3.6.7.8", "6", "num-5", "", queryIsName: true));
 		}
 
@@ -58,8 +61,9 @@ namespace QuickBase.IntegrationTests
 			var dbid = "be7eyypdu";
 			var realm = Configuration["QuickBase:Realm"];
 			var userToken = Configuration["QuickBase:UserToken"];
+			var logger = new MockLogger<QuickBaseConnection>();
 
-			var qb = new QuickBaseConnection(realm, userToken);
+			var qb = new QuickBaseConnection(realm, userToken, logger);
 			Console.WriteLine(qb.DoQuery(dbid, 6, "3.6.7.8", "6", "num-5", ""));
 		}
 	}

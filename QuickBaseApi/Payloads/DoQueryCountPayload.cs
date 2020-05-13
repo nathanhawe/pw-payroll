@@ -18,6 +18,11 @@ namespace QuickBase.Api.Payloads
 
 		public override QuickBaseAction Action => Constants.QuickBaseAction.API_DoQueryCount;
 
+		public override string ToString()
+		{
+			return $"DoQueryCountPayload - action:'{Action}', udata:'{Udata}', query:'{Query}'";
+		}
+
 		internal override string GetXmlString()
 		{
 			var qdbapi = GetBaseQdbapi();

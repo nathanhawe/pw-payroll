@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data.QuickBase;
 using Payroll.Domain;
@@ -27,8 +28,8 @@ namespace QuickBase.IntegrationTests
 
 			var realm = _configuration["QuickBase:Realm"];
 			var userToken = _configuration["QuickBase:UserToken"];
-
-			_quickBaseConn = new QuickBaseConnection(realm, userToken);
+			var logger = new MockLogger<QuickBaseConnection>();
+			_quickBaseConn = new QuickBaseConnection(realm, userToken, logger);
 			_repo = new CrewBossPayRepo(_quickBaseConn);
 		}
 
