@@ -357,7 +357,31 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(0M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
 		}
 
-		
+		[TestMethod]
+		public void LaborCode_551_QualityControl_Before20200511_IsIgnored()
+		{
+			var laborCode = (int)RanchLaborCode.QualityControl;
+			// Crew 27 returns _crewLaborRate + .50 (15.50) in the first two instances and _crewLaborRate + 2 (17) in the last
+			// since labor code 551 does not take precedence before 5/11/2020
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1, shiftDate: new DateTime(2020, 5, 10)));
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate, shiftDate: new DateTime(2020, 5, 10)));
+			Assert.AreEqual(_crewLaborRate + 1.5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1, shiftDate: new DateTime(2020, 5, 10)));
+		}
+
+		[TestMethod]
+		public void LaborCode_551_QualityControl_OnOrAfter20200511_ReturnsGreaterOfEmployeeRateAndCrewLaborPlusQuarterDollar()
+		{
+			var laborCode = (int)RanchLaborCode.QualityControl;
+			var effectiveDate = new DateTime(2020, 5, 11);
+
+			// Return crew labor rate + .25 when it is greater than employee hourly rate
+			Assert.AreEqual((_crewLaborRate + .25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + .25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate.AddYears(10)));
+
+			// Return the employee hourly rate when it is greater than crew labor rate + .25
+			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate.AddYears(10)));
+		}
 
 		[TestMethod]
 		public void LaborCode_SupercedesCrew()

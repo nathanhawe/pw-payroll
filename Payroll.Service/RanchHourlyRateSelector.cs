@@ -43,6 +43,7 @@ namespace Payroll.Service
 			if (laborCode == (int)RanchLaborCode.Girdling && shiftDate >= new DateTime(2020, 3, 21)) return GirdlingRate();
 			if (laborCode == (int)RanchLaborCode.RecoveryTime) return RecoveryTimeRate();
 			if (laborCode == (int)RanchLaborCode.NonProductiveTime) return NonProductiveTimeRate();
+			if (laborCode == (int)RanchLaborCode.QualityControl && shiftDate >= new DateTime(2020, 5, 11)) return QualityControlRate(shiftDate, employeeHourlyRate);
 			if (crew == (int)Crew.WestTractor_Night) return WestTractor_NightRate(shiftDate, employeeHourlyRate);
 			if (crew == (int)Crew.LightDuty_East) return CrewLaborRate(shiftDate);
 			if (crew == (int)Crew.LightDuty_West) return CrewLaborRate(shiftDate);
@@ -50,7 +51,7 @@ namespace Payroll.Service
 			if (crew > 100) return CrewLaborRate(shiftDate);
 			return CulturalRate(shiftDate, employeeHourlyRate);
 		}
-
+		
 		/// <summary>
 		/// Returns true if the provided pay type would result in an hourly rate being assigned.
 		/// </summary>
@@ -126,6 +127,11 @@ namespace Payroll.Service
 		private decimal RecoveryTimeRate() => 0M;
 
 		private decimal NonProductiveTimeRate() => 0M;
+
+		private decimal QualityControlRate(DateTime shiftDate, decimal employeeHourlyRate)
+		{
+			return Math.Max(employeeHourlyRate, CrewLaborRate(shiftDate)+.25M);
+		}
 
 		private decimal WestTractor_NightRate(DateTime shiftDate, decimal employeeHourlyRate)
 		{

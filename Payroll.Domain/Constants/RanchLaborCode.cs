@@ -16,6 +16,7 @@ namespace Payroll.Domain.Constants
 		Girdling = 215,
 		Grafting_BuddingExpertCrew = 217,
 		RecoveryTime = 380,
-		NonProductiveTime = 381
+		NonProductiveTime = 381,
+		QualityControl = 551
 	}
 }
