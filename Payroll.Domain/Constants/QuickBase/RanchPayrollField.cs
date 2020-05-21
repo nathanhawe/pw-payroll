@@ -32,6 +32,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		AlternativeWorkWeek = 50,
 		FiveEight = 131,
 		HourlyRateOverride = 145,
-		EmployeeHourlyRate = 36
+		EmployeeHourlyRate = 36,
+
+		/// <summary>
+		/// [41.1 Approval] - Checkbox indicates that a pay line with pay type 41.1 is approved to be paid out.
+		/// </summary>
+		SpecialAdjustmentApproval = 254
 	}
 }

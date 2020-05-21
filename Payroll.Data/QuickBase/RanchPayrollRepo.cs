@@ -141,6 +141,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchPayrollField.FiveEight: temp.FiveEight = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)RanchPayrollField.HourlyRateOverride: temp.HourlyRateOverride = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchPayrollField.EmployeeHourlyRate: temp.EmployeeHourlyRate = ParseDecimal(field.Value) ?? 0; break;
+						case (int)RanchPayrollField.SpecialAdjustmentApproval: temp.SpecialAdjustmentApproved = ParseBooleanFromCheckbox(field.Value); break;
 					}
 				}
 				ranchPayLines.Add(temp);
@@ -176,7 +177,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollField.AlternativeWorkWeek}.");
 			sb.Append($"{(int)RanchPayrollField.FiveEight}.");
 			sb.Append($"{(int)RanchPayrollField.HourlyRateOverride}.");
-			sb.Append($"{(int)RanchPayrollField.EmployeeHourlyRate}");
+			sb.Append($"{(int)RanchPayrollField.EmployeeHourlyRate}.");
+			sb.Append($"{(int)RanchPayrollField.SpecialAdjustmentApproval}");
 
 			return sb.ToString();
 		}

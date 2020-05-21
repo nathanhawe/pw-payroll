@@ -154,6 +154,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// <summary>
 		/// [Increased Rate] - Checkbox indicates that notwithstanding non-Primas the [IncreasedRate] should be used for pieces.
 		/// </summary>
-		UseIncreasedRate = 75
+		UseIncreasedRate = 75,
+
+		/// <summary>
+		/// [41.1 Approval] - Checkbox indicates that a pay line with pay type 41.1 is approved to be paid out.
+		/// </summary>
+		SpecialAdjustmentApproval = 182
 	}
 }

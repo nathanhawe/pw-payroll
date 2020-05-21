@@ -328,6 +328,7 @@ namespace Payroll.Service
 		{
 			// Plant Payroll
 			var plantPayLines = _plantPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
+			plantPayLines = plantPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
 			plantPayLines.ForEach(x => x.BatchId = batch.Id);
 
 			// Plant Adjustment
@@ -779,6 +780,7 @@ namespace Payroll.Service
 
 			// Ranch Payroll
 			var ranchPayLines = _ranchPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
+			ranchPayLines = ranchPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
 			ranchPayLines.ForEach(x => x.BatchId = batch.Id);
 
 			// Ranch Adjustment

@@ -54,5 +54,8 @@ namespace Payroll.Domain
 		
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal EmployeeHourlyRate { get; set; }
+
+		[NotMapped]
+		public bool SpecialAdjustmentApproved { get; set; }
 	}
 }
