@@ -24,7 +24,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll.IntegrationTest", "Payroll.IntegrationTest\Payroll.IntegrationTest.csproj", "{66656699-B478-4D08-8C22-B7886F115702}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payroll.Infrastructure", "Payroll.Infrastructure\Payroll.Infrastructure.csproj", "{B55B485E-D38D-4767-99AF-AA966864F223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payroll.Infrastructure", "Payroll.Infrastructure\Payroll.Infrastructure.csproj", "{B55B485E-D38D-4767-99AF-AA966864F223}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer", "IdentityServer", "{DDF75464-D081-45D1-8A7B-610168D76B27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimaCompany.IDP", "PrimaCompany.IDP\PrimaCompany.IDP.csproj", "{6EA5CADE-6EE1-4E0F-A988-A8D20CB438F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,9 +72,16 @@ Global
 		{B55B485E-D38D-4767-99AF-AA966864F223}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B55B485E-D38D-4767-99AF-AA966864F223}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B55B485E-D38D-4767-99AF-AA966864F223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA5CADE-6EE1-4E0F-A988-A8D20CB438F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA5CADE-6EE1-4E0F-A988-A8D20CB438F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA5CADE-6EE1-4E0F-A988-A8D20CB438F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA5CADE-6EE1-4E0F-A988-A8D20CB438F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6EA5CADE-6EE1-4E0F-A988-A8D20CB438F1} = {DDF75464-D081-45D1-8A7B-610168D76B27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A9F4C8EE-608C-4FFC-9BB0-6BD475132D53}

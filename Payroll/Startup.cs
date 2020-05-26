@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,16 @@ namespace Payroll
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+
+			// Add IdentityServer4 authentication service
+			services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+				.AddIdentityServerAuthentication(options =>
+				{
+					options.Authority = "https://localhost:6001";
+					options.ApiName = "timeandattendanceapi";
+					options.ApiSecret = "apisecret";
+				});
+
 			services.AddDbContext<PayrollContext>(opt =>
 				opt.UseSqlServer(Configuration.GetConnectionString("PayrollConnection"))
 			);
@@ -51,6 +62,8 @@ namespace Payroll
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
+
+			app.UseAuthentication();
 
 			app.UseAuthorization();
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Payroll.Data.QuickBase;
@@ -10,6 +11,7 @@ namespace Payroll.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
+	[Authorize]
 	public class CrewBossPayTest : ControllerBase
 	{
 		private readonly ILogger<CrewBossPayTest> _logger;
