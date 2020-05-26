@@ -1,4 +1,5 @@
 ﻿using Payroll.Data;
+using Payroll.Domain;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,9 @@ using System.Text;
 
 namespace Payroll.Service
 {
+	/// <summary>
+	/// Handles interactions with the minimum wage data source
+	/// </summary>
 	public class MinimumWageService : IMinimumWageService
 	{
 		private readonly PayrollContext _context;
@@ -14,6 +18,37 @@ namespace Payroll.Service
 		public MinimumWageService(PayrollContext context)
 		{
 			_context = context ?? throw new ArgumentNullException(nameof(context));
+		}
+
+		/// <summary>
+		/// Adds a new <c>MinimumWage</c> to the database.
+		/// </summary>
+		/// <param name="minimumWage"></param>
+		public void AddWage(MinimumWage minimumWage)
+		{
+			minimumWage.IsDeleted = false;
+			_context.MinimumWages.Add(minimumWage);
+			_context.SaveChanges();
+		}
+
+		/// <summary>
+		/// Logically deletes the <c>MinimumWage</c> with the matching ID.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public MinimumWage DeleteWage(int id)
+		{
+			var minimumWage = _context.MinimumWages
+				.Where(x => x.Id == id && !x.IsDeleted)
+				.FirstOrDefault();
+
+			if (minimumWage != null)
+			{
+				minimumWage.IsDeleted = true;
+				_context.SaveChanges();
+			}
+
+			return minimumWage;
 		}
 
 		/// <summary>
@@ -29,6 +64,55 @@ namespace Payroll.Service
 				.FirstOrDefault();
 
 			return currentMinimumWage?.Wage ?? 0;
+		}
+
+		/// <summary>
+		/// Returns the <c>MinimumWage</c> with the passed ID.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public MinimumWage GetWage(int id)
+		{
+			var minimumWage = _context.MinimumWages
+				.Where(x => x.Id == id && !x.IsDeleted)
+				.FirstOrDefault();
+
+			return minimumWage;
+		}
+
+		/// <summary>
+		/// Returns all of the <c>MinimumWage</c> records.
+		/// </summary>
+		/// <returns></returns>
+		public List<MinimumWage> GetWages()
+		{
+			return _context.MinimumWages
+				.Where(x => !x.IsDeleted)
+				.OrderByDescending(o => o.EffectiveDate)
+				.ToList();
+		}
+
+		/// <summary>
+		/// Updates the existing <c>MinimumWage</c> with the passed ID number.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="minimumWage"></param>
+		/// <returns></returns>
+		public MinimumWage UpdateWage(int id, MinimumWage minimumWage)
+		{
+			if (minimumWage == null) throw new ArgumentNullException(nameof(minimumWage));
+
+			var existingWage = _context.MinimumWages
+				.Where(x => x.Id == id && !x.IsDeleted)
+				.FirstOrDefault();
+
+			if (existingWage == null) throw new Exception($"MinimumWage with ID '{id}' was not found.");
+
+			existingWage.EffectiveDate = minimumWage.EffectiveDate;
+			existingWage.Wage = minimumWage.Wage;
+			_context.SaveChanges();
+
+			return existingWage;
 		}
 	}
 }

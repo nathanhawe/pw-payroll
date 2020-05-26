@@ -11,11 +11,11 @@ namespace Payroll.Service
 	/// </summary>
 	public class RanchHourlyRateSelector : IRanchHourlyRateSelector
 	{
-		private readonly ICrewLaborWageSelector _crewLaborWageSelector;
+		private readonly ICrewLaborWageService _crewLaborWageService;
 
-		public RanchHourlyRateSelector(ICrewLaborWageSelector crewLaborWageSelector)
+		public RanchHourlyRateSelector(ICrewLaborWageService crewLaborWageService)
 		{
-			_crewLaborWageSelector = crewLaborWageSelector ?? throw new ArgumentNullException(nameof(crewLaborWageSelector));
+			_crewLaborWageService = crewLaborWageService ?? throw new ArgumentNullException(nameof(crewLaborWageService));
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@ namespace Payroll.Service
 
 		private decimal CrewLaborRate(DateTime shiftDate)
 		{
-			return _crewLaborWageSelector.GetCrewLaborWage(shiftDate);
+			return _crewLaborWageService.GetWage(shiftDate);
 		}
 	}
 }

@@ -25,8 +25,8 @@ namespace Payroll.UnitTest
 			MockCBTest(dbName);
 
 			using var context = new PayrollContext(options);
-			var cbWageSelector = new CrewBossWageSelector(context);
-			var cbService = new CrewBossPayService(context, cbWageSelector, _roundingService);
+			var crewBossWageService = new CrewBossWageService(context);
+			var cbService = new CrewBossPayService(context, crewBossWageService, _roundingService);
 
 			cbService.CalculateCrewBossPay(1);
 
@@ -68,8 +68,8 @@ namespace Payroll.UnitTest
 			MockCBTest(dbName);
 
 			using var context = new PayrollContext(options);
-			var cbWageSelector = new CrewBossWageSelector(context);
-			var cbService = new CrewBossPayService(context, cbWageSelector, _roundingService);
+			var crewBossWageService = new CrewBossWageService(context);
+			var cbService = new CrewBossPayService(context, crewBossWageService, _roundingService);
 
 			var ranchPayLines = cbService.CalculateCrewBossPay(1);
 

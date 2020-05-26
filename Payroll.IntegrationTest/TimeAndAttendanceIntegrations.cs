@@ -43,7 +43,7 @@ namespace Payroll.IntegrationTest
 			// Services
 			var minimumWageService = new MinimumWageService(context);
 			var roundingService = new RoundingService();
-			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageSelector(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
+			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
 			var grossFromPiecesCalculator = new GrossFromPiecesCalculator(roundingService);
 			var grossFromIncentiveCalculator = new GrossFromIncentiveCalculator(roundingService);
 			var totalGrossCalculator = new TotalGrossCalculator(roundingService);
@@ -51,7 +51,7 @@ namespace Payroll.IntegrationTest
 			
 
 			var paidSickLeaveService = new PaidSickLeaveService(context, roundingService);
-			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageSelector(context), roundingService);
+			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageService(context), roundingService);
 			var ranchDailyOTDTHoursCalculator = new RanchDailyOTDTHoursCalculator();
 			var ranchWeeklySummaryCalculator = new RanchWeeklySummaryCalculator(roundingService);
 			var ranchWeeklyOverTimeHoursCalculator = new RanchWeeklyOTHoursCalculator(roundingService);
@@ -139,7 +139,7 @@ namespace Payroll.IntegrationTest
 			// Services
 			var minimumWageService = new MinimumWageService(context);
 			var roundingService = new RoundingService();
-			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageSelector(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
+			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
 			var grossFromPiecesCalculator = new GrossFromPiecesCalculator(roundingService);
 			var grossFromIncentiveCalculator = new GrossFromIncentiveCalculator(roundingService);
 			var totalGrossCalculator = new TotalGrossCalculator(roundingService);
@@ -147,7 +147,7 @@ namespace Payroll.IntegrationTest
 
 
 			var paidSickLeaveService = new PaidSickLeaveService(context, roundingService);
-			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageSelector(context), roundingService);
+			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageService(context), roundingService);
 			var ranchDailyOTDTHoursCalculator = new RanchDailyOTDTHoursCalculator();
 			var ranchWeeklySummaryCalculator = new RanchWeeklySummaryCalculator(roundingService);
 			var ranchWeeklyOverTimeHoursCalculator = new RanchWeeklyOTHoursCalculator(roundingService);

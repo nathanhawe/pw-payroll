@@ -16,17 +16,17 @@ namespace Payroll.UnitTest
 	public class RanchHourlyRateSelectorTests
 	{
 		private readonly decimal _crewLaborRate = 15M;
-		private ICrewLaborWageSelector _mockCrewLaborWageSelector;
+		private ICrewLaborWageService _mockCrewLaborWageService;
 		private RanchHourlyRateSelector _ranchHourlyRateSelector;
 
 		[TestInitialize]
 		public void Setup()
 		{
 			// Create a mock of the crew labor wage selector that always returns the crew labor rate
-			_mockCrewLaborWageSelector = new MockCrewLaborWageSelector(_crewLaborRate);
+			_mockCrewLaborWageService = new MockCrewLaborWageService(_crewLaborRate);
 
 			// Setup common instance of rate selector to test
-			_ranchHourlyRateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageSelector);
+			_ranchHourlyRateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService);
 		}
 
 		private decimal DefaultTest(

@@ -11,7 +11,7 @@ using System.Text;
 namespace Payroll.UnitTest
 {
 	[TestClass]
-	public class CrewLaborWageSelectorTests
+	public class CrewLaborWageServiceTests
 	{
 		[TestMethod]
 		public void SelectsWageBasedOnEffectiveDate()
@@ -40,17 +40,17 @@ namespace Payroll.UnitTest
 
 			if (context.CrewLaborWages.Count() != 8) Assert.Inconclusive("Unexpected number of CrewLaborWages.");
 
-			var wageSelector = new CrewLaborWageSelector(context);
+			var crewLaborWageService = new CrewLaborWageService(context);
 
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 16)));
-			Assert.AreEqual(13, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 17)));
-			Assert.AreEqual(13.5M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 18)));
-			Assert.AreEqual(14M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 19)));
-			Assert.AreEqual(14.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 20)));
-			Assert.AreEqual(15M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 21)));
-			Assert.AreEqual(15.67M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 22)));
-			Assert.AreEqual(16M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 23)));
-			Assert.AreEqual(16M, wageSelector.GetCrewLaborWage(new DateTime(2025, 1, 1)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 16)));
+			Assert.AreEqual(13, crewLaborWageService.GetWage(new DateTime(2020, 2, 17)));
+			Assert.AreEqual(13.5M, crewLaborWageService.GetWage(new DateTime(2020, 2, 18)));
+			Assert.AreEqual(14M, crewLaborWageService.GetWage(new DateTime(2020, 2, 19)));
+			Assert.AreEqual(14.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 20)));
+			Assert.AreEqual(15M, crewLaborWageService.GetWage(new DateTime(2020, 2, 21)));
+			Assert.AreEqual(15.67M, crewLaborWageService.GetWage(new DateTime(2020, 2, 22)));
+			Assert.AreEqual(16M, crewLaborWageService.GetWage(new DateTime(2020, 2, 23)));
+			Assert.AreEqual(16M, crewLaborWageService.GetWage(new DateTime(2025, 1, 1)));
 		}
 
 		[TestMethod]
@@ -80,17 +80,17 @@ namespace Payroll.UnitTest
 
 			if (context.CrewLaborWages.Count() != 8) Assert.Inconclusive("Unexpected number of CrewLaborWages.");
 
-			var wageSelector = new CrewLaborWageSelector(context);
+			var crewLaborWageService = new CrewLaborWageService(context);
 
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 16)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 17)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 18)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 19)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 20)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 21)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 22)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2020, 2, 23)));
-			Assert.AreEqual(6.75M, wageSelector.GetCrewLaborWage(new DateTime(2025, 1, 1)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 16)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 17)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 18)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 19)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 20)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 21)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 22)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2020, 2, 23)));
+			Assert.AreEqual(6.75M, crewLaborWageService.GetWage(new DateTime(2025, 1, 1)));
 		}
 
 	}

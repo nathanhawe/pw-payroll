@@ -14,18 +14,18 @@ namespace Payroll.Service
 	public class CrewBossPayService : Interface.ICrewBossPayService
 	{
 		private readonly PayrollContext _context;
-		private readonly ICrewBossWageSelector _wageSelector;
+		private readonly ICrewBossWageService _crewBossWageService;
 		private readonly IRoundingService _roundingService;
 
 		public decimal SouthDailyPay { get; } = 170.05M;
 
 		public CrewBossPayService(
 			PayrollContext context, 
-			ICrewBossWageSelector wageSelector, 
+			ICrewBossWageService crewBossWageService, 
 			IRoundingService roundingService)
 		{
 			_context = context ?? throw new ArgumentNullException(nameof(context));
-			_wageSelector = wageSelector ?? throw new ArgumentNullException(nameof(wageSelector));
+			_crewBossWageService = crewBossWageService ?? throw new ArgumentNullException(nameof(crewBossWageService));
 			_roundingService = roundingService ?? throw new ArgumentNullException(nameof(roundingService));
 		}
 
@@ -100,7 +100,7 @@ namespace Payroll.Service
 					return 17.90M;
 				case CrewBossPayMethod.HourlyTrees: 
 				case CrewBossPayMethod.HourlyVines:
-					return _wageSelector.GetWage(shiftDate, countOfWorkers);
+					return _crewBossWageService.GetWage(shiftDate, countOfWorkers);
 				default:
 					return 0;
 			}

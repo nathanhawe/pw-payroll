@@ -47,6 +47,15 @@ namespace Payroll
 			services.AddScoped<QuickBase.Api.IQuickBaseConnection>(x =>
 				ActivatorUtilities.CreateInstance<QuickBase.Api.QuickBaseConnection>(x, Configuration["QuickBase:Realm"], Configuration["QuickBase:UserToken"])
 			);
+
+			// Add application services
+			services.AddScoped<Service.Interface.IBatchService, Service.BatchService>();
+			services.AddScoped<Service.Interface.ICrewBossWageService, Service.CrewBossWageService>();
+			services.AddScoped<Service.Interface.ICrewLaborWageService, Service.CrewLaborWageService>();
+			services.AddScoped<Service.Interface.IMinimumWageService, Service.MinimumWageService>();
+			
+
+			// Add application repositories
 			services.AddScoped<Payroll.Data.QuickBase.ICrewBossPayRepo, Payroll.Data.QuickBase.CrewBossPayRepo>();
 		}
 
