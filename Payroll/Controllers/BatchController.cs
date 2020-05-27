@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Payroll.Data;
+using Payroll.Domain;
+using Payroll.Infrastructure.HostedServices;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -17,13 +20,19 @@ namespace Payroll.Controllers
 	{
 		private readonly ILogger<BatchController> _logger;
 		private readonly IBatchService _batchService;
+		private readonly IBackgroundTaskQueue _queue;
+		private readonly IServiceScopeFactory _serviceScopeFactory;
 
 		public BatchController(
 			ILogger<BatchController> logger,
-			IBatchService batchService)
+			IBatchService batchService,
+			Infrastructure.HostedServices.IBackgroundTaskQueue queue,
+			IServiceScopeFactory serviceScopeFactory)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_batchService = batchService ?? throw new ArgumentNullException(nameof(batchService));
+			_queue = queue ?? throw new ArgumentNullException(nameof(queue));
+			_serviceScopeFactory = serviceScopeFactory ?? throw new ArgumentNullException(nameof(serviceScopeFactory));
 		}
 
 		[HttpGet]
@@ -51,7 +60,23 @@ namespace Payroll.Controllers
 			};
 
 			_batchService.AddBatch(batch, "ToDo");
+
+			// Trigger calculations now that a batch has been added
+			EnqueueTimeAndAttendanceCalculations(batch);
+
 			return batch;
+		}
+
+		[NonAction]
+		private void EnqueueTimeAndAttendanceCalculations(Batch batch)
+		{
+			_logger.Log(LogLevel.Information, "{UserName} - ({userId}) enqueuing batch for time and attendance calculations. {Batch}", User.Identity.Name, User.Claims.FirstOrDefault(a => a.Type == "sub")?.Value, batch);
+			_queue.QueueBackgroundWorkItem(async token =>
+			{
+				using var scope = _serviceScopeFactory.CreateScope();
+				var timeAndAttendanceService = scope.ServiceProvider.GetRequiredService<ITimeAndAttendanceService>();
+				timeAndAttendanceService.PerformCalculations(batch.Id);
+			});
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Payroll.Data.QuickBase;
+﻿using Microsoft.Extensions.Logging;
+using Payroll.Data.QuickBase;
 using Payroll.Domain;
 using Payroll.Domain.Constants;
 using Payroll.Service.Interface;
@@ -14,6 +15,8 @@ namespace Payroll.Service
 	/// </summary>
 	public class TimeAndAttendanceService : ITimeAndAttendanceService
 	{
+		private readonly ILogger<TimeAndAttendanceService> _logger;
+
 		// Database context
 		private readonly Data.PayrollContext _context;
 
@@ -50,6 +53,7 @@ namespace Payroll.Service
 		private readonly IPlantSummaryService _plantSummaryService;
 
 		public TimeAndAttendanceService(
+			ILogger<TimeAndAttendanceService> logger,
 			Data.PayrollContext payrollContext,
 			IPslTrackingDailyRepo pslTrackingDailyRepo,
 			ICrewBossPayRepo crewBossPayRepo,
@@ -78,6 +82,7 @@ namespace Payroll.Service
 			IPlantMinimumMakeUpCalculator plantMinimumMakeUpCalculator,
 			IPlantSummaryService plantSummaryService)
 		{
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_context = payrollContext ?? throw new ArgumentNullException(nameof(payrollContext));
 			_pslTrackingDailyRepo = pslTrackingDailyRepo ?? throw new ArgumentNullException(nameof(pslTrackingDailyRepo));
 			_crewBossPayRepo = crewBossPayRepo ?? throw new ArgumentNullException(nameof(crewBossPayRepo));
@@ -105,11 +110,12 @@ namespace Payroll.Service
 			_plantWeeklyOverTimeHoursCalculator = plantWeeklyOTHoursCalculator ?? throw new ArgumentNullException(nameof(plantWeeklyOTHoursCalculator));
 			_plantMinimumMakeUpCalculator = plantMinimumMakeUpCalculator ?? throw new ArgumentNullException(nameof(plantMinimumMakeUpCalculator));
 			_plantSummaryService = plantSummaryService ?? throw new ArgumentNullException(nameof(plantSummaryService));
-
 		}
 
 		public void PerformCalculations(int batchId)
 		{
+			_logger.Log(LogLevel.Information, "Starting calculations for batch {batchId}", batchId);
+
 			var batch = _context.Batches.Where(x => x.Id == batchId).FirstOrDefault();
 			if (batch == null) throw new Exception($"The provided batch ID of '{batchId}' was not found in the database.");
 
@@ -119,6 +125,7 @@ namespace Payroll.Service
 				case Company.Ranches: PerformRanchCalculations(batch); break;
 				default: throw new Exception($"Unknown company value '{batch.Company}'.");
 			}
+			_logger.Log(LogLevel.Information, "Completed calculations for batch {batchId}", batchId);
 		}
 
 		private void PerformPlantCalculations(Batch batch)
@@ -166,6 +173,7 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 
+			_logger.Log(LogLevel.Information, "Calculating PSL for batch {batchId}", batch.Id);
 			/* PSL Requires hours and gross for regular, piece; also requires hours on Sick Leave pay types*/
 			// Perform PSL calculations
 			var startDate = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
@@ -188,7 +196,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(paidSickLeaves);
 			_context.SaveChanges();
 
-
+			_logger.Log(LogLevel.Information, "Calculating OT/DT/WOT/Seventh Day for batch {batchId}", batch.Id);
 			/* OT/DT/Seventh Day Hours */
 			// Daily summaries group all of the plant pay lines by Employee, Week End Date, Shift Date, Alternative Work Week, and Minimum Wage.
 			// Additionally it selects the last of plant sorting - I believe - on the Quick Base Record ID.
@@ -286,7 +294,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			_context.AddRange(weeklyOverTimeRecords);
 
-
+			_logger.Log(LogLevel.Information, "Updating Reporting/Comp/NPT hourly rates for batch {batchId}", batch.Id);
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
 			//var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
 			var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && x.PayType == PayType.ReportingPay).ToList();
@@ -314,11 +322,13 @@ namespace Payroll.Service
 			CalculatePlantAdjustments(batch.Id, company);
 
 			/* Create Summaries */
+			_logger.Log(LogLevel.Information, "Calculating plant summaries for batch {batchId}", batch.Id);
 			var summaries = _plantSummaryService.CreateSummariesForBatch(batch.Id);
 			_context.AddRange(summaries);
 			_context.SaveChanges();
 
 			/* Update records to Quick Base */
+			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
 			// Ranch Payroll Records
 			// Ranch Adjustment Records
 			// Ranch Summary Records
@@ -326,6 +336,7 @@ namespace Payroll.Service
 
 		private void CopyPlantDataFromQuickBase(Batch batch)
 		{
+			_logger.Log(LogLevel.Information, "Downloading plant payroll data from Quick Base for {batchId}", batch.Id);
 			// Plant Payroll
 			var plantPayLines = _plantPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			plantPayLines = plantPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
@@ -353,6 +364,8 @@ namespace Payroll.Service
 
 		private void CalculatePlantAdjustments(int batchId, string company)
 		{
+			_logger.Log(LogLevel.Information, "Calculating plant adjustments for {batchId}", batchId);
+
 			DateTime weekendOfAdjustmentPaid = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId).OrderByDescending(x => x.WeekEndOfAdjustmentPaid).FirstOrDefault()?.WeekEndOfAdjustmentPaid ?? new DateTime(2000, 1, 1);
 
 			/* Gross Calculations */
@@ -593,6 +606,7 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			/* PSL Requires hours and gross for regular, piece, and CB pay types; also requires hours on Sick Leave pay types*/
+			_logger.Log(LogLevel.Information, "Calculating PSL for batch {batchId}", batch.Id);
 			// Perform PSL calculations
 			var startDate = _context.RanchPayLines.Where(x => x.BatchId == batch.Id).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
 			var endDate = _context.RanchPayLines.Where(x => x.BatchId == batch.Id).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
@@ -616,6 +630,7 @@ namespace Payroll.Service
 
 
 			/* OT/DT/Seventh Day Hours */
+			_logger.Log(LogLevel.Information, "Calculating OT/DT/WOT/Seventh Day for batch {batchId}", batch.Id);
 			// Daily summaries group all of the ranch pay lines by Employee, Week End Date, Shift Date, Alternative Work Week, and Minimum Wage.
 			// Additionally it selects the last of Crew and last of FiveEight sorting - I believe - on the Quick Base Record ID.
 			// This needs to be double checked before going to production and the actual rules for the calculation should be confirmed.
@@ -724,7 +739,7 @@ namespace Payroll.Service
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			_context.AddRange(weeklyOverTimeRecords);
 
-
+			_logger.Log(LogLevel.Information, "Updating Reporting/Comp/NPT hourly rates for batch {batchId}", batch.Id);
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
 			var reportingPayRecords = _context.RanchPayLines.Where(x => x.BatchId == batch.Id && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
 			reportingPayRecords.ForEach(x =>
@@ -762,11 +777,13 @@ namespace Payroll.Service
 			CalculateRanchAdjustments(batch.Id, company);
 
 			/* Create Summaries */
+			_logger.Log(LogLevel.Information, "Calculating ranch summaries for batch {batchId}", batch.Id);
 			var summaries = _ranchSummaryService.CreateSummariesForBatch(batch.Id);
 			_context.AddRange(summaries);
 			_context.SaveChanges();
 
 			/* Update records to Quick Base */
+			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
 			// Ranch Payroll Records
 			// Ranch Adjustment Records
 			// Ranch Summary Records
@@ -774,6 +791,8 @@ namespace Payroll.Service
 
 		private void CopyRanchDataFromQuickBase(Batch batch)
 		{
+			_logger.Log(LogLevel.Information, "Downloading ranch payroll data from Quick Base for {batchId}", batch.Id);
+
 			// Crew Boss Pay
 			var crewBossPayLines = _crewBossPayRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			crewBossPayLines.ForEach(x => x.BatchId = batch.Id);
@@ -800,6 +819,7 @@ namespace Payroll.Service
 
 		private void CalculateRanchAdjustments(int batchId, string company)
 		{
+			_logger.Log(LogLevel.Information, "Calculating ranch adjustments for {batchId}", batchId);
 			DateTime weekendOfAdjustmentPaid = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId).OrderByDescending(x => x.WeekEndOfAdjustmentPaid).FirstOrDefault()?.WeekEndOfAdjustmentPaid ?? new DateTime(2000, 1, 1);
 
 			/* Gross Calculations */

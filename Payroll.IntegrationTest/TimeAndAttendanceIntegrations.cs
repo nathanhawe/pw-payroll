@@ -22,13 +22,17 @@ namespace Payroll.IntegrationTest
 				.Options;
 
 			using var context = new PayrollContext(options);
+			
+			// Loggers
+			var apiLogger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var serviceLogger = new MockLogger<TimeAndAttendanceService>();
+
 
 			// Quick Base Connection
 			var configuration = ConfigurationHelper.GetIConfigurationRoot();
 			var realm = configuration["QuickBase:Realm"];
 			var userToken = configuration["QuickBase:UserToken"];
-			var logger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
-			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, logger);
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
 
 			// Repositories
 			var pslTrackingDailyRepo = new PslTrackingDailyRepo(quickBaseConnection);
@@ -65,6 +69,7 @@ namespace Payroll.IntegrationTest
 			var plantSummaryService = new PlantSummaryService(context);
 
 			var service = new TimeAndAttendanceService(
+				serviceLogger,
 				context,
 				pslTrackingDailyRepo,
 				crewBossPayRepo,
@@ -119,12 +124,15 @@ namespace Payroll.IntegrationTest
 
 			using var context = new PayrollContext(options);
 
+			// Loggers
+			var apiLogger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var serviceLogger = new MockLogger<TimeAndAttendanceService>();
+
 			// Quick Base Connection
 			var configuration = ConfigurationHelper.GetIConfigurationRoot();
 			var realm = configuration["QuickBase:Realm"];
 			var userToken = configuration["QuickBase:UserToken"];
-			var logger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
-			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, logger);
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
 
 			// Repositories
 			var pslTrackingDailyRepo = new PslTrackingDailyRepo(quickBaseConnection);
@@ -161,6 +169,7 @@ namespace Payroll.IntegrationTest
 			var plantSummaryService = new PlantSummaryService(context);
 
 			var service = new TimeAndAttendanceService(
+				serviceLogger,
 				context,
 				pslTrackingDailyRepo,
 				crewBossPayRepo,
