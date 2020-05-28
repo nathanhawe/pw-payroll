@@ -9,17 +9,15 @@ namespace PrimaCompany.IDP.Services
 {
 	public interface ILocalUserService
 	{
-		Task<bool> ValdiateClearTextCredentialsAsync(string username, string password);
-		//Task<bool> ValidateCredentialsAsyc(string username, string password);
-		Task<IEnumerable<Entities.UserClaim>> GetUserClaimsBySubjectAsyc(string subject);
-		Task<User> GetUserByUserNameAsync(string username);
+		void AddUser(User userToAdd, string password);
 		Task<User> GetUserBySubjectAsync(string subject);
-		void AddUser(User userToAdd);
-		//void AddUser(User userToAdd, string password);
-		Task<bool> IsUserActive(string subject);
-		//Task<bool> ActivateUser(string securityCode);
-		Task<bool> SaveChangesAsync();
+		Task<User> GetUserByUserNameAsync(string username);
+		Task<IEnumerable<Entities.UserClaim>> GetUserClaimsBySubjectAsyc(string subject);
 		Task<string> InitiatePasswordResetRequest(string email);
+		Task<bool> IsUserActive(string subject);
+		Task<bool> SaveChangesAsync();
 		Task<bool> SetPassword(string securityCode, string password);
+		Task<bool> ValidateCredentialsAsync(string username, string password);
+
 	}
 }

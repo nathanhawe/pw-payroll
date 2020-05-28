@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrimaCompany.IDP.DbContexts;
 
 namespace PrimaCompany.IDP.Migrations.IdentityDb
 {
     [DbContext(typeof(IdentityDbContext))]
-    partial class IdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200528201133_AddEmailAndSecurityCodeToUser")]
+    partial class AddEmailAndSecurityCodeToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

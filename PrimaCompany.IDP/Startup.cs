@@ -7,12 +7,14 @@ using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PrimaCompany.IDP.DbContexts;
+using PrimaCompany.IDP.Entities;
 using PrimaCompany.IDP.Services;
 using System;
 using System.Linq;
@@ -43,6 +45,7 @@ namespace PrimaCompany.IDP
 				options.UseSqlServer(identityDataConnectionString);
 			});
 
+			services.AddScoped<IPasswordHasher<Entities.User>, PasswordHasher<Entities.User>>();
 			services.AddScoped<ILocalUserService, LocalUserService>();
 
 			var builder = services.AddIdentityServer();
