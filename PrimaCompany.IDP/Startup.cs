@@ -9,8 +9,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PrimaCompany.IDP.DbContexts;
+using PrimaCompany.IDP.Services;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -20,38 +23,47 @@ namespace PrimaCompany.IDP
 	public class Startup
 	{
 		public IWebHostEnvironment Environment { get; }
+		public IConfiguration Configuration { get; }
 
-		public Startup(IWebHostEnvironment environment)
+		public Startup(IWebHostEnvironment environment, IConfiguration configuration)
 		{
 			Environment = environment;
+			Configuration = configuration;
 		}
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			var connectionString = "Server=(localdb)\\mssqllocaldb;Database=PrimaCompanyIDPData;Trusted_Connection=True;";
+			var idpConnectionString = Configuration.GetConnectionString("IDPConnection");
+			var identityDataConnectionString = Configuration.GetConnectionString("IdentityDataConnection");
 
-			// uncomment, if you want to add an MVC-based UI
 			services.AddControllersWithViews();
 
-			var builder = services.AddIdentityServer()
-				//.AddInMemoryIdentityResources(Config.Ids)
-				//.AddInMemoryApiResources(Config.Apis)
-				//.AddInMemoryClients(Config.Clients)
-				.AddTestUsers(TestUsers.Users);
+			services.AddDbContext<IdentityDbContext>(options =>
+			{
+				options.UseSqlServer(identityDataConnectionString);
+			});
+
+			services.AddScoped<ILocalUserService, LocalUserService>();
+
+			var builder = services.AddIdentityServer();
+
+			builder.AddProfileService<LocalUserProfileService>();
 
 			// not recommended for production - you need to store your key material somewhere secure
 			builder.AddDeveloperSigningCredential();
 
 			var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+			
+
 			builder.AddConfigurationStore(options =>
 			{
-				options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString, options => options.MigrationsAssembly(migrationsAssembly));
+				options.ConfigureDbContext = builder => builder.UseSqlServer(idpConnectionString, options => options.MigrationsAssembly(migrationsAssembly));
 			});
 
 			builder.AddOperationalStore(options =>
 			{
-				options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString, options => options.MigrationsAssembly(migrationsAssembly));
+				options.ConfigureDbContext = builder => builder.UseSqlServer(idpConnectionString, options => options.MigrationsAssembly(migrationsAssembly));
 			});
 		}
 
