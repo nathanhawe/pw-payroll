@@ -12,7 +12,6 @@ namespace Payroll.Service
 	public class PlantHourlyRateSelector : IPlantHourlyRateSelector
 	{
 		private readonly IMinimumWageService _minimumWageService;
-		private decimal H2ARate { get; } = 13.92M;
 
 		public PlantHourlyRateSelector(IMinimumWageService minimumWageService)
 		{
@@ -105,7 +104,7 @@ namespace Payroll.Service
 
 			if (isH2A)
 			{
-				return H2ARate;
+				return H2ARate(shiftDate);
 			}
 
 			if (laborCode == (int)PlantLaborCode.Palletizing)
@@ -126,7 +125,7 @@ namespace Payroll.Service
 			
 			if (laborCode == (int)PlantLaborCode.NightSanitation)
 			{
-				return Rate535(shiftDate, plant, calculatedEmployeeRate, minimumWage, H2ARate);
+				return Rate535(shiftDate, plant, calculatedEmployeeRate, minimumWage, H2ARate(shiftDate));
 			}
 			
 			if (laborCode == (int)PlantLaborCode.NightShiftSupervision)
@@ -158,6 +157,18 @@ namespace Payroll.Service
 
 			return EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 		}
+
+		/// <summary>
+		/// Returns the effective H-2A rate for the provided shift date.
+		/// </summary>
+		/// <param name="shiftDate"></param>
+		/// <returns></returns>
+		private decimal H2ARate(DateTime shiftDate)
+		{
+			if (shiftDate < new DateTime(2020, 5, 18)) return 13.92M;
+			return 14.77M;
+		}
+
 
 		/// <summary>
 		/// Returns the calculated rate for Palletizer.
@@ -194,11 +205,22 @@ namespace Payroll.Service
 					return Math.Max(calculatedEmployeeRate, 13M);
 				}
 			}
-			else
+			else if (shiftDate < new DateTime(2020, 5, 18))
 			{
 				if (plant == Plant.Cutler)
 				{
 					return Math.Max(calculatedEmployeeRate, (minimumWage + 1M));
+				}
+				else
+				{
+					return Math.Max(calculatedEmployeeRate, 14.77M);
+				}
+			}
+			else
+			{
+				if (plant == Plant.Cutler)
+				{
+					return Math.Max(calculatedEmployeeRate, (minimumWage + 1.5M));
 				}
 				else
 				{
@@ -221,7 +243,14 @@ namespace Payroll.Service
 					[Plant] = 2 => [EmployeeHourlyRateCalc] + 2
 					ELSE [EmployeeHourlyRateCalc]
 			*/
-			return calculatedEmployeeRate + (plant == Plant.Reedley ? 2 : 0);
+			if(shiftDate < new DateTime(2020, 5, 18))
+			{
+				return calculatedEmployeeRate + (plant == Plant.Reedley ? 2 : 0);
+			}
+			else
+			{
+				return calculatedEmployeeRate + 2.0M;
+			}
 		}
 
 		/// <summary>
