@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,7 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using Payroll.Data;
+using Payroll.Domain.Constants;
+using Payroll.Infrastructure.Authorization;
 using Payroll.Infrastructure.Middleware;
 
 namespace Payroll
@@ -29,7 +34,52 @@ namespace Payroll
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services.AddControllers()
+				.AddJsonOptions(options =>
+			{
+				options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+				options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+			});
+
+			services.AddHttpContextAccessor();
+
+			services.AddScoped<IAuthorizationHandler, SubjectMustMatchUserHandler>();
+			services.AddScoped<IAuthorizationHandler, AccessLevelHandler>();
+
+			services.AddAuthorization(authorizationOptions =>
+			{
+				authorizationOptions.AddPolicy(
+					AuthorizationPolicyConstants.SubjectMustMatchUser,
+					policyBuilder =>
+					{
+						policyBuilder.RequireAuthenticatedUser();
+						policyBuilder.AddRequirements(new SubjectMustMatchUserRequirement());
+					});
+
+				authorizationOptions.AddPolicy(
+					AuthorizationPolicyConstants.MustBeViewingUser,
+					policyBuilder =>
+					{
+						policyBuilder.RequireAuthenticatedUser();
+						policyBuilder.AddRequirements(new AccessLevelRequirement(AccessLevel.Viewer.ToString()));
+					});
+
+				authorizationOptions.AddPolicy(
+					AuthorizationPolicyConstants.MustBeBatchCreatingUser,
+					policyBuilder =>
+					{
+						policyBuilder.RequireAuthenticatedUser();
+						policyBuilder.AddRequirements(new AccessLevelRequirement(AccessLevel.BatchCreator.ToString()));
+					});
+
+				authorizationOptions.AddPolicy(
+					AuthorizationPolicyConstants.MustBeAdministrationUser,
+					policyBuilder =>
+					{
+						policyBuilder.RequireAuthenticatedUser();
+						policyBuilder.AddRequirements(new AccessLevelRequirement(AccessLevel.Administrator.ToString()));
+					});
+			});
 
 			// Add IdentityServer4 authentication service
 			services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
@@ -74,6 +124,7 @@ namespace Payroll
 			services.AddScoped<Service.Interface.IPlantMinimumMakeUpCalculator, Service.PlantMinimumMakeUpCalculator>();
 			services.AddScoped<Service.Interface.IPlantSummaryService, Service.PlantSummaryService>();
 			services.AddScoped<Service.Interface.ITimeAndAttendanceService, Service.TimeAndAttendanceService>();
+			services.AddScoped<Service.Interface.IApplicationUserProfileService, Service.ApplicationUserProfileService>();
 
 
 			// Add application repositories

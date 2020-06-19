@@ -9,6 +9,7 @@ namespace PrimaCompany.IDP.Services
 {
 	public interface ILocalUserService
 	{
+		Task<bool> ActivateUser(string securityCode);
 		void AddUser(User userToAdd, string password);
 		Task<User> GetUserBySubjectAsync(string subject);
 		Task<User> GetUserByUserNameAsync(string username);

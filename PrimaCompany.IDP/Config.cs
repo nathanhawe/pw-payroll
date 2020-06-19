@@ -36,7 +36,8 @@ namespace PrimaCompany.IDP
                 {
                     ClientId = "timeandattendance",
                     ClientName = "Time and Attendance",
-                    AccessTokenType = AccessTokenType.Reference,
+                    RequireConsent = false,
+                    AccessTokenType = AccessTokenType.Jwt,
                     UpdateAccessTokenClaimsOnRefresh = true,
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
@@ -52,12 +53,16 @@ namespace PrimaCompany.IDP
                     },
                     RedirectUris = new List<string>()
                     {
-                        "https://localhost:5001/signin-oidc"
+                        "http://localhost:3000/signin-oidc"
                     },
                     PostLogoutRedirectUris = new List<string>()
                     {
-                        "https://localhost:5001/signout-callback-oidc"
+                        "http://localhost:3000/signout-callback-oidc"
                     }
+                    ,AllowedCorsOrigins = new List<string>()
+					{
+                        "http://localhost:3000"
+					}
                 }
             };
         

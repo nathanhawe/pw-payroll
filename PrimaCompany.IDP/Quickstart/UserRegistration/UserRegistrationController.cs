@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PrimaCompany.IDP.Exceptions;
+using PrimaCompany.IDP.Migrations.IdentityDb;
 using PrimaCompany.IDP.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +29,23 @@ namespace PrimaCompany.IDP.UserRegistration
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_localUserService = localUserService ?? throw new ArgumentNullException(nameof(localUserService));
 			_interaction = interaction ?? throw new ArgumentNullException(nameof(interaction));
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> ActivateUser(string securityCode)
+		{
+			if(await _localUserService.ActivateUser(securityCode))
+			{
+				ViewData["Message"] = "Your account was successfully activated. Navigate to your client application to log in.";
+			}
+			else
+			{
+				ViewData["Message"] = "Your account couldn't be activated, please contact your administrator.";
+			}
+
+			await _localUserService.SaveChangesAsync();
+
+			return View();
 		}
 
 		[HttpGet]
@@ -54,7 +73,7 @@ namespace PrimaCompany.IDP.UserRegistration
 				Username = model.Username,
 				Subject = Guid.NewGuid().ToString(),
 				Email = model.Email,
-				Active = true
+				Active = false
 			};
 
 			userToCreate.Claims.Add(new Entities.UserClaim()
@@ -74,16 +93,23 @@ namespace PrimaCompany.IDP.UserRegistration
 				_localUserService.AddUser(userToCreate, model.Password);
 				await _localUserService.SaveChangesAsync();
 
-				// lot the user in after successfull registration
-				await HttpContext.SignInAsync(userToCreate.Subject, userToCreate.Username);
+				// create an activation link
+				var link = Url.ActionLink("ActivateUser", "UserRegistration", new { securityCode = userToCreate.SecurityCode });
 
-				// continue with the flow
-				if (_interaction.IsValidReturnUrl(model.ReturnUrl) || Url.IsLocalUrl(model.ReturnUrl))
-				{
-					return Redirect(model.ReturnUrl);
-				}
+				// todo: replace this with an email link for verification
+				Debug.WriteLine(link);
 
-				return Redirect("~/");
+				//// log the user in after successfull registration
+				//await HttpContext.SignInAsync(userToCreate.Subject, userToCreate.Username);
+
+				//// continue with the flow
+				//if (_interaction.IsValidReturnUrl(model.ReturnUrl) || Url.IsLocalUrl(model.ReturnUrl))
+				//{
+				//	return Redirect(model.ReturnUrl);
+				//}
+
+				//return Redirect("~/");
+				return View("ActivationCodeSent");
 			}
 			catch (UsernameIsNotUniqueException)
 			{

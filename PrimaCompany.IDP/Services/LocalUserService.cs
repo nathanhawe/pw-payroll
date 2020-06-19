@@ -37,10 +37,30 @@ namespace PrimaCompany.IDP.Services
 			if (!ValidateEmail(userToAdd.Email)) throw new EmailIsInvalidException();
 
 			userToAdd.SecurityCode = GenerateSecurityCode();
-			userToAdd.SecurityCodeExpirationDate = DateTime.UtcNow;
+			userToAdd.SecurityCodeExpirationDate = DateTime.UtcNow.AddHours(1);
 			userToAdd.Password = _passwordHasher.HashPassword(userToAdd, password);
 
 			_context.Users.Add(userToAdd);
+		}
+
+		public async Task<bool> ActivateUser(string securityCode)
+		{
+			if (string.IsNullOrWhiteSpace(securityCode))
+			{
+				throw new ArgumentNullException(nameof(securityCode));
+			}
+
+			// find a user with this security code as an active security code.
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.SecurityCode == securityCode && u.SecurityCodeExpirationDate >= DateTime.UtcNow);
+
+			if(user == null)
+			{
+				return false;
+			}
+
+			user.Active = true;
+			user.SecurityCode = null;
+			return true;
 		}
 			
 
@@ -60,8 +80,16 @@ namespace PrimaCompany.IDP.Services
 		public async Task<IEnumerable<UserClaim>> GetUserClaimsBySubjectAsyc(string subject)
 		{
 			if (string.IsNullOrWhiteSpace(subject)) throw new ArgumentNullException(nameof(subject));
+			var claims = await _context.UserClaims.Where(u => u.User.Subject == subject).ToListAsync();
+			var user = await GetUserBySubjectAsync(subject);
 
-			return await _context.UserClaims.Where(u => u.User.Subject == subject).ToListAsync();
+			claims.Add(new UserClaim()
+			{
+				Type = "email",
+				Value = user.Email
+			});
+
+			return claims;
 		}
 
 		public async Task<string> InitiatePasswordResetRequest(string email)

@@ -5,6 +5,7 @@
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.Options;
+using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -92,6 +93,7 @@ namespace PrimaCompany.IDP
 			{
 				endpoints.MapDefaultControllerRoute();
 			});
+			
 		}
 
 		// Bootstrap IP databases

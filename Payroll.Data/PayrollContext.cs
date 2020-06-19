@@ -23,6 +23,7 @@ namespace Payroll.Data
 		public DbSet<PlantAdjustmentLine> PlantAdjustmentLines { get; set; }
 		public DbSet<PlantSummary> PlantSummaries { get; set; }
 		public DbSet<UserAction> UserActions { get; set; }
+		public DbSet<ApplicationUserProfile> ApplicationUserProfiles {get; set;}
 
 		public PayrollContext()
 		{
