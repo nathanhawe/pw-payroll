@@ -34,6 +34,20 @@ namespace Payroll
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			// Explicitly define which origins are allowed in CORS.
+			services.AddCors(options =>
+			{
+				options.AddDefaultPolicy(builder =>
+				{
+					builder
+						.WithOrigins("http://localhost:3000")
+						.AllowAnyHeader()
+						.AllowAnyMethod();
+				});
+			});
+
+			// Set serialization naming policies to camel case. These settings do not affect the automatic response sent
+			// during model binding errors.
 			services.AddControllers()
 				.AddJsonOptions(options =>
 			{
@@ -41,11 +55,12 @@ namespace Payroll
 				options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 			});
 
+			// HTTP context accessor is used by the authorization handlers defined below.
 			services.AddHttpContextAccessor();
-
 			services.AddScoped<IAuthorizationHandler, SubjectMustMatchUserHandler>();
 			services.AddScoped<IAuthorizationHandler, AccessLevelHandler>();
 
+			// Define authorization policies
 			services.AddAuthorization(authorizationOptions =>
 			{
 				authorizationOptions.AddPolicy(
@@ -61,7 +76,7 @@ namespace Payroll
 					policyBuilder =>
 					{
 						policyBuilder.RequireAuthenticatedUser();
-						policyBuilder.AddRequirements(new AccessLevelRequirement(AccessLevel.Viewer.ToString()));
+						policyBuilder.AddRequirements(new AccessLevelRequirement(AccessLevel.Viewer.ToString(), AccessLevel.BatchCreator.ToString(), AccessLevel.Administrator.ToString()));
 					});
 
 				authorizationOptions.AddPolicy(
@@ -69,7 +84,7 @@ namespace Payroll
 					policyBuilder =>
 					{
 						policyBuilder.RequireAuthenticatedUser();
-						policyBuilder.AddRequirements(new AccessLevelRequirement(AccessLevel.BatchCreator.ToString()));
+						policyBuilder.AddRequirements(new AccessLevelRequirement(AccessLevel.BatchCreator.ToString(), AccessLevel.Administrator.ToString()));
 					});
 
 				authorizationOptions.AddPolicy(
@@ -82,6 +97,7 @@ namespace Payroll
 			});
 
 			// Add IdentityServer4 authentication service
+			// ToDo: Move this configuration into a config and/or environment variables
 			services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
 				.AddIdentityServerAuthentication(options =>
 				{
@@ -90,10 +106,12 @@ namespace Payroll
 					options.ApiSecret = "apisecret";
 				});
 
+			// Inject the database context for application data
 			services.AddDbContext<PayrollContext>(opt =>
 				opt.UseSqlServer(Configuration.GetConnectionString("PayrollConnection"))
 			);
 			
+			// Inject the Quick Base connection
 			services.AddScoped<QuickBase.Api.IQuickBaseConnection>(x =>
 				ActivatorUtilities.CreateInstance<QuickBase.Api.QuickBaseConnection>(x, Configuration["QuickBase:Realm"], Configuration["QuickBase:UserToken"])
 			);
@@ -128,32 +146,34 @@ namespace Payroll
 
 
 			// Add application repositories
-			services.AddScoped<Payroll.Data.QuickBase.IPslTrackingDailyRepo, Payroll.Data.QuickBase.PslTrackingDailyRepo>();
-			services.AddScoped<Payroll.Data.QuickBase.ICrewBossPayRepo, Payroll.Data.QuickBase.CrewBossPayRepo>();
-			services.AddScoped<Payroll.Data.QuickBase.IRanchPayrollRepo, Payroll.Data.QuickBase.RanchPayrollRepo>();
-			services.AddScoped<Payroll.Data.QuickBase.IRanchPayrollAdjustmentRepo, Payroll.Data.QuickBase.RanchPayrollAdjustmentRepo>();
-			services.AddScoped<Payroll.Data.QuickBase.IRanchSummariesRepo, Payroll.Data.QuickBase.RanchSummariesRepo>();
-			services.AddScoped<Payroll.Data.QuickBase.IPlantPayrollRepo, Payroll.Data.QuickBase.PlantPayrollRepo>();
-			services.AddScoped<Payroll.Data.QuickBase.IPlantPayrollAdjustmentRepo, Payroll.Data.QuickBase.PlantPayrollAdjustmentRepo>();
-			services.AddScoped<Payroll.Data.QuickBase.IPlantSummariesRepo, Payroll.Data.QuickBase.PlantSummariesRepo>();
+			services.AddScoped<Data.QuickBase.IPslTrackingDailyRepo, Data.QuickBase.PslTrackingDailyRepo>();
+			services.AddScoped<Data.QuickBase.ICrewBossPayRepo, Data.QuickBase.CrewBossPayRepo>();
+			services.AddScoped<Data.QuickBase.IRanchPayrollRepo, Data.QuickBase.RanchPayrollRepo>();
+			services.AddScoped<Data.QuickBase.IRanchPayrollAdjustmentRepo, Data.QuickBase.RanchPayrollAdjustmentRepo>();
+			services.AddScoped<Data.QuickBase.IRanchSummariesRepo, Data.QuickBase.RanchSummariesRepo>();
+			services.AddScoped<Data.QuickBase.IPlantPayrollRepo, Data.QuickBase.PlantPayrollRepo>();
+			services.AddScoped<Data.QuickBase.IPlantPayrollAdjustmentRepo, Data.QuickBase.PlantPayrollAdjustmentRepo>();
+			services.AddScoped<Data.QuickBase.IPlantSummariesRepo, Data.QuickBase.PlantSummariesRepo>();
 
 			// Add hosted services
-			services.AddHostedService<Payroll.Infrastructure.HostedServices.QueuedHostedService>();
-			services.AddSingleton<Payroll.Infrastructure.HostedServices.IBackgroundTaskQueue, Payroll.Infrastructure.HostedServices.BackgroundTaskQueue>();
+			services.AddHostedService<Infrastructure.HostedServices.QueuedHostedService>();
+			services.AddSingleton<Infrastructure.HostedServices.IBackgroundTaskQueue, Infrastructure.HostedServices.BackgroundTaskQueue>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			if (env.IsDevelopment())
-			{
-				//app.UseDeveloperExceptionPage();
-			}
+			//if (env.IsDevelopment())
+			//{
+			//	app.UseDeveloperExceptionPage();
+			//}
 			app.UseApiExceptionHandler();
 
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
+
+			app.UseCors();
 
 			app.UseAuthentication();
 

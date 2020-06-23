@@ -52,6 +52,15 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
+		/// Returns the total count of active <c>CrewLaborWage</c> records.
+		/// </summary>
+		/// <returns></returns>
+		public int GetTotalCrewLaborWageCount()
+		{
+			return _context.CrewLaborWages.Where(x => !x.IsDeleted).Count();
+		}
+
+		/// <summary>
 		/// Returns the crew labor rate effective as of the provided shift date.
 		/// </summary>
 		/// <param name="shiftDate"></param>
@@ -82,14 +91,19 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
-		/// Returns all of the <c>CrewLaborWage</c> records.
+		/// Returns all of the <c>CrewLaborWage</c> records.  Ignores orderByDescending flag.
 		/// </summary>
+		/// <param name="offset"></param>
+		/// <param name="limit"></param>
+		/// <param name="orderByDescending"></param>
 		/// <returns></returns>
-		public List<CrewLaborWage> GetWages()
+		public List<CrewLaborWage> GetWages(int offset, int limit, bool orderByDescending)
 		{
 			return _context.CrewLaborWages
 				.Where(x => !x.IsDeleted)
 				.OrderByDescending(o => o.EffectiveDate)
+				.Skip(offset * limit)
+				.Take(limit)
 				.ToList();
 		}
 

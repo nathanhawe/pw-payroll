@@ -126,7 +126,6 @@ namespace Payroll.UnitTest.Helpers
 			bool? isDeleted = null,
 			DateTime? startDate = null,
 			DateTime? endDate = null,
-			string state = null,
 			bool? isComplete = null,
 			string owner = null)
 		{
@@ -136,7 +135,6 @@ namespace Payroll.UnitTest.Helpers
 			isDeleted ??= false;
 			startDate ??= DateTime.Now;
 			//endDate ??= DateTime.Now;
-			//state ??= "Pending";
 			isComplete ??= false;
 			owner ??= "Test";
 
@@ -148,7 +146,6 @@ namespace Payroll.UnitTest.Helpers
 				IsDeleted = isDeleted.Value,
 				StartDate = startDate,
 				EndDate = endDate,
-				State = state,
 				IsComplete = isComplete.Value,
 				Owner = owner
 			};

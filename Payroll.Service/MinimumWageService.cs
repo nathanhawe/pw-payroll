@@ -67,6 +67,15 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
+		/// Returns the total count of active <c>MinimumWage</c> records.
+		/// </summary>
+		/// <returns></returns>
+		public int GetTotalMininumWageCount()
+		{
+			return _context.MinimumWages.Where(x => !x.IsDeleted).Count();
+		}
+
+		/// <summary>
 		/// Returns the <c>MinimumWage</c> with the passed ID.
 		/// </summary>
 		/// <param name="id"></param>
@@ -83,12 +92,26 @@ namespace Payroll.Service
 		/// <summary>
 		/// Returns all of the <c>MinimumWage</c> records.
 		/// </summary>
+		/// <param name="offset"></param>
+		/// <param name="limit"></param>
+		/// <param name="orderByDescending"></param>
 		/// <returns></returns>
-		public List<MinimumWage> GetWages()
+		public List<MinimumWage> GetWages(int offset, int limit, bool orderByDescending)
 		{
-			return _context.MinimumWages
-				.Where(x => !x.IsDeleted)
-				.OrderByDescending(o => o.EffectiveDate)
+			var query = _context.MinimumWages.Where(x => !x.IsDeleted);
+
+			if (orderByDescending)
+			{
+				query = query.OrderByDescending(o => o.EffectiveDate);
+			}
+			else
+			{
+				query = query.OrderBy(o => o.EffectiveDate);
+			}
+			
+			return query
+				.Skip(offset * limit)
+				.Take(limit)
 				.ToList();
 		}
 

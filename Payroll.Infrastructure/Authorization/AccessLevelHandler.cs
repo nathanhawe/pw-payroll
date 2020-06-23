@@ -23,13 +23,16 @@ namespace Payroll.Infrastructure.Authorization
 
 			var accessLevel = _applicationUserProfileService.GetApplicationUserProfile(subject)?.AccessLevel;
 
-			if(accessLevel != requirement.RequiredAccessLevel)
+			foreach(string permittedAccessLevel in requirement.PermittedAccessLevels)
 			{
-				context.Fail();
-				return Task.CompletedTask;
+				if(accessLevel == permittedAccessLevel)
+				{
+					context.Succeed(requirement);
+					return Task.CompletedTask;
+				}
 			}
 
-			context.Succeed(requirement);
+			context.Fail();
 			return Task.CompletedTask;
 		}
 	}

@@ -8,11 +8,15 @@ namespace Payroll.Infrastructure.Authorization
 {
 	public class AccessLevelRequirement : IAuthorizationRequirement
 	{
-		public string RequiredAccessLevel { get; }
+		public List<string> PermittedAccessLevels { get; } = new List<string>();
 
-		public AccessLevelRequirement(string requiredAccessLevel)
+		public AccessLevelRequirement(string permittedAccessLevel)
 		{
-			RequiredAccessLevel = requiredAccessLevel;
+			PermittedAccessLevels.Add(permittedAccessLevel);
+		}
+		public AccessLevelRequirement(params string[] permittedAccessLevels)
+		{
+			PermittedAccessLevels.AddRange(permittedAccessLevels);
 		}
 	}
 

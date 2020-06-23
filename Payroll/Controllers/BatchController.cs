@@ -1,21 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Payroll.Data;
 using Payroll.Domain;
 using Payroll.Infrastructure.HostedServices;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Payroll.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	//[Authorize]
+	[Authorize]
 	public class BatchController : ControllerBase
 	{
 		private readonly ILogger<BatchController> _logger;
@@ -36,35 +35,83 @@ namespace Payroll.Controllers
 		}
 
 		[HttpGet]
-		public IEnumerable<Payroll.Domain.Batch> Get(int pageNumber = 1, int itemsPerPage = 20, bool orderByDescending = true)
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeViewingUser)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public ActionResult<Models.ApiResponse<IEnumerable<Batch>>> Get(
+			int offset = 0, 
+			int limit = 20, 
+			bool orderByDescending = true)
 		{
-			return _batchService.GetBatches(pageNumber, itemsPerPage, orderByDescending);
+			var batches = _batchService.GetBatches(offset, limit, orderByDescending);
+			int batchCount = _batchService.GetTotalBatchCount();
+			return Ok(new Models.ApiResponse<IEnumerable<Batch>>
+			{
+				Data = batches,
+				Pagination = new Models.Pagination
+				{
+					Offset = offset,
+					Limit = limit,
+					Total = batchCount,
+					OrderByDescending = orderByDescending
+				}
+			});
 		}
 
 		[HttpGet("{id:int}")]
-		public Payroll.Domain.Batch Get(
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeViewingUser)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public ActionResult<Models.ApiResponse<Batch>> Get(
 			int id)
 		{
-			return _batchService.GetBatch(id);
+			var batch = _batchService.GetBatch(id);
+			return Ok(new Models.ApiResponse<Batch>
+			{
+				Data = batch
+			});
 		}
 
 		[HttpPost]
-		public Payroll.Domain.Batch Post(
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeBatchCreatingUser)]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public ActionResult<Models.ApiResponse<Batch>> Post(
 			[FromBody]Models.BatchViewModel viewModel)
 		{
-			var batch = new Payroll.Domain.Batch
+			var errors = new Dictionary<string, List<string>>();
+			var batch = new Batch
 			{
 				WeekEndDate = viewModel.WeekEndDate.Value,
 				LayoffId = viewModel.LayoffId,
 				Company = viewModel.Company
 			};
 
-			_batchService.AddBatch(batch, "ToDo");
+			if (_batchService.CanAddBatch())
+			{
+				var sub = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value ?? "Unknown";
+				_batchService.AddBatch(batch, sub);
 
-			// Trigger calculations now that a batch has been added
-			EnqueueTimeAndAttendanceCalculations(batch);
-
-			return batch;
+				// Trigger calculations now that a batch has been added
+				EnqueueTimeAndAttendanceCalculations(batch);
+			}
+			else
+			{
+				errors.Add("Batch Processing", new List<string> { "Unable to create a new batch while processing an existing batch." });
+			}
+			
+			if(errors.Count == 0)
+			{
+				return Created($"api/batch/{batch.Id}",new Models.ApiResponse<Batch>
+				{
+					Data = batch
+				});
+			}
+			else
+			{
+				return BadRequest(new Models.ApiResponse<Batch>
+				{
+					Errors = errors
+				});
+			}
 		}
 
 		[NonAction]

@@ -1,5 +1,6 @@
 ﻿using Payroll.Data;
 using Payroll.Domain;
+using Payroll.Domain.Constants;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,15 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
+		/// Returns true if processing rules allow a new batch to be created.
+		/// </summary>
+		/// <returns></returns>
+		public bool CanAddBatch()
+		{
+			return _context.Batches.Where(x => !x.IsComplete).Count() == 0;
+		}
+
+		/// <summary>
 		/// Returns the <c>Batch</c> with the passed ID.
 		/// </summary>
 		/// <param name="id"></param>
@@ -50,9 +60,9 @@ namespace Payroll.Service
 		/// <param name="itemsPerPage"></param>
 		/// <param name="orderByDescending"></param>
 		/// <returns></returns>
-		public List<Batch> GetBatches(int pageNumber, int itemsPerPage, bool orderByDescending)
+		public List<Batch> GetBatches(int offset, int limit, bool orderByDescending)
 		{
-			if (pageNumber < 1) pageNumber = 1;
+			if (offset < 0) offset = 0;
 
 			var query = _context.Batches.Where(x => !x.IsDeleted);
 			if (orderByDescending)
@@ -65,9 +75,27 @@ namespace Payroll.Service
 			}
 
 			return query
-				.Skip((pageNumber - 1) * itemsPerPage)
-				.Take(itemsPerPage)
+				.Skip(offset * limit)
+				.Take(limit)
 				.ToList();
+		}
+
+		/// <summary>
+		/// Returns the batch currently being processed or the most recently processed batch if no batch is currently being processed.
+		/// </summary>
+		/// <returns></returns>
+		public Batch GetCurrentlyProcessingBatch()
+		{
+			return _context.Batches.OrderByDescending(x => x.Id).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Returns the count of active <c>Batch</c> records in the database.
+		/// </summary>
+		/// <returns></returns>
+		public int GetTotalBatchCount()
+		{
+			return _context.Batches.Where(x => !x.IsDeleted).Count();
 		}
 	}
 }

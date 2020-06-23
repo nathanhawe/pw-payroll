@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Payroll.Domain.Constants;
+using System;
 
 namespace Payroll.Domain
 {
@@ -9,7 +10,8 @@ namespace Payroll.Domain
 		public string Company { get; set; }
 		public DateTime? StartDate { get; set; }
 		public DateTime? EndDate { get; set; }
-		public string State { get; set; }
+		public BatchProcessingStatus ProcessingStatus { get; set; } = BatchProcessingStatus.NotStarted;
+		public string StatusMessage { get; set; }
 		public bool IsComplete { get; set; }
 		public string Owner { get; set; }
 		

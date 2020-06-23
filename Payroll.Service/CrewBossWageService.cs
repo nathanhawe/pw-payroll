@@ -51,6 +51,15 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
+		/// Returns the count of all active <c>CrewBossWage</c> records.
+		/// </summary>
+		/// <returns></returns>
+		public int GetTotalCrewBossWageCount()
+		{
+			return _context.CrewBossWages.Where(x => !x.IsDeleted).Count();
+		}
+
+		/// <summary>
 		/// Returns the crew boss wage effective for the provided shift date and count of workers.
 		/// </summary>
 		/// <param name="shiftDate"></param>
@@ -85,15 +94,22 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
-		///  Returns all of the <c>CrewBossWage</c> records.
+		/// Returns all of the <c>CrewBossWage</c> records.  Ignores orderByDescending flag.
 		/// </summary>
+		/// <param name="offset"></param>
+		/// <param name="limit"></param>
+		/// <param name="orderByDescending"></param>
 		/// <returns></returns>
-		public List<CrewBossWage> GetWages()
+		public List<CrewBossWage> GetWages(int offset, int limit, bool orderByDescending)
 		{
+			if (offset < 0) offset = 0;
+
 			return _context.CrewBossWages
-				.Where(x => x.IsDeleted == false)
+				.Where(x => !x.IsDeleted)
 				.OrderBy(o => o.WorkerCountThreshold)
 				.ThenByDescending(o => o.EffectiveDate)
+				.Skip(offset * limit)
+				.Take(limit)
 				.ToList();
 		}
 

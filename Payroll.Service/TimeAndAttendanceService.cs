@@ -114,18 +114,27 @@ namespace Payroll.Service
 
 		public void PerformCalculations(int batchId)
 		{
-			_logger.Log(LogLevel.Information, "Starting calculations for batch {batchId}", batchId);
-
-			var batch = _context.Batches.Where(x => x.Id == batchId).FirstOrDefault();
-			if (batch == null) throw new Exception($"The provided batch ID of '{batchId}' was not found in the database.");
-
-			switch (batch.Company)
+			try
 			{
-				case Company.Plants: PerformPlantCalculations(batch); break;
-				case Company.Ranches: PerformRanchCalculations(batch); break;
-				default: throw new Exception($"Unknown company value '{batch.Company}'.");
+				_logger.Log(LogLevel.Information, "Starting calculations for batch {batchId}", batchId);
+				var batch = _context.Batches.Where(x => x.Id == batchId).FirstOrDefault();
+				if (batch == null) throw new Exception($"The provided batch ID of '{batchId}' was not found in the database.");
+				SetBatchStatus(batchId, BatchProcessingStatus.Starting);
+
+				switch (batch.Company)
+				{
+					case Company.Plants: PerformPlantCalculations(batch); break;
+					case Company.Ranches: PerformRanchCalculations(batch); break;
+					default: throw new Exception($"Unknown company value '{batch.Company}'.");
+				}
+				_logger.Log(LogLevel.Information, "Completed calculations for batch {batchId}", batchId);
+				SetBatchStatus(batchId, BatchProcessingStatus.Success);
 			}
-			_logger.Log(LogLevel.Information, "Completed calculations for batch {batchId}", batchId);
+			catch(Exception ex)
+			{
+				SetBatchStatus(batchId, BatchProcessingStatus.Failed);
+				throw ex;
+			}
 		}
 
 		private void PerformPlantCalculations(Batch batch)
@@ -133,9 +142,11 @@ namespace Payroll.Service
 			var company = Company.Plants;
 
 			/* Download Quick Base data */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Downloading);
 			CopyPlantDataFromQuickBase(batch);
 
 			/* Gross Calculations */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
 			// Hourly
 			var hourlyLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id &&
 				(
@@ -175,6 +186,8 @@ namespace Payroll.Service
 
 			_logger.Log(LogLevel.Information, "Calculating PSL for batch {batchId}", batch.Id);
 			/* PSL Requires hours and gross for regular, piece; also requires hours on Sick Leave pay types*/
+			SetBatchStatus(batch.Id, BatchProcessingStatus.PaidSickLeaveCalculations);
+	
 			// Perform PSL calculations
 			var startDate = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
 			var endDate = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).OrderByDescending(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
@@ -198,6 +211,7 @@ namespace Payroll.Service
 
 			_logger.Log(LogLevel.Information, "Calculating OT/DT/WOT/Seventh Day for batch {batchId}", batch.Id);
 			/* OT/DT/Seventh Day Hours */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.AdditionalCalculations);
 			// Daily summaries group all of the plant pay lines by Employee, Week End Date, Shift Date, Alternative Work Week, and Minimum Wage.
 			// Additionally it selects the last of plant sorting - I believe - on the Quick Base Record ID.
 			// This needs to be double checked before going to production and the actual rules for the calculation should be confirmed.
@@ -319,15 +333,18 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			/* Calculate Adjustments */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Adjustments);
 			CalculatePlantAdjustments(batch.Id, company);
 
 			/* Create Summaries */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Summaries);
 			_logger.Log(LogLevel.Information, "Calculating plant summaries for batch {batchId}", batch.Id);
 			var summaries = _plantSummaryService.CreateSummariesForBatch(batch.Id);
 			_context.AddRange(summaries);
 			_context.SaveChanges();
 
 			/* Update records to Quick Base */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
 			// Ranch Payroll Records
 			// Ranch Adjustment Records
@@ -562,9 +579,11 @@ namespace Payroll.Service
 			var company = Company.Ranches;
 
 			/* Download Quick Base data */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Downloading);
 			CopyRanchDataFromQuickBase(batch);
 
 			/* Crew Boss Calculations */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.CrewBossCalculations);
 			var crewBossPayLines = _crewBossPayService.CalculateCrewBossPay(batch.Id);
 
 			// Add crew boss pay lines to database.
@@ -573,6 +592,7 @@ namespace Payroll.Service
 
 
 			/* Gross Calculations */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
 			// Hourly
 			var hourlyLines = _context.RanchPayLines.Where(x => x.BatchId == batch.Id &&
 				(
@@ -606,6 +626,7 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			/* PSL Requires hours and gross for regular, piece, and CB pay types; also requires hours on Sick Leave pay types*/
+			SetBatchStatus(batch.Id, BatchProcessingStatus.PaidSickLeaveCalculations);
 			_logger.Log(LogLevel.Information, "Calculating PSL for batch {batchId}", batch.Id);
 			// Perform PSL calculations
 			var startDate = _context.RanchPayLines.Where(x => x.BatchId == batch.Id).OrderBy(s => s.ShiftDate).FirstOrDefault()?.ShiftDate ?? DateTime.Now;
@@ -630,6 +651,7 @@ namespace Payroll.Service
 
 
 			/* OT/DT/Seventh Day Hours */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.AdditionalCalculations);
 			_logger.Log(LogLevel.Information, "Calculating OT/DT/WOT/Seventh Day for batch {batchId}", batch.Id);
 			// Daily summaries group all of the ranch pay lines by Employee, Week End Date, Shift Date, Alternative Work Week, and Minimum Wage.
 			// Additionally it selects the last of Crew and last of FiveEight sorting - I believe - on the Quick Base Record ID.
@@ -774,15 +796,18 @@ namespace Payroll.Service
 
 
 			/* Calculate Adjustments */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Adjustments);
 			CalculateRanchAdjustments(batch.Id, company);
 
 			/* Create Summaries */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Summaries);
 			_logger.Log(LogLevel.Information, "Calculating ranch summaries for batch {batchId}", batch.Id);
 			var summaries = _ranchSummaryService.CreateSummariesForBatch(batch.Id);
 			_context.AddRange(summaries);
 			_context.SaveChanges();
 
 			/* Update records to Quick Base */
+			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
 			// Ranch Payroll Records
 			// Ranch Adjustment Records
@@ -1031,6 +1056,32 @@ namespace Payroll.Service
 				.ToList();
 			_context.RanchPayLines.AddRange(adjustmentLines);
 			_context.SaveChanges();
+		}
+
+		private void SetBatchStatus(int id, BatchProcessingStatus status)
+		{
+			var batch = _context.Batches.Find(id);
+			if(batch != null)
+			{
+				if(status == BatchProcessingStatus.Failed)
+				{
+					batch.StatusMessage = $"Batch ID #{batch.Id} failed while at step '{batch.ProcessingStatus}'.";
+					batch.IsComplete = true;
+					batch.EndDate = DateTime.UtcNow;
+				}
+				else if(status == BatchProcessingStatus.Success)
+				{
+					batch.IsComplete = true;
+					batch.EndDate = DateTime.UtcNow;
+				}
+				else if(status == BatchProcessingStatus.Starting)
+				{
+					batch.StartDate = DateTime.UtcNow;
+				}
+				
+				batch.ProcessingStatus = status;
+				_context.SaveChanges();
+			}
 		}
 	}
 }

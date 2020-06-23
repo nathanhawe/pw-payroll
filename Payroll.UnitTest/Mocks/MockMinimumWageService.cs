@@ -32,7 +32,12 @@ namespace Payroll.UnitTest.Mocks
             }
         }
 
-        public MinimumWage GetWage(int id)
+		public int GetTotalMininumWageCount()
+		{
+			throw new NotImplementedException();
+		}
+
+		public MinimumWage GetWage(int id)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +47,12 @@ namespace Payroll.UnitTest.Mocks
             throw new NotImplementedException();
         }
 
-        public void Test_AddMinimumWage(DateTime date, decimal wage)
+		public List<MinimumWage> GetWages(int offset, int limit, bool orderByDescending)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Test_AddMinimumWage(DateTime date, decimal wage)
         {
             if (MinimumWages.ContainsKey(date))
             {

@@ -7,9 +7,10 @@ namespace Payroll.Service.Interface
 	{
 		void AddWage(Domain.CrewBossWage crewBossWage);
 		Domain.CrewBossWage GetWage(int id);
-		List<Domain.CrewBossWage> GetWages();
+		List<Domain.CrewBossWage> GetWages(int offset, int limit, bool orderByDescending);
 		Domain.CrewBossWage UpdateWage(int id, Domain.CrewBossWage crewBossWage);
 		Domain.CrewBossWage DeleteWage(int id);
 		decimal GetWage(DateTime shiftDate, int countOfWorkers);
+		int GetTotalCrewBossWageCount();
 	}
 }

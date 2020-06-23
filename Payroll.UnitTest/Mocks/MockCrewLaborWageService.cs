@@ -27,7 +27,12 @@ namespace Payroll.UnitTest.Mocks
             throw new NotImplementedException();
         }
 
-        public decimal GetWage(DateTime shiftDate)
+		public int GetTotalCrewLaborWageCount()
+		{
+			throw new NotImplementedException();
+		}
+
+		public decimal GetWage(DateTime shiftDate)
         {
             return _defaultWage;
         }
@@ -42,7 +47,12 @@ namespace Payroll.UnitTest.Mocks
             throw new NotImplementedException();
         }
 
-        public CrewLaborWage UpdateWage(int id, CrewLaborWage crewLaborWage)
+		public List<CrewLaborWage> GetWages(int offset, int limit, bool orderByDescending)
+		{
+			throw new NotImplementedException();
+		}
+
+		public CrewLaborWage UpdateWage(int id, CrewLaborWage crewLaborWage)
         {
             throw new NotImplementedException();
         }

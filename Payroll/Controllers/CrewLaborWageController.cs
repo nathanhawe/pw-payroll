@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Payroll.Data;
+using Payroll.Models;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Payroll.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	//[Authorize]
+	[Authorize]
 	public class CrewLaborWageController : ControllerBase
 	{
 		private readonly ILogger<CrewLaborWageController> _logger;
@@ -27,50 +26,111 @@ namespace Payroll.Controllers
 		}
 
 		[HttpGet]
-		public IEnumerable<Payroll.Domain.CrewLaborWage> Get()
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeViewingUser)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public ActionResult<ApiResponse<IEnumerable<Domain.CrewLaborWage>>> Get(
+			int offset = 0,
+			int limit = 50,
+			bool orderByDescending = true)
 		{
-			return _crewLaborWageService.GetWages();
+			var wages = _crewLaborWageService.GetWages(offset, limit, orderByDescending);
+			int wageCount = _crewLaborWageService.GetTotalCrewLaborWageCount();
+
+			return Ok(
+				new ApiResponse<IEnumerable<Domain.CrewLaborWage>>
+				{
+					Data = wages,
+					Pagination = new Pagination
+					{
+						Offset = offset,
+						Limit = limit,
+						Total = wageCount,
+						OrderByDescending = orderByDescending
+					}
+				});
 		}
 
 		[HttpGet("{id:int}")]
-		public Payroll.Domain.CrewLaborWage Get(
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeViewingUser)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public ActionResult<ApiResponse<Domain.CrewLaborWage>> Get(
 			int id)
 		{
-			return _crewLaborWageService.GetWage(id);
+			var wage = _crewLaborWageService.GetWage(id);
+			return Ok(
+				new ApiResponse<Domain.CrewLaborWage>
+				{
+					Data = wage
+				});
 		}
 
 		[HttpPost]
-		public Payroll.Domain.CrewLaborWage Post(
-			[FromBody]Models.CrewLaborWageViewModel viewModel)
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeAdministrationUser)]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		public ActionResult<ApiResponse<Domain.CrewLaborWage>> Post(
+			[FromBody]CrewLaborWageViewModel viewModel)
 		{
-			var crewLaborWage = new Payroll.Domain.CrewLaborWage
+			var crewLaborWage = new Domain.CrewLaborWage
 			{
 				EffectiveDate = viewModel.EffectiveDate,
 				Wage = viewModel.Wage
 			};
 			_crewLaborWageService.AddWage(crewLaborWage);
-			return crewLaborWage;
+
+			return Created(
+				$"api/crewlaborwage/{crewLaborWage.Id}",
+				new ApiResponse<Domain.CrewLaborWage>
+				{
+					Data = crewLaborWage
+				}
+			);
 		}
 
 		[HttpPut("{id:int}")]
-		public Payroll.Domain.CrewLaborWage Put(
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeAdministrationUser)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public ActionResult<ApiResponse<Domain.CrewLaborWage>> Put(
 			int id, 
-			[FromBody]Models.CrewLaborWageViewModel viewModel)
+			[FromBody]CrewLaborWageViewModel viewModel)
 		{
-			var crewLaborWage = new Payroll.Domain.CrewLaborWage
+			var crewLaborWage = new Domain.CrewLaborWage
 			{
 				EffectiveDate = viewModel.EffectiveDate,
 				Wage = viewModel.Wage
 			};
 
-			return _crewLaborWageService.UpdateWage(id, crewLaborWage);
+			try
+			{
+				var updatedWage = _crewLaborWageService.UpdateWage(id, crewLaborWage);
+				return Ok(
+					new ApiResponse<Domain.CrewLaborWage>
+					{
+						Data = updatedWage
+					});
+			}
+			catch (Exception ex)
+			{
+				_logger.Log(LogLevel.Error, "Unable to update {CrewLaborWage} because an exception occured. {Exception}", viewModel, ex);
+				return BadRequest(
+					new ApiResponse<Domain.CrewLaborWage>
+					{
+						Errors = new Dictionary<string, List<string>>
+						{
+							{"", new List<string>{ "Unable to complete update because an error occured."} }
+						}
+					});
+			}
 		}
 
 		[HttpDelete("{id:int}")]
-		public Payroll.Domain.CrewLaborWage Delete(
+		[Authorize(Policy = Infrastructure.Authorization.AuthorizationPolicyConstants.MustBeAdministrationUser)]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		public ActionResult Delete(
 			int id)
 		{
-			return _crewLaborWageService.DeleteWage(id);
+			_crewLaborWageService.DeleteWage(id);
+			return NoContent();
 		}
 
 	}

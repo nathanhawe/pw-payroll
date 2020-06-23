@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Payroll.Domain.Constants;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,9 @@ namespace Payroll.Service.Interface
 	{
 		void AddBatch(Domain.Batch batch, string owner);
 		Domain.Batch GetBatch(int id);
-		List<Domain.Batch> GetBatches(int pageNumber, int itemsPerPage, bool orderByDescending);
+		List<Domain.Batch> GetBatches(int offset, int limit, bool orderByDescending);
+		bool CanAddBatch();
+		Domain.Batch GetCurrentlyProcessingBatch();
+		int GetTotalBatchCount();
 	}
 }
