@@ -25,7 +25,7 @@ namespace Payroll
 			// Configure logging for this application
 			Log.Logger = new LoggerConfiguration()
 				.ReadFrom.Configuration(Configuration)
-				.WriteTo.File(new JsonFormatter(), @"C:\temp\logs\payroll.json", shared: true, rollingInterval: RollingInterval.Day)
+				.WriteTo.File(new JsonFormatter(), Configuration["Serilog:FilePath"], shared: true, rollingInterval: RollingInterval.Day)
 				.CreateLogger();
 
 			try

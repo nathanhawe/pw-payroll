@@ -10,7 +10,7 @@ This application is currently in development.
 1. Restore nuget packages
 1. Update the local instance of MSSQLLocalDB for PrimaCompany.IDP by opening the Package Manager Console, setting the default project to PrimaCompany.IDP and executing the following command:
 	* `Update-Database -Context ConfigurationDbContext -StartupProject PrimaCompany.IDP`
-	* `Update-Database -Context PersistedGrandDbContext -StartupProject PrimaCompany.IDP`
+	* `Update-Database -Context PersistedGrantDbContext -StartupProject PrimaCompany.IDP`
 	* `Update-Database -Context IdentityDbContext -StartupProject PrimaCompany.IDP`
 1. Update the local instance of MSSQLLocalDB for Payroll.Data by opening the Package Manager Console, setting the default project to Payroll.data and typing `Update-Database -StartupProject Payroll`.
 1. Add required app secrets using `dotnet user-secrets set "<Key>" "<Value>" --project payroll`

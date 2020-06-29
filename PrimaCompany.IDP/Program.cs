@@ -26,7 +26,7 @@ namespace PrimaCompany.IDP
         {
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.File(new JsonFormatter(), @"C:\temp\logs\identityProvider.json", shared: true, rollingInterval: RollingInterval.Day)
+                .WriteTo.File(new JsonFormatter(), Configuration["Serilog:FilePath"], shared: true, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             try

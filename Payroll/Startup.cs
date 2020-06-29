@@ -35,12 +35,13 @@ namespace Payroll
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// Explicitly define which origins are allowed in CORS.
+			var origins = Configuration.GetSection("AllowedCorsOrigins").Get<string[]>();
 			services.AddCors(options =>
 			{
 				options.AddDefaultPolicy(builder =>
 				{
 					builder
-						.WithOrigins("http://localhost:3000")
+						.WithOrigins(origins)
 						.AllowAnyHeader()
 						.AllowAnyMethod();
 				});
@@ -97,13 +98,12 @@ namespace Payroll
 			});
 
 			// Add IdentityServer4 authentication service
-			// ToDo: Move this configuration into a config and/or environment variables
 			services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
 				.AddIdentityServerAuthentication(options =>
 				{
-					options.Authority = "https://localhost:6001";
-					options.ApiName = "timeandattendanceapi";
-					options.ApiSecret = "apisecret";
+					options.Authority = Configuration["IdentityProvider:Authority"];
+					options.ApiName = Configuration["IdentityProvider:ApiName"];
+					options.ApiSecret = Configuration["IdentityProvider:ApiSecret"];
 				});
 
 			// Inject the database context for application data
@@ -163,10 +163,7 @@ namespace Payroll
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			//if (env.IsDevelopment())
-			//{
-			//	app.UseDeveloperExceptionPage();
-			//}
+
 			app.UseApiExceptionHandler();
 
 			app.UseHttpsRedirection();
