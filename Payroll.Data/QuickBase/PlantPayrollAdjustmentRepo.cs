@@ -172,12 +172,12 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollAdjustmentField.PayType}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.Pieces}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.PieceRate}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.HourlyRate}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromHours}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromPieces}.");
+			//sb.Append($"{(int)PlantPayrollAdjustmentField.HourlyRate}.");
+			//sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromHours}.");
+			//sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromPieces}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromIncentive}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.OtherGross}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.TotalGross}.");
+			//sb.Append($"{(int)PlantPayrollAdjustmentField.TotalGross}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.AlternativeWorkWeek}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.EmployeeHourlyRate}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.H2A}.");

@@ -35,14 +35,22 @@ namespace Payroll.Service
 			decimal hourlyRate;
 			foreach (var payLine in ranchPayLines)
 			{
-				hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(
+				// Use the stated hourly rate for sick leave
+				if(payLine.PayType == PayType.SickLeave)
+				{
+					hourlyRate = payLine.HourlyRate;
+				}
+				else
+				{
+					hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(
 					payLine.PayType,
 					payLine.Crew,
 					payLine.LaborCode,
 					payLine.EmployeeHourlyRate,
 					payLine.HourlyRateOverride,
 					payLine.ShiftDate);
-
+				}
+				
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 			}
 		}
@@ -59,7 +67,14 @@ namespace Payroll.Service
 			{
 				plant = GetPlantFromInteger(payLine.Plant);
 
-				hourlyRate = _plantHourlyRateSelector.GetHourlyRate(
+				// Use the stated hourly rate for sick leave
+				if (payLine.PayType == PayType.SickLeave)
+				{
+					hourlyRate = payLine.HourlyRate;
+				}
+				else
+				{
+					hourlyRate = _plantHourlyRateSelector.GetHourlyRate(
 					payLine.PayType,
 					payLine.LaborCode,
 					payLine.EmployeeHourlyRate,
@@ -67,6 +82,7 @@ namespace Payroll.Service
 					payLine.IsH2A,
 					plant,
 					payLine.ShiftDate);
+				}
 
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 			}

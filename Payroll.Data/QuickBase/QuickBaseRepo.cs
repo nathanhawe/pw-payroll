@@ -9,7 +9,7 @@ namespace Payroll.Data.QuickBase
 	public abstract class QuickBaseRepo<T>
 	{
 		protected readonly IQuickBaseConnection _quickBaseConn;
-		public int BatchSize { get; } = 1000;
+		public int BatchSize { get; } = 10000;
 
 		public QuickBaseRepo(IQuickBaseConnection quickBaseConnection)
 		{

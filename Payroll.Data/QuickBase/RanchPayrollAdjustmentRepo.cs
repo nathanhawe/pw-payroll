@@ -176,11 +176,11 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PayType}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.Pieces}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PieceRate}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.HourlyRate}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromHours}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromPieces}.");
+			//sb.Append($"{(int)RanchPayrollAdjustmentField.HourlyRate}.");
+			//sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromHours}.");
+			//sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromPieces}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OtherGross}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.TotalGross}.");
+			//sb.Append($"{(int)RanchPayrollAdjustmentField.TotalGross}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.AlternativeWorkWeek}.");
 			//sb.Append($"{(int)RanchPayrollAdjustmentField.FiveEight}.");
 			//sb.Append($"{(int)RanchPayrollAdjustmentField.HourlyRateOverride}.");

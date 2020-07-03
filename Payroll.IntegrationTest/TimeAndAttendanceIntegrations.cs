@@ -14,7 +14,7 @@ namespace Payroll.IntegrationTest
 		[TestMethod]
 		public void RunPlantsProcess()
 		{
-			var weekEndingDate = new DateTime(2020, 5, 24);
+			var weekEndingDate = new DateTime(2020, 6, 28);
 
 			// Database context
 			var options = new DbContextOptionsBuilder<PayrollContext>()
@@ -115,7 +115,7 @@ namespace Payroll.IntegrationTest
 		[TestMethod]
 		public void RunRanchesProcess()
 		{
-			var weekEndingDate = new DateTime(2020, 5, 24);
+			var weekEndingDate = new DateTime(2020, 6, 28);
 
 			// Database context
 			var options = new DbContextOptionsBuilder<PayrollContext>()

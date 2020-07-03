@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Payroll.Data.QuickBase;
 using Payroll.Domain;
 using Payroll.Domain.Constants;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -145,45 +148,6 @@ namespace Payroll.Service
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Downloading);
 			CopyPlantDataFromQuickBase(batch);
 
-			/* Gross Calculations */
-			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
-			// Hourly
-			var hourlyLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id &&
-				(
-					x.PayType == PayType.Regular
-					//|| x.PayType == PayType.HourlyPlusPieces
-					|| x.PayType == PayType.SpecialAdjustment
-					|| x.PayType == PayType.ReportingPay
-					|| x.PayType == PayType.CompTime
-					|| x.PayType == PayType.Vacation
-					|| x.PayType == PayType.Holiday
-					|| x.PayType == PayType.Bereavement))
-				.ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
-			_context.UpdateRange(hourlyLines);
-			_context.SaveChanges();
-
-			// Pieces
-			var pieceLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && x.PayType == PayType.Pieces).ToList();
-			_grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
-			_context.UpdateRange(pieceLines);
-			_context.SaveChanges();
-
-			// Incentives!!!
-			var incentiveLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && (
-				x.LaborCode == (int)PlantLaborCode.TallyTagWriter
-				|| (x.PayType == PayType.Pieces && !x.IsIncentiveDisqualified))).ToList();
-			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(incentiveLines);
-			_context.UpdateRange(incentiveLines);
-			_context.SaveChanges();
-
-			// Total
-			var payLines = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList();
-			_totalGrossCalculator.CalculateTotalGross(payLines);
-			_context.UpdateRange(payLines);
-			_context.SaveChanges();
-
-
 			_logger.Log(LogLevel.Information, "Calculating PSL for batch {batchId}", batch.Id);
 			/* PSL Requires hours and gross for regular, piece; also requires hours on Sick Leave pay types*/
 			SetBatchStatus(batch.Id, BatchProcessingStatus.PaidSickLeaveCalculations);
@@ -237,7 +201,7 @@ namespace Payroll.Service
 				BatchId = batch.Id
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
-			_context.AddRange(minimumMakeUpRecords);
+			BulkInsert(minimumMakeUpRecords);
 
 
 			// Create Weekly Summaries groups all of the daily summaries by Employee, Week End Date, and Minimum Wage and summarizes the
@@ -267,7 +231,7 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
-			_context.AddRange(overTimeRecords);
+			BulkInsert(overTimeRecords);
 
 			var doubleTimeRecords = dailySummaries.Where(x => x.DoubleTimeHours > 0).Select(x => new PlantPayLine
 			{
@@ -286,7 +250,7 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
-			_context.AddRange(doubleTimeRecords);
+			BulkInsert(doubleTimeRecords);
 
 			/* WOT Gross (Requires effective weekly rate) */
 			var weeklyOverTimeRecords = weeklyOt.Where(x => x.OverTimeHours > 0).Select(x => new PlantPayLine
@@ -306,7 +270,7 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
-			_context.AddRange(weeklyOverTimeRecords);
+			BulkInsert(weeklyOverTimeRecords);
 
 			_logger.Log(LogLevel.Information, "Updating Reporting/Comp/NPT hourly rates for batch {batchId}", batch.Id);
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
@@ -353,26 +317,61 @@ namespace Payroll.Service
 
 		private void CopyPlantDataFromQuickBase(Batch batch)
 		{
-			_logger.Log(LogLevel.Information, "Downloading plant payroll data from Quick Base for {batchId}", batch.Id);
 			// Plant Payroll
+			_logger.Log(LogLevel.Information, "Downloading plant payroll data from Quick Base for {batchId}", batch.Id);
 			var plantPayLines = _plantPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			plantPayLines = plantPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
 			plantPayLines.ForEach(x => x.BatchId = batch.Id);
 
 			// Plant Adjustment
+			_logger.Log(LogLevel.Information, "Downloading plant adjustment data from Quick Base for {batchId}", batch.Id);
 			var plantAdjustmentLines = _plantPayrollAdjustmentRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			plantAdjustmentLines.ForEach(x => x.BatchId = batch.Id);
 
 			// Plant PSL Tracking
+			_logger.Log(LogLevel.Information, "Downloading plant paid sick leave data from Quick Base for {batchId}", batch.Id);
 			List<PaidSickLeave> paidSickLeaves = GetPaidSickLeaveTracking(batch.WeekEndDate, batch.Company);
 			paidSickLeaves.ForEach(x => x.BatchId = batch.Id);
 
-			
-			_context.AddRange(plantPayLines);
-			_context.AddRange(plantAdjustmentLines);
-			_context.AddRange(paidSickLeaves);
-			_context.SaveChanges();
+			/* Gross Calculations */
+			_logger.Log(LogLevel.Information, "Calculating initial gross for batch {batchId}", batch.Id);
+			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
+
+			// Hourly
+			var hourlyLines = plantPayLines.Where(x => x.BatchId == batch.Id &&
+				(
+					x.PayType == PayType.Regular
+					//|| x.PayType == PayType.HourlyPlusPieces
+					|| x.PayType == PayType.SpecialAdjustment
+					|| x.PayType == PayType.ReportingPay
+					|| x.PayType == PayType.CompTime
+					|| x.PayType == PayType.Vacation
+					|| x.PayType == PayType.Holiday
+					|| x.PayType == PayType.Bereavement))
+				.ToList();
+			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
+
+			// Pieces
+			var pieceLines = plantPayLines.Where(x => x.BatchId == batch.Id && x.PayType == PayType.Pieces).ToList();
+			_grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
+
+			// Incentives!!!
+			var incentiveLines = plantPayLines.Where(x => x.BatchId == batch.Id && (
+				x.LaborCode == (int)PlantLaborCode.TallyTagWriter
+				|| (x.PayType == PayType.Pieces && !x.IsIncentiveDisqualified))).ToList();
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(incentiveLines);
+
+			// Total
+			var payLines = plantPayLines.Where(x => x.BatchId == batch.Id).ToList();
+			_totalGrossCalculator.CalculateTotalGross(payLines);
+
+			_logger.Log(LogLevel.Information, "Saving plant data from Quick Base for {batchId}", batch.Id);
+			BulkInsert(plantPayLines);
+			BulkInsert(plantAdjustmentLines);
+			BulkInsert(paidSickLeaves);
+			_logger.Log(LogLevel.Information, "Completed save of plant data from Quick Base for {batchId}", batch.Id);
 		}
+				
 
 		private List<PaidSickLeave> GetPaidSickLeaveTracking(DateTime weekEndDate, string company)
 		{
@@ -583,46 +582,12 @@ namespace Payroll.Service
 			CopyRanchDataFromQuickBase(batch);
 
 			/* Crew Boss Calculations */
+			_logger.Log(LogLevel.Information, "Calculating crew boss pay for batch {batchId}", batch.Id);
 			SetBatchStatus(batch.Id, BatchProcessingStatus.CrewBossCalculations);
 			var crewBossPayLines = _crewBossPayService.CalculateCrewBossPay(batch.Id);
 
 			// Add crew boss pay lines to database.
 			_context.AddRange(crewBossPayLines);
-			_context.SaveChanges();
-
-
-			/* Gross Calculations */
-			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
-			// Hourly
-			var hourlyLines = _context.RanchPayLines.Where(x => x.BatchId == batch.Id &&
-				(
-					x.PayType == PayType.Regular
-					|| x.PayType == PayType.HourlyPlusPieces
-					|| x.PayType == PayType.SpecialAdjustment
-					|| x.PayType == PayType.ReportingPay
-					|| x.PayType == PayType.CompTime
-					|| x.PayType == PayType.Vacation
-					|| x.PayType == PayType.Holiday
-					|| x.PayType == PayType.Bereavement))
-				.ToList();
-			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
-			_context.UpdateRange(hourlyLines);
-			_context.SaveChanges();
-
-			// Pieces
-			var pieceLines = _context.RanchPayLines.Where(x => x.BatchId == batch.Id &&
-				(
-					x.PayType == PayType.Pieces
-					|| x.PayType == PayType.HourlyPlusPieces))
-				.ToList();
-			_grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
-			_context.UpdateRange(pieceLines);
-			_context.SaveChanges();
-
-			// Total
-			var payLines = _context.RanchPayLines.Where(x => x.BatchId == batch.Id).ToList();
-			_totalGrossCalculator.CalculateTotalGross(payLines);
-			_context.UpdateRange(payLines);
 			_context.SaveChanges();
 
 			/* PSL Requires hours and gross for regular, piece, and CB pay types; also requires hours on Sick Leave pay types*/
@@ -682,7 +647,7 @@ namespace Payroll.Service
 				BatchId = batch.Id
 			}).ToList();
 			_totalGrossCalculator.CalculateTotalGross(minimumMakeUpRecords);
-			_context.AddRange(minimumMakeUpRecords);
+			BulkInsert(minimumMakeUpRecords);
 
 			/* WOT Hours */
 			var weeklyOt = _ranchWeeklyOverTimeHoursCalculator.GetWeeklyOTHours(weeklySummaries);
@@ -710,7 +675,7 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
-			_context.AddRange(overTimeRecords);
+			BulkInsert(overTimeRecords);
 
 			var doubleTimeRecords = dailySummaries.Where(x => x.DoubleTimeHours > 0).Select(x => new RanchPayLine
 			{
@@ -734,7 +699,7 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
-			_context.AddRange(doubleTimeRecords);
+			BulkInsert(doubleTimeRecords);
 
 			/* WOT Gross (Requires effective weekly rate) */
 			var weeklyOverTimeRecords = weeklyOt.Where(x => x.OverTimeHours > 0).Select(x => new RanchPayLine
@@ -759,7 +724,7 @@ namespace Payroll.Service
 				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
-			_context.AddRange(weeklyOverTimeRecords);
+			BulkInsert(weeklyOverTimeRecords);
 
 			_logger.Log(LogLevel.Information, "Updating Reporting/Comp/NPT hourly rates for batch {batchId}", batch.Id);
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
@@ -816,30 +781,63 @@ namespace Payroll.Service
 
 		private void CopyRanchDataFromQuickBase(Batch batch)
 		{
-			_logger.Log(LogLevel.Information, "Downloading ranch payroll data from Quick Base for {batchId}", batch.Id);
+
 
 			// Crew Boss Pay
+			_logger.Log(LogLevel.Information, "Downloading crew boss payroll data from Quick Base for {batchId}", batch.Id);
 			var crewBossPayLines = _crewBossPayRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			crewBossPayLines.ForEach(x => x.BatchId = batch.Id);
 
 			// Ranch Payroll
+			_logger.Log(LogLevel.Information, "Downloading ranch payroll data from Quick Base for {batchId}", batch.Id);
 			var ranchPayLines = _ranchPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			ranchPayLines = ranchPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
 			ranchPayLines.ForEach(x => x.BatchId = batch.Id);
 
 			// Ranch Adjustment
+			_logger.Log(LogLevel.Information, "Downloading ranch adjustment data from Quick Base for {batchId}", batch.Id);
 			var ranchAdjustmentLines = _ranchPayrollAdjustmentRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			ranchAdjustmentLines.ForEach(x => x.BatchId = batch.Id);
 
 			// Ranch PSL Tracking
+			_logger.Log(LogLevel.Information, "Downloading ranch paid sick leave data from Quick Base for {batchId}", batch.Id);
 			var paidSickLeaves = GetPaidSickLeaveTracking(batch.WeekEndDate, batch.Company);
 			paidSickLeaves.ForEach(x => x.BatchId = batch.Id);
 
-			_context.AddRange(crewBossPayLines);
-			_context.AddRange(ranchPayLines);
-			_context.AddRange(ranchAdjustmentLines);
-			_context.AddRange(paidSickLeaves);
-			_context.SaveChanges();
+			/* Gross Calculations */
+			_logger.Log(LogLevel.Information, "Calculating initial gross for batch {batchId}", batch.Id);
+			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
+
+			// Hourly
+			_grossFromHoursCalculator.CalculateGrossFromHours(ranchPayLines.Where(x => 
+				(
+					x.PayType == PayType.Regular
+					|| x.PayType == PayType.HourlyPlusPieces
+					|| x.PayType == PayType.SpecialAdjustment
+					|| x.PayType == PayType.ReportingPay
+					|| x.PayType == PayType.CompTime
+					|| x.PayType == PayType.Vacation
+					|| x.PayType == PayType.Holiday
+					|| x.PayType == PayType.Bereavement))
+				.ToList());
+
+			// Pieces
+			_grossFromPiecesCalculator.CalculateGrossFromPieces(ranchPayLines.Where(x => 
+				(
+					x.PayType == PayType.Pieces
+					|| x.PayType == PayType.HourlyPlusPieces))
+				.ToList());
+			
+			// Total
+			_totalGrossCalculator.CalculateTotalGross(ranchPayLines.Where(x => x.BatchId == batch.Id).ToList());
+
+			_logger.Log(LogLevel.Information, "Starting save of ranch data from Quick Base for {batchId}", batch.Id);
+			BulkInsert(crewBossPayLines);
+			BulkInsert(ranchPayLines);
+			BulkInsert(ranchAdjustmentLines);
+			BulkInsert(paidSickLeaves);
+			
+			_logger.Log(LogLevel.Information, "Completed saving ranch payroll data from Quick Base for {batchId}", batch.Id);
 		}
 
 		private void CalculateRanchAdjustments(int batchId, string company)
@@ -1081,6 +1079,540 @@ namespace Payroll.Service
 				
 				batch.ProcessingStatus = status;
 				_context.SaveChanges();
+			}
+		}
+
+		private void BulkInsert(List<PaidSickLeave> paidSickLeaves)
+		{
+			var tableName = "PaidSickLeaves";
+			var table = new DataTable(tableName);
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.Id), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.DateCreated), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.IsDeleted), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.BatchId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.EmployeeId), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.Company), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.Hours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.Gross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.NinetyDayHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.NinetyDayGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PaidSickLeave.HoursUsed), typeof(decimal)));
+
+			var utcNow = DateTime.UtcNow;
+			foreach (var psl in paidSickLeaves)
+			{
+				var row = table.NewRow();
+				row[nameof(PaidSickLeave.Id)] = 0;
+				row[nameof(PaidSickLeave.DateCreated)] = utcNow;
+				row[nameof(PaidSickLeave.DateModified)] = utcNow;
+				row[nameof(PaidSickLeave.IsDeleted)] = psl.IsDeleted;
+				row[nameof(PaidSickLeave.BatchId)] = psl.BatchId;
+				row[nameof(PaidSickLeave.EmployeeId)] = psl.EmployeeId;
+				row[nameof(PaidSickLeave.ShiftDate)] = psl.ShiftDate;
+				row[nameof(PaidSickLeave.Company)] = psl.Company;
+				row[nameof(PaidSickLeave.Hours)] = psl.Hours;
+				row[nameof(PaidSickLeave.Gross)] = psl.Gross;
+				row[nameof(PaidSickLeave.NinetyDayHours)] = psl.NinetyDayHours;
+				row[nameof(PaidSickLeave.NinetyDayGross)] = psl.NinetyDayGross;
+				row[nameof(PaidSickLeave.HoursUsed)] = psl.HoursUsed;
+
+				table.Rows.Add(row);
+			}
+
+			var connectionString = _context.Database.GetDbConnection().ConnectionString;
+			using var connection = new SqlConnection(connectionString);
+			connection.Open();
+			var transaction = connection.BeginTransaction();
+			try
+			{
+				using var sqlBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock, transaction);
+				sqlBulkCopy.BulkCopyTimeout = 0;
+				sqlBulkCopy.BatchSize = 10000;
+				sqlBulkCopy.DestinationTableName = tableName;
+				sqlBulkCopy.WriteToServer(table);
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw ex;
+			}
+			finally
+			{
+				transaction.Dispose();
+				connection.Close();
+			}
+		}
+
+		private void BulkInsert(List<CrewBossPayLine> payLines)
+		{
+			var tableName = "CrewBossPayLines";
+			var table = new DataTable(tableName);
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.Id), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.DateCreated), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.IsDeleted), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.BatchId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.LayoffId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.QuickBaseRecordId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.WeekEndDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.Crew), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.EmployeeId), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.PayMethod), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.WorkerCount), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.HoursWorked), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.HourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.Gross), typeof(decimal)));
+
+			var utcNow = DateTime.UtcNow;
+			foreach (var payLine in payLines)
+			{
+				var row = table.NewRow();
+				row[nameof(CrewBossPayLine.Id)] = 0;
+				row[nameof(CrewBossPayLine.DateCreated)] = utcNow;
+				row[nameof(CrewBossPayLine.DateModified)] = utcNow;
+				row[nameof(CrewBossPayLine.IsDeleted)] = payLine.IsDeleted;
+				row[nameof(CrewBossPayLine.BatchId)] = payLine.BatchId;
+				row[nameof(CrewBossPayLine.LayoffId)] = payLine.LayoffId;
+				row[nameof(CrewBossPayLine.QuickBaseRecordId)] = payLine.QuickBaseRecordId;
+				row[nameof(CrewBossPayLine.WeekEndDate)] = payLine.WeekEndDate;
+				row[nameof(CrewBossPayLine.ShiftDate)] = payLine.ShiftDate;
+				row[nameof(CrewBossPayLine.Crew)] = payLine.Crew;
+				row[nameof(CrewBossPayLine.EmployeeId)] = payLine.EmployeeId;
+				row[nameof(CrewBossPayLine.PayMethod)] = payLine.PayMethod;
+				row[nameof(CrewBossPayLine.WorkerCount)] = payLine.WorkerCount;
+				row[nameof(CrewBossPayLine.HoursWorked)] = payLine.HoursWorked;
+				row[nameof(CrewBossPayLine.HourlyRate)] = payLine.HourlyRate;
+				row[nameof(CrewBossPayLine.Gross)] = payLine.Gross;
+
+				table.Rows.Add(row);
+			}
+
+			var connectionString = _context.Database.GetDbConnection().ConnectionString;
+			using var connection = new SqlConnection(connectionString);
+			connection.Open();
+			var transaction = connection.BeginTransaction();
+			try
+			{
+				using var sqlBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock, transaction);
+				sqlBulkCopy.BulkCopyTimeout = 0;
+				sqlBulkCopy.BatchSize = 10000;
+				sqlBulkCopy.DestinationTableName = tableName;
+				sqlBulkCopy.WriteToServer(table);
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw ex;
+			}
+			finally
+			{
+				transaction.Dispose();
+				connection.Close();
+			}
+		}
+
+		private void BulkInsert(List<RanchPayLine> payLines)
+		{
+			var tableName = "RanchPayLines";
+			var table = new DataTable(tableName);
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.Id), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.DateCreated), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.IsDeleted), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.BatchId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.LayoffId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.QuickBaseRecordId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.WeekEndDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.Crew), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.EmployeeId), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.LaborCode), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.BlockId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.HoursWorked), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.PayType), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.Pieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.PieceRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.HourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.OtDtWotRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.OtDtWotHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.GrossFromHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.GrossFromPieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.OtherGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.AlternativeWorkWeek), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.FiveEight), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.EmployeeHourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.HourlyRateOverride), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.TotalGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.LastCrew), typeof(int)));
+
+			var utcNow = DateTime.UtcNow;
+			foreach (var payLine in payLines)
+			{
+				var row = table.NewRow();
+				row[nameof(RanchPayLine.Id)] = 0;
+				row[nameof(RanchPayLine.DateCreated)] = utcNow;
+				row[nameof(RanchPayLine.DateModified)] = utcNow;
+				row[nameof(RanchPayLine.IsDeleted)] = payLine.IsDeleted;
+				row[nameof(RanchPayLine.BatchId)] = payLine.BatchId;
+				row[nameof(RanchPayLine.LayoffId)] = payLine.LayoffId;
+				row[nameof(RanchPayLine.QuickBaseRecordId)] = payLine.QuickBaseRecordId;
+				row[nameof(RanchPayLine.WeekEndDate)] = payLine.WeekEndDate;
+				row[nameof(RanchPayLine.ShiftDate)] = payLine.ShiftDate;
+				row[nameof(RanchPayLine.Crew)] = payLine.Crew;
+				row[nameof(RanchPayLine.EmployeeId)] = payLine.EmployeeId;
+				row[nameof(RanchPayLine.LaborCode)] = payLine.LaborCode;
+				row[nameof(RanchPayLine.BlockId)] = payLine.BlockId;
+				row[nameof(RanchPayLine.HoursWorked)] = payLine.HoursWorked;
+				row[nameof(RanchPayLine.PayType)] = payLine.PayType;
+				row[nameof(RanchPayLine.Pieces)] = payLine.Pieces;
+				row[nameof(RanchPayLine.PieceRate)] = payLine.PieceRate;
+				row[nameof(RanchPayLine.HourlyRate)] = payLine.HourlyRate;
+				row[nameof(RanchPayLine.OtDtWotRate)] = payLine.OtDtWotRate;
+				row[nameof(RanchPayLine.OtDtWotHours)] = payLine.OtDtWotHours;
+				row[nameof(RanchPayLine.GrossFromHours)] = payLine.GrossFromHours;
+				row[nameof(RanchPayLine.GrossFromPieces)] = payLine.GrossFromPieces;
+				row[nameof(RanchPayLine.OtherGross)] = payLine.OtherGross;
+				row[nameof(RanchPayLine.AlternativeWorkWeek)] = payLine.AlternativeWorkWeek;
+				row[nameof(RanchPayLine.FiveEight)] = payLine.FiveEight;
+				row[nameof(RanchPayLine.EmployeeHourlyRate)] = payLine.EmployeeHourlyRate;
+				row[nameof(RanchPayLine.HourlyRateOverride)] = payLine.HourlyRateOverride;
+				row[nameof(RanchPayLine.TotalGross)] = payLine.TotalGross;
+				row[nameof(RanchPayLine.LastCrew)] = payLine.LastCrew;
+				table.Rows.Add(row);
+			}
+
+			var connectionString = _context.Database.GetDbConnection().ConnectionString;
+			using var connection = new SqlConnection(connectionString);
+			connection.Open();
+			var transaction = connection.BeginTransaction();
+			try
+			{
+				using var sqlBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock, transaction);
+				sqlBulkCopy.BulkCopyTimeout = 0;
+				sqlBulkCopy.BatchSize = 10000;
+				sqlBulkCopy.DestinationTableName = tableName;
+				sqlBulkCopy.WriteToServer(table);
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw ex;
+			}
+			finally
+			{
+				transaction.Dispose();
+				connection.Close();
+			}
+		}
+
+		private void BulkInsert(List<RanchAdjustmentLine> adjustmentLines)
+		{
+			var tableName = "RanchAdjustmentLines";
+			var table = new DataTable(tableName);
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.Id), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.DateCreated), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.IsDeleted), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.BatchId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.LayoffId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.QuickBaseRecordId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.WeekEndDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.Crew), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.EmployeeId), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.LaborCode), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.BlockId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.HoursWorked), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.PayType), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.Pieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.PieceRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.HourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.OtDtWotRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.OtDtWotHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.GrossFromHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.GrossFromPieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.OtherGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.TotalGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.AlternativeWorkWeek), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.FiveEight), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.HourlyRateOverride), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.EmployeeHourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.WeekEndOfAdjustmentPaid), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.IsOriginal), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.OldHourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.UseOldHourlyRate), typeof(bool)));
+
+			var utcNow = DateTime.UtcNow;
+			foreach (var adjustmentLine in adjustmentLines)
+			{
+				var row = table.NewRow();
+				row[nameof(RanchAdjustmentLine.Id)] = 0;
+				row[nameof(RanchAdjustmentLine.DateCreated)] = utcNow;
+				row[nameof(RanchAdjustmentLine.DateModified)] = utcNow;
+				row[nameof(RanchAdjustmentLine.IsDeleted)] = adjustmentLine.IsDeleted;
+				row[nameof(RanchAdjustmentLine.BatchId)] = adjustmentLine.BatchId;
+				row[nameof(RanchAdjustmentLine.LayoffId)] = adjustmentLine.LayoffId;
+				row[nameof(RanchAdjustmentLine.QuickBaseRecordId)] = adjustmentLine.QuickBaseRecordId;
+				row[nameof(RanchAdjustmentLine.WeekEndDate)] = adjustmentLine.WeekEndDate;
+				row[nameof(RanchAdjustmentLine.ShiftDate)] = adjustmentLine.ShiftDate;
+				row[nameof(RanchAdjustmentLine.Crew)] = adjustmentLine.Crew;
+				row[nameof(RanchAdjustmentLine.EmployeeId)] = adjustmentLine.EmployeeId;
+				row[nameof(RanchAdjustmentLine.LaborCode)] = adjustmentLine.LaborCode;
+				row[nameof(RanchAdjustmentLine.BlockId)] = adjustmentLine.BlockId;
+				row[nameof(RanchAdjustmentLine.HoursWorked)] = adjustmentLine.HoursWorked;
+				row[nameof(RanchAdjustmentLine.PayType)] = adjustmentLine.PayType;
+				row[nameof(RanchAdjustmentLine.Pieces)] = adjustmentLine.Pieces;
+				row[nameof(RanchAdjustmentLine.PieceRate)] = adjustmentLine.PieceRate;
+				row[nameof(RanchAdjustmentLine.HourlyRate)] = adjustmentLine.HourlyRate;
+				row[nameof(RanchAdjustmentLine.OtDtWotRate)] = adjustmentLine.OtDtWotRate;
+				row[nameof(RanchAdjustmentLine.OtDtWotHours)] = adjustmentLine.OtDtWotHours;
+				row[nameof(RanchAdjustmentLine.GrossFromHours)] = adjustmentLine.GrossFromHours;
+				row[nameof(RanchAdjustmentLine.GrossFromPieces)] = adjustmentLine.GrossFromPieces;
+				row[nameof(RanchAdjustmentLine.OtherGross)] = adjustmentLine.OtherGross;
+				row[nameof(RanchAdjustmentLine.TotalGross)] = adjustmentLine.TotalGross;
+				row[nameof(RanchAdjustmentLine.AlternativeWorkWeek)] = adjustmentLine.AlternativeWorkWeek;
+				row[nameof(RanchAdjustmentLine.FiveEight)] = adjustmentLine.FiveEight;
+				row[nameof(RanchAdjustmentLine.HourlyRateOverride)] = adjustmentLine.HourlyRateOverride;
+				row[nameof(RanchAdjustmentLine.EmployeeHourlyRate)] = adjustmentLine.EmployeeHourlyRate;
+				row[nameof(RanchAdjustmentLine.WeekEndOfAdjustmentPaid)] = adjustmentLine.WeekEndOfAdjustmentPaid;
+				row[nameof(RanchAdjustmentLine.IsOriginal)] = adjustmentLine.IsOriginal;
+				row[nameof(RanchAdjustmentLine.OldHourlyRate)] = adjustmentLine.OldHourlyRate;
+				row[nameof(RanchAdjustmentLine.UseOldHourlyRate)] = adjustmentLine.UseOldHourlyRate;
+				table.Rows.Add(row);
+			}
+
+			var connectionString = _context.Database.GetDbConnection().ConnectionString;
+			using var connection = new SqlConnection(connectionString);
+			connection.Open();
+			var transaction = connection.BeginTransaction();
+			try
+			{
+				using var sqlBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock, transaction);
+				sqlBulkCopy.BulkCopyTimeout = 0;
+				sqlBulkCopy.BatchSize = 10000;
+				sqlBulkCopy.DestinationTableName = tableName;
+				sqlBulkCopy.WriteToServer(table);
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw ex;
+			}
+			finally
+			{
+				transaction.Dispose();
+				connection.Close();
+			}
+		}
+
+		private void BulkInsert(List<PlantPayLine> payLines)
+		{
+			var tableName = "PlantPayLines";
+			var table = new DataTable(tableName);
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.Id), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.DateCreated), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.IsDeleted), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.BatchId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.LayoffId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.QuickBaseRecordId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.WeekEndDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.Plant), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.EmployeeId), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.LaborCode), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.HoursWorked), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.PayType), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.Pieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.HourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.OtDtWotRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.OtDtWotHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.GrossFromHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.GrossFromPieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.OtherGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.TotalGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.AlternativeWorkWeek), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.HourlyRateOverride), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.EmployeeHourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.GrossFromIncentive), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.HasNonPrimaViolation), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.IncreasedRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.IsH2A), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.IsIncentiveDisqualified), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.NonPrimaRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.PrimaRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.UseIncreasedRate), typeof(bool)));
+
+			var utcNow = DateTime.UtcNow;
+			foreach (var payLine in payLines)
+			{
+				var row = table.NewRow();
+				row[nameof(PlantPayLine.Id)] = 0;
+				row[nameof(PlantPayLine.DateCreated)] = utcNow;
+				row[nameof(PlantPayLine.DateModified)] = utcNow;
+				row[nameof(PlantPayLine.IsDeleted)] = payLine.IsDeleted;
+				row[nameof(PlantPayLine.BatchId)] = payLine.BatchId;
+				row[nameof(PlantPayLine.LayoffId)] = payLine.LayoffId;
+				row[nameof(PlantPayLine.QuickBaseRecordId)] = payLine.QuickBaseRecordId;
+				row[nameof(PlantPayLine.WeekEndDate)] = payLine.WeekEndDate;
+				row[nameof(PlantPayLine.ShiftDate)] = payLine.ShiftDate;
+				row[nameof(PlantPayLine.Plant)] = payLine.Plant;
+				row[nameof(PlantPayLine.EmployeeId)] = payLine.EmployeeId;
+				row[nameof(PlantPayLine.LaborCode)] = payLine.LaborCode;
+				row[nameof(PlantPayLine.HoursWorked)] = payLine.HoursWorked;
+				row[nameof(PlantPayLine.PayType)] = payLine.PayType;
+				row[nameof(PlantPayLine.Pieces)] = payLine.Pieces;
+				row[nameof(PlantPayLine.HourlyRate)] = payLine.HourlyRate;
+				row[nameof(PlantPayLine.OtDtWotRate)] = payLine.OtDtWotRate;
+				row[nameof(PlantPayLine.OtDtWotHours)] = payLine.OtDtWotHours;
+				row[nameof(PlantPayLine.GrossFromHours)] = payLine.GrossFromHours;
+				row[nameof(PlantPayLine.GrossFromPieces)] = payLine.GrossFromPieces;
+				row[nameof(PlantPayLine.OtherGross)] = payLine.OtherGross;
+				row[nameof(PlantPayLine.TotalGross)] = payLine.TotalGross;
+				row[nameof(PlantPayLine.AlternativeWorkWeek)] = payLine.AlternativeWorkWeek;
+				row[nameof(PlantPayLine.HourlyRateOverride)] = payLine.HourlyRateOverride;
+				row[nameof(PlantPayLine.EmployeeHourlyRate)] = payLine.EmployeeHourlyRate;
+				row[nameof(PlantPayLine.GrossFromIncentive)] = payLine.GrossFromIncentive;
+				row[nameof(PlantPayLine.HasNonPrimaViolation)] = payLine.HasNonPrimaViolation;
+				row[nameof(PlantPayLine.IncreasedRate)] = payLine.IncreasedRate;
+				row[nameof(PlantPayLine.IsH2A)] = payLine.IsH2A;
+				row[nameof(PlantPayLine.IsIncentiveDisqualified)] = payLine.IsIncentiveDisqualified;
+				row[nameof(PlantPayLine.NonPrimaRate)] = payLine.NonPrimaRate;
+				row[nameof(PlantPayLine.PrimaRate)] = payLine.PrimaRate;
+				row[nameof(PlantPayLine.UseIncreasedRate)] = payLine.UseIncreasedRate;
+				table.Rows.Add(row);
+			}
+
+			var connectionString = _context.Database.GetDbConnection().ConnectionString;
+			using var connection = new SqlConnection(connectionString);
+			connection.Open();
+			var transaction = connection.BeginTransaction();
+			try
+			{
+				using var sqlBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock, transaction);
+				sqlBulkCopy.BulkCopyTimeout = 0;
+				sqlBulkCopy.BatchSize = 10000;
+				sqlBulkCopy.DestinationTableName = tableName;
+				sqlBulkCopy.WriteToServer(table);
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw ex;
+			}
+			finally
+			{
+				transaction.Dispose();
+				connection.Close();
+			}
+		}
+
+		private void BulkInsert(List<PlantAdjustmentLine> adjustmentLines)
+		{
+			var tableName = "PlantAdjustmentLines";
+			var table = new DataTable(tableName);
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.Id), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.DateCreated), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsDeleted), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.BatchId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.LayoffId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.QuickBaseRecordId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.WeekEndDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.Plant), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.EmployeeId), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.LaborCode), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.HoursWorked), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.PayType), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.Pieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.PieceRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.HourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.OtDtWotRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.OtDtWotHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.GrossFromHours), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.GrossFromPieces), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.OtherGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.GrossFromIncentive), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.TotalGross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.AlternativeWorkWeek), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.HourlyRateOverride), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.EmployeeHourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsH2A), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.WeekEndOfAdjustmentPaid), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsOriginal), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.OldHourlyRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.UseOldHourlyRate), typeof(bool)));
+
+			var utcNow = DateTime.UtcNow;
+			foreach (var adjustmentLine in adjustmentLines)
+			{
+				var row = table.NewRow();
+				row[nameof(PlantAdjustmentLine.Id)] = 0;
+				row[nameof(PlantAdjustmentLine.DateCreated)] = utcNow;
+				row[nameof(PlantAdjustmentLine.DateModified)] = utcNow;
+				row[nameof(PlantAdjustmentLine.IsDeleted)] = adjustmentLine.IsDeleted;
+				row[nameof(PlantAdjustmentLine.BatchId)] = adjustmentLine.BatchId;
+				row[nameof(PlantAdjustmentLine.LayoffId)] = adjustmentLine.LayoffId;
+				row[nameof(PlantAdjustmentLine.QuickBaseRecordId)] = adjustmentLine.QuickBaseRecordId;
+				row[nameof(PlantAdjustmentLine.WeekEndDate)] = adjustmentLine.WeekEndDate;
+				row[nameof(PlantAdjustmentLine.ShiftDate)] = adjustmentLine.ShiftDate;
+				row[nameof(PlantAdjustmentLine.Plant)] = adjustmentLine.Plant;
+				row[nameof(PlantAdjustmentLine.EmployeeId)] = adjustmentLine.EmployeeId;
+				row[nameof(PlantAdjustmentLine.LaborCode)] = adjustmentLine.LaborCode;
+				row[nameof(PlantAdjustmentLine.HoursWorked)] = adjustmentLine.HoursWorked;
+				row[nameof(PlantAdjustmentLine.PayType)] = adjustmentLine.PayType;
+				row[nameof(PlantAdjustmentLine.Pieces)] = adjustmentLine.Pieces;
+				row[nameof(PlantAdjustmentLine.PieceRate)] = adjustmentLine.PieceRate;
+				row[nameof(PlantAdjustmentLine.HourlyRate)] = adjustmentLine.HourlyRate;
+				row[nameof(PlantAdjustmentLine.OtDtWotRate)] = adjustmentLine.OtDtWotRate;
+				row[nameof(PlantAdjustmentLine.OtDtWotHours)] = adjustmentLine.OtDtWotHours;
+				row[nameof(PlantAdjustmentLine.GrossFromHours)] = adjustmentLine.GrossFromHours;
+				row[nameof(PlantAdjustmentLine.GrossFromPieces)] = adjustmentLine.GrossFromPieces;
+				row[nameof(PlantAdjustmentLine.OtherGross)] = adjustmentLine.OtherGross;
+				row[nameof(PlantAdjustmentLine.GrossFromIncentive)] = adjustmentLine.GrossFromIncentive;
+				row[nameof(PlantAdjustmentLine.TotalGross)] = adjustmentLine.TotalGross;
+				row[nameof(PlantAdjustmentLine.AlternativeWorkWeek)] = adjustmentLine.AlternativeWorkWeek;
+				row[nameof(PlantAdjustmentLine.HourlyRateOverride)] = adjustmentLine.HourlyRateOverride;
+				row[nameof(PlantAdjustmentLine.EmployeeHourlyRate)] = adjustmentLine.EmployeeHourlyRate;
+				row[nameof(PlantAdjustmentLine.IsH2A)] = adjustmentLine.IsH2A;
+				row[nameof(PlantAdjustmentLine.WeekEndOfAdjustmentPaid)] = adjustmentLine.WeekEndOfAdjustmentPaid;
+				row[nameof(PlantAdjustmentLine.IsOriginal)] = adjustmentLine.IsOriginal;
+				row[nameof(PlantAdjustmentLine.OldHourlyRate)] = adjustmentLine.OldHourlyRate;
+				row[nameof(PlantAdjustmentLine.UseOldHourlyRate)] = adjustmentLine.UseOldHourlyRate;
+				table.Rows.Add(row);
+			}
+
+			var connectionString = _context.Database.GetDbConnection().ConnectionString;
+			using var connection = new SqlConnection(connectionString);
+			connection.Open();
+			var transaction = connection.BeginTransaction();
+			try
+			{
+				using var sqlBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock, transaction);
+				sqlBulkCopy.BulkCopyTimeout = 0;
+				sqlBulkCopy.BatchSize = 10000;
+				sqlBulkCopy.DestinationTableName = tableName;
+				sqlBulkCopy.WriteToServer(table);
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw ex;
+			}
+			finally
+			{
+				transaction.Dispose();
+				connection.Close();
 			}
 		}
 	}
