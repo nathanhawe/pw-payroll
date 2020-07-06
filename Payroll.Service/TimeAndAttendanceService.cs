@@ -225,14 +225,14 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Plant = x.Crew,
 				PayType = PayType.OverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batch.Id
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
 			BulkInsert(overTimeRecords);
@@ -244,14 +244,14 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Plant = x.Crew,
 				PayType = PayType.DoubleTime,
-				HoursWorked = x.DoubleTimeHours,
+				OtDtWotHours = x.DoubleTimeHours,
 				BatchId = batch.Id
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
-				x.HourlyRateOverride = (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
 			BulkInsert(doubleTimeRecords);
@@ -264,14 +264,14 @@ namespace Payroll.Service
 				ShiftDate = x.WeekEndDate,
 				Plant = x.Crew,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batch.Id
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			BulkInsert(weeklyOverTimeRecords);
@@ -470,15 +470,15 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Plant = x.Crew,
 				PayType = PayType.OverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batchId,
 				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
 			_context.AddRange(overTimeRecords);
@@ -490,15 +490,15 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Plant = x.Crew,
 				PayType = PayType.DoubleTime,
-				HoursWorked = x.DoubleTimeHours,
+				OtDtWotHours = x.DoubleTimeHours,
 				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid,
 				BatchId = batchId
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
 			_context.AddRange(doubleTimeRecords);
@@ -511,15 +511,15 @@ namespace Payroll.Service
 				ShiftDate = x.WeekEndDate,
 				Plant = x.Crew,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batchId,
 				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			_context.AddRange(weeklyOverTimeRecords);
@@ -667,7 +667,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Crew = x.Crew,
 				PayType = PayType.OverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batch.Id
 			}).ToList();
 			overTimeRecords.ForEach(x =>
@@ -678,8 +678,8 @@ namespace Payroll.Service
 						&& w.EmployeeId == x.EmployeeId)
 					.OrderByDescending(o => o.MinimumWage)
 					.FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
 			BulkInsert(overTimeRecords);
@@ -691,7 +691,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Crew = x.Crew,
 				PayType = PayType.DoubleTime,
-				HoursWorked = x.DoubleTimeHours,
+				OtDtWotHours = x.DoubleTimeHours,
 				BatchId = batch.Id
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
@@ -702,8 +702,8 @@ namespace Payroll.Service
 						&& w.EmployeeId == x.EmployeeId)
 					.OrderByDescending(o => o.MinimumWage)
 					.FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
 			BulkInsert(doubleTimeRecords);
@@ -716,7 +716,7 @@ namespace Payroll.Service
 				ShiftDate = x.WeekEndDate,
 				Crew = x.Crew,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batch.Id
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
@@ -727,8 +727,8 @@ namespace Payroll.Service
 						&& w.EmployeeId == x.EmployeeId)
 					.OrderByDescending(o => o.MinimumWage)
 					.FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			BulkInsert(weeklyOverTimeRecords);
@@ -933,7 +933,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Crew = x.Crew,
 				PayType = PayType.OverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batchId,
 				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
@@ -945,8 +945,8 @@ namespace Payroll.Service
 						&& w.EmployeeId == x.EmployeeId)
 					.OrderByDescending(o => o.MinimumWage)
 					.FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(overTimeRecords);
 			_context.RanchAdjustmentLines.AddRange(overTimeRecords);
@@ -958,7 +958,7 @@ namespace Payroll.Service
 				ShiftDate = x.ShiftDate,
 				Crew = x.Crew,
 				PayType = PayType.DoubleTime,
-				HoursWorked = x.DoubleTimeHours,
+				OtDtWotHours = x.DoubleTimeHours,
 				BatchId = batchId,
 				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
@@ -970,8 +970,8 @@ namespace Payroll.Service
 						&& w.EmployeeId == x.EmployeeId)
 					.OrderByDescending(o => o.MinimumWage)
 					.FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round((weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
 			_context.RanchAdjustmentLines.AddRange(doubleTimeRecords);
@@ -984,7 +984,7 @@ namespace Payroll.Service
 				ShiftDate = x.WeekEndDate,
 				Crew = x.Crew,
 				PayType = PayType.WeeklyOverTime,
-				HoursWorked = x.OverTimeHours,
+				OtDtWotHours = x.OverTimeHours,
 				BatchId = batchId,
 				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
 			}).ToList();
@@ -996,8 +996,8 @@ namespace Payroll.Service
 						&& w.EmployeeId == x.EmployeeId)
 					.OrderByDescending(o => o.MinimumWage)
 					.FirstOrDefault();
-				x.HourlyRateOverride = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
-				x.OtherGross = _roundingService.Round(x.HourlyRateOverride * x.HoursWorked, 2);
+				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : Math.Max(weeklySummary.EffectiveHourlyRate, weeklySummary.MinimumWage)), 2);
+				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(weeklyOverTimeRecords);
 			_context.RanchAdjustmentLines.AddRange(weeklyOverTimeRecords);
