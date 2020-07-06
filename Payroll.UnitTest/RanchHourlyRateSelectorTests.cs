@@ -35,10 +35,11 @@ namespace Payroll.UnitTest
 			int laborCode = -1,
 			decimal employeeHourlyRate = 14,
 			decimal hourlyRateOverride = 0,
-			DateTime? shiftDate = null)
+			DateTime? shiftDate = null,
+			decimal payLineHourlyRate = 0)
 		{
 			shiftDate ??= new DateTime(2020, 1, 1);
-			return _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride, shiftDate.Value);
+			return _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride, shiftDate.Value, payLineHourlyRate);
 		}
 
 		[TestMethod]
@@ -51,7 +52,7 @@ namespace Payroll.UnitTest
 			var hourlyOverride = 42;
 			var shiftDate = new DateTime(2020, 1, 1);
 
-			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate);
+			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate, 0);
 			Assert.AreEqual(hourlyOverride, hourlyRate);
 		}
 
@@ -67,12 +68,12 @@ namespace Payroll.UnitTest
 			var shiftDate = new DateTime(2020, 1, 1);
 
 			// Labor code 116 rate is currently set to 12 dollars but hourly rate override will ensure it is 42
-			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate);
+			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate, 0);
 			Assert.AreEqual(hourlyOverride, hourlyRate);
 
 			// Crew 100 should receive the regular crew labor rate of 15 but hourly rate override will ensure it is 42
 			laborCode = -1;
-			hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate);
+			hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate, 0);
 			Assert.AreEqual(hourlyOverride, hourlyRate);
 		}
 
@@ -163,9 +164,29 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void PayTypeSickLeave_ReturnsZero()
+		public void PayTypeSickLeave_ReturnsPayLineHourlyRate()
 		{
-			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.SickLeave));
+			Assert.IsTrue(15M == DefaultTest(payType: Payroll.Domain.Constants.PayType.SickLeave, payLineHourlyRate: 15M));
+
+			// Override still applies
+			Assert.IsTrue(10.5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.SickLeave, payLineHourlyRate: 15M, hourlyRateOverride: 10.5M));
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		{
+			// Pay line is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M));
+
+			// Override still applies
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M));
+
 		}
 
 		[TestMethod]

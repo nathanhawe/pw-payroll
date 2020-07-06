@@ -28,67 +28,26 @@ namespace Payroll.Service
 		/// <param name="isH2A"></param>
 		/// <param name="plant"></param>
 		/// <param name="shiftDate"></param>
+		/// <param name="payLineHourlyRate">Assumed to be the 90-Day Hourly Rate for sick leave and COVID-19 lines, othewise 0</param>
 		/// <returns></returns>
-		public decimal GetHourlyRate(string payType, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, bool isH2A, Domain.Constants.Plant plant, DateTime shiftDate)
+		public decimal GetHourlyRate(string payType, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, bool isH2A, Domain.Constants.Plant plant, DateTime shiftDate, decimal payLineHourlyRate)
 		{
-			/*
-					[Hourly Rate]
-						[Pay Type]="7.2-Sick Leave" =?	[90 Day Hourly Rate]
-						[H-2A] =>				13.92
-						[Labor Code]=125 =>		[125 Rate]
-						[Labor Code]=151 =>		[151 Rate]
-						[Labor Code]=312 =>		[125 Rate]
-						[Labor Code]=535 =>		[535 Rate]
-						[Labor Code]=536 =>		[536 Rate]
-						[Labor Code]=537 =>		[537 Rate]
-						[Labor Code]=9503 =>		[503 Rate]
-						[Labor Code]=503 =>		[503 Rate]
-						ELSE =>				[EmployeeHourlyRateCalc]
-						
-						[90 Day Hourly Rate] lookup of PSL Tracking Daily: 90 Day Hourly Rate
-						[H-2A] checkbox lookup of Employee Master: H-2A (Employee Number)
-						[125 Rate] = 
-							[Shift Date] < #5-27-2019# => MAX([EmployeeHourlyRateCalc], 12.5)
-							[Shift Date] < #3/2/2020# => 
-								[Plant] = 11 => [Minimum Wage] + 0.5
-								ELSE Max([EmployeeHourlyRateCalc], 13)
-							ELSE 
-								[Plant] = 11 => MAX([EmployeeHourlyRateCalc], [Minimum Wage] + 1)
-								ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-
-						[151 Rate]
-							[Plant] = 2 => [EmployeeHourlyRateCalc] + 2
-							ELSE [EmployeeHourlyRateCalc]
-
-						[535 Rate] = 
-							[Shift Date] < #3-2-2020# =>
-								[Plant]=11 => [EmployeeHourlyRateCalc]
-								[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
-								ELSE [EmployeeHourlyRateCalc]
-							ELSE
-								[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
-								ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-
-						[536 Rate] = [EmployeeHourlyRateCalc] + 3
-
-						[537 Rate] = [EmployeeHourlyRateCalc] + 1.5
-
-						[503 Rate] = 
-							[Shift Date] < #5-27-2019# => MAX([EmployeeHourlyRateCalc], 12)
-							[Shift Date] < #3/2/2020# =>  MAX([EmployeeHourlyRateCalc], 13)
-							ELSE 
-								[Plant] = 11 => [EmployeeHourlyRateCalc]
-								ELSE MAX([EmployeeHourlyRateCalc], Minimum + 1)
-										
-						[EmployeeHourlyRateCalc] = 
-							IsNull([Hourly Rate Override]) => (If([Employee Hourly Rate]<[Minimum Wage],[Minimum Wage],[Employee Hourly Rate]))
-							ELSE [Hourly Rate Override])
-						[Hourly Rate Override] is data entry
-						[Employee Hourly Rate] is lookup of Employee Master: Plants Hourly Rate
-						[Minimum Wage] (same as ranches formula)
-			*/
 			var minimumWage = _minimumWageService.GetMinimumWageOnDate(shiftDate);
 			var calculatedEmployeeRate = EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
+
+			if(hourlyRateOverride > 0)
+			{
+				return hourlyRateOverride;
+			}
+			if (payType == PayType.SickLeave)
+			{
+				return payLineHourlyRate;
+			}
+			
+			if(payType == PayType.Covid19)
+			{
+				return Math.Max(payLineHourlyRate, calculatedEmployeeRate);
+			}
 
 			if (
 				payType != PayType.Regular 

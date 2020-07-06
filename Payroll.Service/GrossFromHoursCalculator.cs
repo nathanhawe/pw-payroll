@@ -35,22 +35,15 @@ namespace Payroll.Service
 			decimal hourlyRate;
 			foreach (var payLine in ranchPayLines)
 			{
-				// Use the stated hourly rate for sick leave
-				if(payLine.PayType == PayType.SickLeave)
-				{
-					hourlyRate = payLine.HourlyRate;
-				}
-				else
-				{
-					hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(
+				hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(
 					payLine.PayType,
 					payLine.Crew,
 					payLine.LaborCode,
 					payLine.EmployeeHourlyRate,
 					payLine.HourlyRateOverride,
-					payLine.ShiftDate);
-				}
-				
+					payLine.ShiftDate,
+					payLine.HourlyRate);
+
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 			}
 		}
@@ -66,24 +59,17 @@ namespace Payroll.Service
 			foreach (var payLine in plantPayLines)
 			{
 				plant = GetPlantFromInteger(payLine.Plant);
-
-				// Use the stated hourly rate for sick leave
-				if (payLine.PayType == PayType.SickLeave)
-				{
-					hourlyRate = payLine.HourlyRate;
-				}
-				else
-				{
-					hourlyRate = _plantHourlyRateSelector.GetHourlyRate(
+				
+				hourlyRate = _plantHourlyRateSelector.GetHourlyRate(
 					payLine.PayType,
 					payLine.LaborCode,
 					payLine.EmployeeHourlyRate,
 					payLine.HourlyRateOverride,
 					payLine.IsH2A,
 					plant,
-					payLine.ShiftDate);
-				}
-
+					payLine.ShiftDate,
+					payLine.HourlyRate);
+				
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 			}
 		}
@@ -109,7 +95,8 @@ namespace Payroll.Service
 						adjustmentLine.LaborCode, 
 						adjustmentLine.EmployeeHourlyRate, 
 						0,
-						adjustmentLine.ShiftDate);
+						adjustmentLine.ShiftDate,
+						adjustmentLine.HourlyRate);
 				}
 
 				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);
@@ -142,7 +129,8 @@ namespace Payroll.Service
 						0, 
 						adjustmentLine.IsH2A, 
 						plant, 
-						adjustmentLine.ShiftDate);
+						adjustmentLine.ShiftDate,
+						adjustmentLine.HourlyRate);
 				}
 
 				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);

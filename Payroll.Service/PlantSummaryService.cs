@@ -1,5 +1,6 @@
 ﻿using Payroll.Data;
 using Payroll.Domain;
+using Payroll.Domain.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,15 +27,30 @@ namespace Payroll.Service
 		/// <returns></returns>
 		public List<PlantSummary> CreateSummariesForBatch(int batchId)
 		{
-			var summaries = _context.PlantPayLines
+			// Entity Framework cannot execute sub queries to determine COVID hours only through SQL.
+			// Therefore, we process as much as we can on SQL and then calculate the cultural hours in memory.
+			var temp = _context.PlantPayLines
 				.Where(x => x.BatchId == batchId)
+				.GroupBy(g => new { g.WeekEndDate, g.EmployeeId, g.LaborCode }, (key, group) => new
+				{
+					BatchId = batchId,
+					key.EmployeeId,
+					key.WeekEndDate,
+					key.LaborCode,
+					TotalHours = group.Sum(x => x.HoursWorked),
+					TotalGross = group.Sum(x => x.TotalGross)
+				})
+				.ToList();
+
+			var summaries = temp
 				.GroupBy(g => new { g.WeekEndDate, g.EmployeeId }, (key, group) => new PlantSummary
 				{
 					BatchId = batchId,
 					EmployeeId = key.EmployeeId,
 					WeekEndDate = key.WeekEndDate,
-					TotalHours = group.Sum(x => x.HoursWorked),
-					TotalGross = group.Sum(x => x.TotalGross)
+					TotalHours = group.Sum(x => x.TotalHours),
+					TotalGross = group.Sum(x => x.TotalGross),
+					CovidHours = group.Where(x => x.LaborCode == (int)PlantLaborCode.Covid19).Sum(x => x.TotalHours)
 				})
 				.ToList();
 

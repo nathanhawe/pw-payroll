@@ -43,5 +43,10 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// [Total Gross] - Currency
 		/// </summary>
 		TotalGross = 11,
+
+		/// <summary>
+		/// [LC 600 Hours] - Numeric
+		/// </summary>
+		LC600Hours = 95
 	}
 }

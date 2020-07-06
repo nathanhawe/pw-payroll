@@ -30,47 +30,47 @@ namespace Payroll.UnitTest
 
 			if (_context.RanchPayLines.Count() == 0)
 			{
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
 
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee4", crew: (int)Crew.WestTractor_Night, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee4", crew: (int)Crew.WestTractor_Night, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172, laborCode: (int)RanchLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 172));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 172, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 172, laborCode: (int)RanchLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 172));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 172, laborCode: (int)RanchLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 172));
@@ -82,21 +82,21 @@ namespace Payroll.UnitTest
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 7), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 8), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 9), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 10), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 10), employeeId: "Employee1", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 6), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 7), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 8), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 9), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 10), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 10), employeeId: "Employee2", crew: 100, lastCrew: 142, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 6), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 7), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 8), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 9), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 10), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 10), employeeId: "Employee3", crew: 100, lastCrew: 60, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 
-				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 6), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 6), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 7), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 8), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 9), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
@@ -141,6 +141,28 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee2" && x.CulturalHours == 0).Count());
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee3" && x.CulturalHours == 0).Count());
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee4" && x.CulturalHours == 10).Count());
+		}
+
+		[TestMethod]
+		public void SumOfCovidHours_AreHoursForLaborCode600()
+		{
+			var ranchSummaries = _ranchSummaryService.CreateSummariesForBatch(1);
+
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee1" && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee2" && x.CovidHours == 20).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee3" && x.CovidHours == 30).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee4" && x.CovidHours == 50).Count());
+
+			ranchSummaries = _ranchSummaryService.CreateSummariesForBatch(2);
+			
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 30).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 20).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 0).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
 		}
 
 		[TestMethod]

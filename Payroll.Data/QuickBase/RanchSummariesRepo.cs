@@ -53,6 +53,7 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.TotalGross},");
 				sb.Append($"{line.CulturalHours},");
 				sb.Append($"{(line.LastCrew > 0 ? line.LastCrew.ToString() : "")},");
+				sb.Append($"{line.CovidHours}");
 				sb.Append("\n");
 			}
 
@@ -80,7 +81,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchSummariesField.TotalHours}.");
 			sb.Append($"{(int)RanchSummariesField.TotalGross}.");
 			sb.Append($"{(int)RanchSummariesField.CulturalHours}.");
-			sb.Append($"{(int)RanchSummariesField.LastCrew}");
+			sb.Append($"{(int)RanchSummariesField.LastCrew}.");
+			sb.Append($"{(int)RanchSummariesField.LC600Hours}.");
 
 			return sb.ToString();
 		}
@@ -125,6 +127,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchSummariesField.TotalGross: temp.TotalGross = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchSummariesField.CulturalHours: temp.CulturalHours = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchSummariesField.LastCrew: temp.LastCrew = ParseInt(field.Value) ?? 0; break;
+						case (int)RanchSummariesField.LC600Hours: temp.CovidHours = ParseDecimal(field.Value) ?? 0; break;
 					}
 				}
 				ranchSummaries.Add(temp);

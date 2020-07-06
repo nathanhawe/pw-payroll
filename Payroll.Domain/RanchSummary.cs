@@ -20,6 +20,10 @@ namespace Payroll.Domain
 
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal CulturalHours { get; set; }
+
 		public int LastCrew { get; set; }
+		
+		[Column(TypeName = "decimal(18,2)")]
+		public decimal CovidHours { get; set; }
 	}
 }

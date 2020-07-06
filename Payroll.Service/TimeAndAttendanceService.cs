@@ -162,11 +162,15 @@ namespace Payroll.Service
 			// Update PSL usage
 			_paidSickLeaveService.UpdateUsage(batch.Id, company);
 
-			// Set PSL rate and recalculate gross.
+			// Set PSL/Covid19 rate and recalculate gross.
 			var paidSickLeaves = _context.PlantPayLines
 				.Where(x =>
 					x.BatchId == batch.Id
-					&& x.PayType == PayType.SickLeave)
+					&&
+					(
+						x.PayType == PayType.SickLeave
+						|| x.PayType == PayType.Covid19)
+					)
 				.ToList();
 			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batch.Id, Company.Plants, x.EmployeeId, x.ShiftDate));
 			_grossFromHoursCalculator.CalculateGrossFromHours(paidSickLeaves);
@@ -341,7 +345,6 @@ namespace Payroll.Service
 			var hourlyLines = plantPayLines.Where(x => x.BatchId == batch.Id &&
 				(
 					x.PayType == PayType.Regular
-					//|| x.PayType == PayType.HourlyPlusPieces
 					|| x.PayType == PayType.SpecialAdjustment
 					|| x.PayType == PayType.ReportingPay
 					|| x.PayType == PayType.CompTime
@@ -603,11 +606,15 @@ namespace Payroll.Service
 			// Update PSL usage
 			_paidSickLeaveService.UpdateUsage(batch.Id, company);
 
-			// Set PSL rate and recalculate gross.
+			// Set PSL/COVID19 rate and recalculate gross.
 			var paidSickLeaves = _context.RanchPayLines
 				.Where(x =>
 					x.BatchId == batch.Id
-					&& x.PayType == PayType.SickLeave)
+					&& (
+						x.PayType == PayType.SickLeave
+						|| x.PayType == PayType.Covid19
+						)
+					)
 				.ToList();
 			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batch.Id, Company.Ranches, x.EmployeeId, x.ShiftDate));
 			_grossFromHoursCalculator.CalculateGrossFromHours(paidSickLeaves);

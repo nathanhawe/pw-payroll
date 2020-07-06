@@ -18,5 +18,6 @@ namespace Payroll.Domain.Constants.QuickBase
 		TotalGross = 11,
 		CulturalHours = 45,
 		LastCrew = 35,
+		LC600Hours = 161,
 	}
 }

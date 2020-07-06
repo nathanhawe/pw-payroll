@@ -27,13 +27,15 @@ namespace Payroll.Service
 		/// <param name="employeeHourlyRate"></param>
 		/// <param name="hourlyRateOverride"></param>
 		/// <param name="shiftDate"></param>
+		/// <param name="payLineHourlyRate">Assumed to be the 90-Day Hourly Rate for sick leave and COVID-19 lines, othewise 0</param>
 		/// <returns></returns>
-		public decimal GetHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, DateTime shiftDate)
+		public decimal GetHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, DateTime shiftDate, decimal payLineHourlyRate)
 		{
 			if (!IsAnAcceptablePayType(payType)) return 0;
 				
 			if (hourlyRateOverride > 0) return hourlyRateOverride;
-			if (payType == PayType.SickLeave) return 0;
+			if (payType == PayType.SickLeave) return payLineHourlyRate;
+			if (payType == PayType.Covid19) return Math.Max(payLineHourlyRate, CulturalRate(shiftDate, employeeHourlyRate));
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay) return AlmondHarvestEquipmentOperatorDay(shiftDate, employeeHourlyRate);
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight) return AlmondHarvestEquipmentOperatorNight(shiftDate, employeeHourlyRate);
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestGeneral) return AlmondHarvestGeneral(shiftDate, crew, employeeHourlyRate);
@@ -67,7 +69,9 @@ namespace Payroll.Service
 				|| payType == PayType.Bereavement
 				|| payType == PayType.CompTime
 				|| payType == PayType.ReportingPay
-				|| payType == PayType.SpecialAdjustment)
+				|| payType == PayType.SpecialAdjustment
+				|| payType == PayType.SickLeave
+				|| payType == PayType.Covid19)
 			{
 				return true;
 			}

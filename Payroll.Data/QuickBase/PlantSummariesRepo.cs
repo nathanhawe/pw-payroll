@@ -50,7 +50,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{line.WeekEndDate:MM-dd-yyyy},");
 				sb.Append($"{line.TotalHours},");
-				sb.Append($"{line.TotalGross}");
+				sb.Append($"{line.TotalGross},");
+				sb.Append($"{line.CovidHours}");
 				sb.Append("\n");
 			}
 
@@ -77,6 +78,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantSummariesField.WeekEndDate}.");
 			sb.Append($"{(int)PlantSummariesField.TotalHours}.");
 			sb.Append($"{(int)PlantSummariesField.TotalGross}.");
+			sb.Append($"{(int)PlantSummariesField.LC600Hours}.");
 
 			return sb.ToString();
 		}
@@ -119,6 +121,7 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantSummariesField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
 						case (int)PlantSummariesField.TotalHours: temp.TotalHours = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantSummariesField.TotalGross: temp.TotalGross = ParseDecimal(field.Value) ?? 0; break;
+						case (int)PlantSummariesField.LC600Hours: temp.CovidHours = ParseDecimal(field.Value) ?? 0; break;
 					}
 				}
 				PlantSummaries.Add(temp);

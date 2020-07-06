@@ -1,5 +1,6 @@
 ﻿using Payroll.Data;
 using Payroll.Domain;
+using Payroll.Domain.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,11 @@ namespace Payroll.Service
 		/// <returns></returns>
 		public List<RanchSummary> CreateSummariesForBatch(int batchId)
 		{
-			// Entity Framework cannot execute sub queries to determine CulturalHours only through SQL.
+			// Entity Framework cannot execute sub queries to determine Cultural and COVID hours only through SQL.
 			// Therefore, we process as much as we can on SQL and then calculate the cultural hours in memory.
 			var temp = _context.RanchPayLines
 				.Where(x => x.BatchId == batchId)
-				.GroupBy(g => new { g.WeekEndDate, g.EmployeeId, g.Crew }, (key, group) => new
+				.GroupBy(g => new { g.WeekEndDate, g.EmployeeId, g.Crew, g.LaborCode }, (key, group) => new
 				{
 					BatchId = batchId,
 					EmployeeId = key.EmployeeId,
@@ -38,7 +39,8 @@ namespace Payroll.Service
 					Crew = key.Crew,
 					LastCrew = group.Max(x => x.LastCrew),
 					TotalHours = group.Sum(x => x.HoursWorked),
-					TotalGross = group.Sum(x => x.TotalGross)
+					TotalGross = group.Sum(x => x.TotalGross),
+					LaborCode = key.LaborCode
 				})
 				.ToList();
 
@@ -51,7 +53,8 @@ namespace Payroll.Service
 					LastCrew = group.Max(x => x.LastCrew),
 					TotalHours = group.Sum(x => x.TotalHours),
 					TotalGross = group.Sum(x => x.TotalGross),
-					CulturalHours = group.Where(x => x.Crew < 60).Sum(x => x.TotalHours)
+					CulturalHours = group.Where(x => x.Crew < 60).Sum(x => x.TotalHours),
+					CovidHours = group.Where(x => x.LaborCode == (int)RanchLaborCode.Covid19).Sum(x => x.TotalHours)
 				})
 				.ToList();
 

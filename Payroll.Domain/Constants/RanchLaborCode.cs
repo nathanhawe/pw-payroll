@@ -17,6 +17,7 @@ namespace Payroll.Domain.Constants
 		Grafting_BuddingExpertCrew = 217,
 		RecoveryTime = 380,
 		NonProductiveTime = 381,
-		QualityControl = 551
+		QualityControl = 551,
+		Covid19 = 600,
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data;
+using Payroll.Domain.Constants;
 using Payroll.Service;
 using Payroll.UnitTest.Helpers;
 using System;
@@ -29,47 +30,47 @@ namespace Payroll.UnitTest
 
 			if (_context.PlantPayLines.Count() == 0)
 			{
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
 
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
 
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
 
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 1, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee1", hoursWorked: 10, totalGross: 172, laborCode: (int)PlantLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 172));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 172, laborCode: (int)PlantLaborCode.Covid19));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee2", hoursWorked: 10, totalGross: 172, laborCode: (int)PlantLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 172));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 172));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee3", hoursWorked: 10, totalGross: 172, laborCode: (int)PlantLaborCode.Covid19));
 
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 172));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 5), employeeId: "Employee4", hoursWorked: 10, totalGross: 172));
@@ -79,12 +80,12 @@ namespace Payroll.UnitTest
 
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee1", hoursWorked: 10, totalGross: 150));
 
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee2", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee2", hoursWorked: 10, totalGross: 150));
@@ -92,14 +93,14 @@ namespace Payroll.UnitTest
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee3", hoursWorked: 10, totalGross: 150));
 
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
-				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee4", hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockPlantPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), employeeId: "Employee4", hoursWorked: 10, totalGross: 150, laborCode: (int)PlantLaborCode.Covid19));
 
 				_context.SaveChanges();
 			}
@@ -128,6 +129,28 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.TotalGross == 750).Count());
 			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.TotalGross == 750).Count());
 			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.TotalGross == 750).Count());
+		}
+
+		[TestMethod]
+		public void SumOfCovidHours_AreHoursForLaborCode600()
+		{
+			var plantSummaries = _plantSummaryService.CreateSummariesForBatch(1);
+
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.CovidHours == 20).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.CovidHours == 30).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.CovidHours == 50).Count());
+
+			plantSummaries = _plantSummaryService.CreateSummariesForBatch(2);
+
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 30).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 20).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 0).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
 		}
 
 		[TestMethod]
