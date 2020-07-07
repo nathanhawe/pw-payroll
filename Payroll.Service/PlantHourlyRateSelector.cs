@@ -35,10 +35,25 @@ namespace Payroll.Service
 			var minimumWage = _minimumWageService.GetMinimumWageOnDate(shiftDate);
 			var calculatedEmployeeRate = EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 
-			if(hourlyRateOverride > 0)
+			if (
+				payType != PayType.Regular
+				&& payType != PayType.CompTime
+				&& payType != PayType.ReportingPay
+				&& payType != PayType.Holiday
+				&& payType != PayType.Bereavement
+				&& payType != PayType.Vacation
+				&& payType != PayType.SpecialAdjustment
+				&& payType != PayType.SickLeave
+				&& payType != PayType.Covid19)
+			{
+				return 0;
+			}
+
+			if (hourlyRateOverride > 0)
 			{
 				return hourlyRateOverride;
 			}
+
 			if (payType == PayType.SickLeave)
 			{
 				return payLineHourlyRate;
@@ -48,19 +63,7 @@ namespace Payroll.Service
 			{
 				return Math.Max(payLineHourlyRate, calculatedEmployeeRate);
 			}
-
-			if (
-				payType != PayType.Regular 
-				&& payType != PayType.CompTime 
-				&& payType != PayType.ReportingPay
-				&& payType != PayType.Holiday
-				&& payType != PayType.Bereavement
-				&& payType != PayType.Vacation
-				&& payType != PayType.SpecialAdjustment)
-			{
-				return 0;
-			}
-
+			
 			if (isH2A)
 			{
 				return H2ARate(shiftDate);

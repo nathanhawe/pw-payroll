@@ -28,7 +28,7 @@ namespace Payroll.Service
 			// Plant pay lines can receive hourly incentives for labor code 555 or piece incentives.
 			foreach (var payLine in plantPayLines)
 			{
-				if (payLine.LaborCode == 555)
+				if (payLine.LaborCode == (int)PlantLaborCode.TallyTagWriter)
 				{
 					HourlyIncentive(payLine);
 				}

@@ -389,7 +389,7 @@ namespace Payroll.Service
 
 			/* Gross Calculations */
 			// Hourly
-			// Include sick leave to be calculated as we expect to be provided an "Old Hourly Rate" instead of figuring
+			// Include sick leave AND COVID19 to be calculated as we expect to be provided an "Old Hourly Rate" instead of figuring
 			// out the rate ourselves.
 			var hourlyLines = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal &&
 				(
@@ -400,7 +400,8 @@ namespace Payroll.Service
 					|| x.PayType == PayType.Vacation
 					|| x.PayType == PayType.Holiday
 					|| x.PayType == PayType.SickLeave
-					|| x.PayType == PayType.Bereavement))
+					|| x.PayType == PayType.Bereavement
+					|| x.PayType == PayType.Covid19))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
 			_context.UpdateRange(hourlyLines);
