@@ -12,6 +12,7 @@ namespace Payroll.IntegrationTest
 	public class TimeAndAttendanceIntegrations
 	{
 		[TestMethod]
+		[Ignore("Only Run To Change State")]
 		public void RunPlantsProcess()
 		{
 			var weekEndingDate = new DateTime(2020, 6, 28);
@@ -113,6 +114,7 @@ namespace Payroll.IntegrationTest
 		}
 
 		[TestMethod]
+		[Ignore("Only Run To Change State")]
 		public void RunRanchesProcess()
 		{
 			var weekEndingDate = new DateTime(2020, 6, 28);

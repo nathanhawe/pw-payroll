@@ -314,9 +314,19 @@ namespace Payroll.Service
 			/* Update records to Quick Base */
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
-			// Ranch Payroll Records
-			// Ranch Adjustment Records
-			// Ranch Summary Records
+
+			//// Plant Payroll Records
+			//_plantPayrollRepo.Save(_context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList());
+			//// Plant Adjustment Records
+			//_plantPayrollAdjustmentRepo.Save(_context.PlantAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList());
+			//// Plant Summary Records
+			//_plantSummariesRepo.Save(_context.PlantSummaries.Where(x => x.BatchId == batch.Id).ToList());
+			//// PSL Updates
+			//_pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x => 
+			//	x.BatchId == batch.Id
+			//	&& x.ShiftDate >= batch.WeekEndDate.AddDays(-6)
+			//	&& x.ShiftDate <= batch.WeekEndDate).ToList());
+
 		}
 
 		private void CopyPlantDataFromQuickBase(Batch batch)
@@ -325,7 +335,10 @@ namespace Payroll.Service
 			_logger.Log(LogLevel.Information, "Downloading plant payroll data from Quick Base for {batchId}", batch.Id);
 			var plantPayLines = _plantPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			plantPayLines = plantPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
-			plantPayLines.ForEach(x => x.BatchId = batch.Id);
+			plantPayLines.ForEach(x => {
+				x.BatchId = batch.Id;
+				x.HoursWorked = _roundingService.Round(x.HoursWorked, 2);
+			});
 
 			// Plant Adjustment
 			_logger.Log(LogLevel.Information, "Downloading plant adjustment data from Quick Base for {batchId}", batch.Id);
@@ -391,7 +404,7 @@ namespace Payroll.Service
 			// Hourly
 			// Include sick leave AND COVID19 to be calculated as we expect to be provided an "Old Hourly Rate" instead of figuring
 			// out the rate ourselves.
-			var hourlyLines = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal &&
+			var hourlyLines = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId &&
 				(
 					x.PayType == PayType.Regular
 					|| x.PayType == PayType.SpecialAdjustment
@@ -408,7 +421,7 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			// Pieces
-			var pieceLines = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal && x.PayType == PayType.Pieces).ToList();
+			var pieceLines = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && x.PayType == PayType.Pieces).ToList();
 			_grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
 			_context.UpdateRange(pieceLines);
 			_context.SaveChanges();
@@ -418,7 +431,7 @@ namespace Payroll.Service
 			// "New" record.
 
 			// Total
-			var payLines = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal).ToList();
+			var payLines = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId).ToList();
 			_totalGrossCalculator.CalculateTotalGross(payLines);
 			_context.UpdateRange(payLines);
 			_context.SaveChanges();
@@ -789,18 +802,22 @@ namespace Payroll.Service
 
 		private void CopyRanchDataFromQuickBase(Batch batch)
 		{
-
-
 			// Crew Boss Pay
 			_logger.Log(LogLevel.Information, "Downloading crew boss payroll data from Quick Base for {batchId}", batch.Id);
 			var crewBossPayLines = _crewBossPayRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
-			crewBossPayLines.ForEach(x => x.BatchId = batch.Id);
+			crewBossPayLines.ForEach(x => {
+				x.BatchId = batch.Id;
+				x.HoursWorked = _roundingService.Round(x.HoursWorked, 2);
+			});
 
 			// Ranch Payroll
 			_logger.Log(LogLevel.Information, "Downloading ranch payroll data from Quick Base for {batchId}", batch.Id);
 			var ranchPayLines = _ranchPayrollRepo.Get(batch.WeekEndDate, batch.LayoffId ?? 0).ToList();
 			ranchPayLines = ranchPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
-			ranchPayLines.ForEach(x => x.BatchId = batch.Id);
+			ranchPayLines.ForEach(x => { 
+				x.BatchId = batch.Id;
+				x.HoursWorked = _roundingService.Round(x.HoursWorked, 2);
+			});
 
 			// Ranch Adjustment
 			_logger.Log(LogLevel.Information, "Downloading ranch adjustment data from Quick Base for {batchId}", batch.Id);
@@ -857,7 +874,7 @@ namespace Payroll.Service
 			// Hourly
 			// Include sick leave to be calculated as we expect to be provided an "Old Hourly Rate" instead of figuring
 			// out the rate ourselves.
-			var hourlyLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal &&
+			var hourlyLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId &&
 				(
 					x.PayType == PayType.Regular
 					|| x.PayType == PayType.HourlyPlusPieces
@@ -874,7 +891,7 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			// Pieces
-			var pieceLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal &&
+			var pieceLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId &&
 				(
 					x.PayType == PayType.Pieces
 					|| x.PayType == PayType.HourlyPlusPieces))
@@ -884,7 +901,7 @@ namespace Payroll.Service
 			_context.SaveChanges();
 
 			// Total
-			var payLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && !x.IsOriginal).ToList();
+			var payLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId).ToList();
 			_totalGrossCalculator.CalculateTotalGross(payLines);
 			_context.RanchAdjustmentLines.UpdateRange(payLines);
 			_context.SaveChanges();

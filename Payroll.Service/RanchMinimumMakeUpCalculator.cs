@@ -32,7 +32,7 @@ namespace Payroll.Service
 			{
 				if (summary.EffectiveHourlyRate >= summary.MinimumWage) continue;
 
-				makeUpGross = _roundingService.Round((summary.MinimumWage * summary.TotalHours) - summary.TotalGross, 2);
+				makeUpGross = _roundingService.Round((summary.MinimumWage * (summary.TotalHours - summary.NonProductiveTime)) - (summary.TotalGross - summary.NonProductiveGross), 2);
 
 				if (makeUpGross > 0)
 				{

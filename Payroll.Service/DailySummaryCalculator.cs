@@ -304,6 +304,7 @@ namespace Payroll.Service
 					TotalGross = x.Sum(s => s.TotalGross),
 					TotalHours = x.Sum(s => s.HoursWorked),
 					NonProductiveTime = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.HoursWorked),
+					NonProductiveGross = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.TotalGross),
 				})
 				.ToList();
 
@@ -338,6 +339,7 @@ namespace Payroll.Service
 					TotalGross = x.Sum(s => s.TotalGross),
 					TotalHours = x.Sum(s => s.HoursWorked),
 					NonProductiveTime = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.HoursWorked),
+					NonProductiveGross = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.TotalGross),
 				})
 				.ToList();
 
@@ -357,7 +359,7 @@ namespace Payroll.Service
 				divisor = x.TotalHours - x.NonProductiveTime;
 				if (divisor > 0)
 				{
-					x.EffectiveHourlyRate = _roundingService.Round(x.TotalGross / divisor, 2);
+					x.EffectiveHourlyRate = _roundingService.Round((x.TotalGross-x.NonProductiveGross) / divisor, 2);
 				}
 				else
 				{

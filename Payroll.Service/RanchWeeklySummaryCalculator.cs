@@ -36,6 +36,7 @@ namespace Payroll.Service
 					FiveEight = group.OrderByDescending(o => o.ShiftDate).First().FiveEight,
 					TotalHours = group.Sum(x => x.TotalHours),
 					NonProductiveTime = group.Sum(x => x.NonProductiveTime),
+					NonProductiveGross = group.Sum(x => x.NonProductiveGross),
 					TotalGross = group.Sum(x => x.TotalGross),
 					EffectiveHourlyRate = 0,
 					TotalOverTimeHours = group.Sum(x => x.OverTimeHours),
@@ -48,7 +49,7 @@ namespace Payroll.Service
 			weeklySummaries.ForEach(x =>
 			{
 				divisor = x.TotalHours - x.NonProductiveTime;
-				x.EffectiveHourlyRate = divisor > 0 ? _roundingService.Round(x.TotalGross / divisor, 2) : 0;
+				x.EffectiveHourlyRate = divisor > 0 ? _roundingService.Round((x.TotalGross - x.NonProductiveGross) / divisor, 2) : 0;
 			});
 
 			return weeklySummaries;

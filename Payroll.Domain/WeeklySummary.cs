@@ -17,5 +17,6 @@ namespace Payroll.Domain
 		public decimal EffectiveHourlyRate { get; set; }
 		public decimal TotalOverTimeHours { get; set; }
 		public decimal TotalDoubleTimeHours { get; set; }
+		public decimal NonProductiveGross { get; set; }
 	}
 }

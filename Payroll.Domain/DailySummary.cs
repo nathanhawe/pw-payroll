@@ -19,5 +19,6 @@ namespace Payroll.Domain
 		public decimal OverTimeHours { get; set; }
 		public decimal DoubleTimeHours { get; set; }
 		public decimal MinimumWage { get; set; }
+		public decimal NonProductiveGross { get; set; }
 	}
 }
