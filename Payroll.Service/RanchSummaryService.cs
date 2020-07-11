@@ -53,7 +53,7 @@ namespace Payroll.Service
 					LastCrew = group.Max(x => x.LastCrew),
 					TotalHours = group.Sum(x => x.TotalHours),
 					TotalGross = group.Sum(x => x.TotalGross),
-					CulturalHours = group.Where(x => x.Crew < 60).Sum(x => x.TotalHours),
+					CulturalHours = group.Where(x => x.Crew <= 60).Sum(x => x.TotalHours),
 					CovidHours = group.Where(x => x.LaborCode == (int)RanchLaborCode.Covid19).Sum(x => x.TotalHours)
 				})
 				.ToList();

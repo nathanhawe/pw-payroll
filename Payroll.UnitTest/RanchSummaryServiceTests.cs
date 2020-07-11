@@ -102,6 +102,12 @@ namespace Payroll.UnitTest
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 9), employeeId: "Employee4", crew: 100, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 2, weekEndDate: new DateTime(2020, 1, 12), shiftDate: new DateTime(2020, 1, 10), employeeId: "Employee4", crew: (int)Crew.WestTractor_Night, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				
 				_context.SaveChanges();
 			}
 
@@ -141,6 +147,11 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee2" && x.CulturalHours == 0).Count());
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee3" && x.CulturalHours == 0).Count());
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee4" && x.CulturalHours == 10).Count());
+
+			ranchSummaries = _ranchSummaryService.CreateSummariesForBatch(3);
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee1" && x.CulturalHours == 50).Count());
+			Assert.AreEqual(1, ranchSummaries.Count());
+
 		}
 
 		[TestMethod]
