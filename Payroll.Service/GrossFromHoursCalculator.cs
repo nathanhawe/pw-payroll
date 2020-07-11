@@ -45,6 +45,7 @@ namespace Payroll.Service
 					payLine.HourlyRate);
 
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
+				payLine.HourlyRate = hourlyRate;
 			}
 		}
 
@@ -71,6 +72,7 @@ namespace Payroll.Service
 					payLine.HourlyRate);
 				
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
+				payLine.HourlyRate = hourlyRate;
 			}
 		}
 
@@ -100,6 +102,7 @@ namespace Payroll.Service
 				}
 
 				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);
+				adjustmentLine.HourlyRate = hourlyRate;
 			}
 		}
 
@@ -134,6 +137,7 @@ namespace Payroll.Service
 				}
 
 				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);
+				adjustmentLine.HourlyRate = hourlyRate;
 			}
 		}
 
