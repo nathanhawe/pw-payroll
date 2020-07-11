@@ -16,13 +16,16 @@ namespace PrimaCompany.IDP.PasswordReset
 	{
 		private readonly ILogger<PasswordResetController> _logger;
 		private readonly ILocalUserService _localUserService;
+		private readonly IEmailService _emailService;
 
 		public PasswordResetController(
 			ILogger<PasswordResetController> logger,
-			ILocalUserService localUserService)
+			ILocalUserService localUserService,
+			IEmailService emailService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_localUserService = localUserService ?? throw new ArgumentNullException(nameof(localUserService));
+			_emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
 		}
 
 		[HttpGet]
@@ -46,10 +49,9 @@ namespace PrimaCompany.IDP.PasswordReset
 				var securityCode = await _localUserService.InitiatePasswordResetRequest(model.Email);
 				await _localUserService.SaveChangesAsync();
 
-				// create activation link
-				// todo: replace debug statement with email
+				// create reset link and send it to the user's email address
 				var link = Url.ActionLink("ResetPassword", "PasswordReset", new { securityCode });
-				Debug.WriteLine(link);
+				_emailService.SendEmail(model.Email, "Password Reset", $"Reset your password by following this link: {link}");
 			}
 			catch(Exception ex)
 			{

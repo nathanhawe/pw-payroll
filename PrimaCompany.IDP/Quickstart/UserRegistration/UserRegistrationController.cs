@@ -20,15 +20,18 @@ namespace PrimaCompany.IDP.UserRegistration
 		private readonly ILogger<UserRegistrationController> _logger;
 		private readonly ILocalUserService _localUserService;
 		private readonly IIdentityServerInteractionService _interaction;
+		private readonly IEmailService _emailService;
 
 		public UserRegistrationController(
 			ILogger<UserRegistrationController> logger,
 			ILocalUserService localUserService,
-			IIdentityServerInteractionService interaction)
+			IIdentityServerInteractionService interaction,
+			IEmailService emailService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_localUserService = localUserService ?? throw new ArgumentNullException(nameof(localUserService));
 			_interaction = interaction ?? throw new ArgumentNullException(nameof(interaction));
+			_emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
 		}
 
 		[HttpGet]
@@ -93,20 +96,9 @@ namespace PrimaCompany.IDP.UserRegistration
 				_localUserService.AddUser(userToCreate, model.Password);
 				await _localUserService.SaveChangesAsync();
 
-				// create an activation link
+				// create an activation link and send it to the user's email address
 				var link = Url.ActionLink("ActivateUser", "UserRegistration", new { securityCode = userToCreate.SecurityCode });
-
-				// todo: replace this with an email link for verification
-				Debug.WriteLine(link);
-
-				//// log the user in after successfull registration
-				//await HttpContext.SignInAsync(userToCreate.Subject, userToCreate.Username);
-
-				//// continue with the flow
-				//if (_interaction.IsValidReturnUrl(model.ReturnUrl) || Url.IsLocalUrl(model.ReturnUrl))
-				//{
-				//	return Redirect(model.ReturnUrl);
-				//}
+				_emailService.SendEmail(model.Email, "Confirm User Registration", $"Complete your user registration by following this link: {link}");
 
 				//return Redirect("~/");
 				return View("ActivationCodeSent");

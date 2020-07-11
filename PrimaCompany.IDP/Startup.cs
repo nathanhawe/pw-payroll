@@ -20,6 +20,7 @@ using PrimaCompany.IDP.Services;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PrimaCompany.IDP
 {
@@ -48,13 +49,27 @@ namespace PrimaCompany.IDP
 
 			services.AddScoped<IPasswordHasher<Entities.User>, PasswordHasher<Entities.User>>();
 			services.AddScoped<ILocalUserService, LocalUserService>();
+			services.AddScoped<IEmailService>(x =>
+				ActivatorUtilities.CreateInstance<SmtpEmailService>(
+					x,
+					Configuration["Email:ServerAddress"],
+					Configuration["Email:FromMailboxName"],
+					Configuration["Email:FromMailboxAddress"],
+					(int.TryParse(Configuration["Email:Port"], out int port) ? port : 25))
+				);
 
 			var builder = services.AddIdentityServer();
 
 			builder.AddProfileService<LocalUserProfileService>();
 
-			// not recommended for production - you need to store your key material somewhere secure
-			builder.AddDeveloperSigningCredential();
+			if (Environment.IsDevelopment())
+			{
+				builder.AddDeveloperSigningCredential();
+			}
+			else
+			{
+				builder.AddSigningCredential(LoadCertificateFromStore());
+			}
 
 			var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
@@ -91,6 +106,19 @@ namespace PrimaCompany.IDP
 				endpoints.MapDefaultControllerRoute();
 			});
 			
+		}
+
+		public X509Certificate2 LoadCertificateFromStore()
+		{
+			string thumbprint = Configuration["SigningCertificate:Thumbprint"];
+			using var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+			store.Open(OpenFlags.ReadOnly);
+			var certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, true);
+			if(certCollection.Count == 0)
+			{
+				throw new Exception($"The certificate with thumbprint '{thumbprint}' was not found.");
+			}
+			return certCollection[0];
 		}
 	}
 }
