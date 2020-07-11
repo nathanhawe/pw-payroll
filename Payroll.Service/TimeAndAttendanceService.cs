@@ -511,7 +511,7 @@ namespace Payroll.Service
 			doubleTimeRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
-				x.OtDtWotRate = _roundingService.Round(.5M * (weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
+				x.OtDtWotRate = _roundingService.Round((weeklySummary == null ? 0 : weeklySummary.EffectiveHourlyRate), 2);
 				x.OtherGross = _roundingService.Round(x.OtDtWotRate * x.OtDtWotHours, 2);
 			});
 			_totalGrossCalculator.CalculateTotalGross(doubleTimeRecords);
