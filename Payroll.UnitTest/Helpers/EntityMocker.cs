@@ -339,7 +339,8 @@ namespace Payroll.UnitTest.Helpers
 			decimal primaRate = 0,
 			bool isIncentiveDisqualified = false,
 			bool hasNonPrimaViolation = false,
-			bool useIncreasedRate = false
+			bool useIncreasedRate = false,
+			decimal nonDiscretionaryBonusRate = 0
 			)
 		{
 			dateCreated ??= DateTime.Now;
@@ -378,7 +379,8 @@ namespace Payroll.UnitTest.Helpers
 				NonPrimaRate = nonPrimaRate,
 				IsIncentiveDisqualified = isIncentiveDisqualified,
 				HasNonPrimaViolation = hasNonPrimaViolation,
-				UseIncreasedRate = useIncreasedRate
+				UseIncreasedRate = useIncreasedRate,
+				NonDiscretionaryBonusRate = nonDiscretionaryBonusRate
 			};
 		}
 

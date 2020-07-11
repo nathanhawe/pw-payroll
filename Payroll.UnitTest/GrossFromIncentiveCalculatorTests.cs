@@ -376,5 +376,101 @@ namespace Payroll.UnitTest
 				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
 			}
 		}
+
+		[TestMethod]
+		public void NonDiscretionaryBonus()
+		{
+			var laborCode = (int)PlantLaborCode.Unknown;
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, NonDiscretionaryBonusRate = 2, ExpectedGross = 16M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, NonDiscretionaryBonusRate = 2, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = 10.25M, NonDiscretionaryBonusRate = 2.25M, ExpectedGross = 23.06M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 8M, NonDiscretionaryBonusRate = 0, ExpectedGross = 0M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: false,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode,
+				nonDiscretionaryBonusRate: x.NonDiscretionaryBonusRate)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		[TestMethod]
+		public void NonDiscretionaryBonusRate_IgnoresIncentiveDisqualified()
+		{
+			var laborCode = (int)PlantLaborCode.Unknown;
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, NonDiscretionaryBonusRate = 2, ExpectedGross = 16M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, NonDiscretionaryBonusRate = 2, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = 10.25M, NonDiscretionaryBonusRate = 2.25M, ExpectedGross = 23.06M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 8M, NonDiscretionaryBonusRate = 0, ExpectedGross = 0M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: true,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode,
+				nonDiscretionaryBonusRate: x.NonDiscretionaryBonusRate)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		[TestMethod]
+		public void NonDiscretionaryBonusRate_IsNotAddedToTallyTagWriting()
+		{
+			var laborCode = (int)PlantLaborCode.TallyTagWriter;
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, NonDiscretionaryBonusRate = 2, ExpectedGross = 16M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, NonDiscretionaryBonusRate = 2, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = 10.25M, NonDiscretionaryBonusRate = 2.25M, ExpectedGross = 20.5M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 8M, NonDiscretionaryBonusRate = 0, ExpectedGross = 16M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: false,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode,
+				nonDiscretionaryBonusRate: x.NonDiscretionaryBonusRate)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
 	}
 }

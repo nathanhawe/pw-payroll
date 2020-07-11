@@ -13,6 +13,7 @@ namespace Payroll.UnitTest.Helpers
 		public decimal IncreasedRate { get; set; }
 		public decimal PrimaRate { get; set; }
 		public decimal NonPrimaRate { get; set; }
+		public decimal NonDiscretionaryBonusRate { get; set; }
 		public decimal ExpectedGross { get; set; }
 	}
 }

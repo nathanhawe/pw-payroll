@@ -383,7 +383,8 @@ namespace Payroll.Service
 			// Incentives!!!
 			var incentiveLines = plantPayLines.Where(x => x.BatchId == batch.Id && (
 				x.LaborCode == (int)PlantLaborCode.TallyTagWriter
-				|| (x.PayType == PayType.Pieces && !x.IsIncentiveDisqualified))).ToList();
+				|| (x.PayType == PayType.Pieces && !x.IsIncentiveDisqualified)
+				|| x.NonDiscretionaryBonusRate > 0)).ToList();
 			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(incentiveLines);
 
 			// Total
@@ -1501,6 +1502,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.NonPrimaRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.PrimaRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.UseIncreasedRate), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.NonDiscretionaryBonusRate), typeof(decimal)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1539,6 +1541,7 @@ namespace Payroll.Service
 				row[nameof(PlantPayLine.NonPrimaRate)] = payLine.NonPrimaRate;
 				row[nameof(PlantPayLine.PrimaRate)] = payLine.PrimaRate;
 				row[nameof(PlantPayLine.UseIncreasedRate)] = payLine.UseIncreasedRate;
+				row[nameof(PlantPayLine.NonDiscretionaryBonusRate)] = payLine.NonDiscretionaryBonusRate;
 				table.Rows.Add(row);
 			}
 

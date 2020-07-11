@@ -159,6 +159,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// <summary>
 		/// [41.1 Approval] - Checkbox indicates that a pay line with pay type 41.1 is approved to be paid out.
 		/// </summary>
-		SpecialAdjustmentApproval = 182
+		SpecialAdjustmentApproval = 182,
+
+		/// <summary>
+		/// [Non Discretionary Bonus Rate] - Currency indicates the amount of bonus pay given per hour for non-LC555 pay lines
+		/// </summary>
+		NonDiscretionaryBonusRate = 189
 	}
 }
