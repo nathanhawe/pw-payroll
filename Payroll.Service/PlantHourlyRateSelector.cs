@@ -56,12 +56,26 @@ namespace Payroll.Service
 
 			if (payType == PayType.SickLeave)
 			{
-				return payLineHourlyRate;
+				if (isH2A)
+				{
+					return H2ARate(shiftDate);
+				}
+				else
+				{
+					return payLineHourlyRate;
+				}
 			}
 			
 			if(payType == PayType.Covid19)
 			{
-				return Math.Max(payLineHourlyRate, calculatedEmployeeRate);
+				if(isH2A)
+				{
+					return H2ARate(shiftDate);
+				}
+				else
+				{
+					return Math.Max(payLineHourlyRate, calculatedEmployeeRate);
+				}
 			}
 			
 			if (isH2A)
