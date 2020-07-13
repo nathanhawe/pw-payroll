@@ -324,18 +324,27 @@ namespace Payroll.Service
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
 
-			//// Plant Payroll Records
-			//_plantPayrollRepo.Save(_context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList());
-			//// Plant Adjustment Records
-			//_plantPayrollAdjustmentRepo.Save(_context.PlantAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList());
-			//// Plant Summary Records
-			//_plantSummariesRepo.Save(_context.PlantSummaries.Where(x => x.BatchId == batch.Id).ToList());
-			//// PSL Updates
-			//_pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
-			//	x.BatchId == batch.Id
-			//	&& x.ShiftDate >= batch.WeekEndDate.AddDays(-6)
-			//	&& x.ShiftDate <= batch.WeekEndDate).ToList());
 
+			// Plant Payroll Records
+			var toPlantPayroll = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList();
+			if (batch.LayoffId != null) toPlantPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			var ppResponse = _plantPayrollRepo.Save(toPlantPayroll);
+
+			// Plant Adjustment Records
+			var toPlantAdjustments = _context.PlantAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
+			if (batch.LayoffId != null) toPlantAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			var ppaResponse = _plantPayrollAdjustmentRepo.Save(toPlantAdjustments);
+
+			// Plant Summary Records
+			var toPlantSummaries = _context.PlantSummaries.Where(x => x.BatchId == batch.Id).ToList();
+			if (batch.LayoffId != null) toPlantSummaries.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			var psResponse = _plantSummariesRepo.Save(toPlantSummaries);
+
+			// PSL Updates
+			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
+				x.BatchId == batch.Id
+				&& x.ShiftDate >= batch.WeekEndDate.AddDays(-6)
+				&& x.ShiftDate <= batch.WeekEndDate).ToList());
 		}
 
 		private void CopyPlantDataFromQuickBase(Batch batch)
@@ -819,9 +828,62 @@ namespace Payroll.Service
 			/* Update records to Quick Base */
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
+
+			// Crew Boss Pay Records
+			var toCrewBossPay = _context.CrewBossPayLines.Where(x => x.BatchId == batch.Id).ToList();
+			if (batch.LayoffId != null) toCrewBossPay.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			var cbReponse = _crewBossPayRepo.Save(toCrewBossPay);
+
 			// Ranch Payroll Records
+			// Crew boss lines need to have the hours worked included as they have been newly created.
+			var cbLinesToRanchPayroll = _context.RanchPayLines
+				.Where(x =>
+					x.BatchId == batch.Id
+					&& x.QuickBaseRecordId == 0
+					&& (
+						x.PayType == PayType.CBCommission
+						|| x.PayType == PayType.CBDaily
+						|| x.PayType == PayType.CBHourlyTrees
+						|| x.PayType == PayType.CBHourlyVines
+						|| x.PayType == PayType.CBPerWorker
+						|| x.PayType == PayType.CBSouthDaily
+						|| x.PayType == PayType.CBSouthHourly))
+				.ToList();
+
+			var toRanchPayroll = _context.RanchPayLines
+				.Where(x => 
+					x.BatchId == batch.Id
+					&& x.PayType != PayType.CBCommission
+					&& x.PayType != PayType.CBDaily
+					&& x.PayType != PayType.CBHourlyTrees
+					&& x.PayType != PayType.CBHourlyVines
+					&& x.PayType != PayType.CBPerWorker
+					&& x.PayType != PayType.CBSouthDaily
+					&& x.PayType != PayType.CBSouthHourly).ToList();
+			if (batch.LayoffId != null)
+			{
+				cbLinesToRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+				toRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			}
+			var cbrpResponse = _ranchPayrollRepo.SaveWithHoursWorked(cbLinesToRanchPayroll);
+			var rpResponse = _ranchPayrollRepo.Save(toRanchPayroll);
+
 			// Ranch Adjustment Records
+			var toRanchAdjustments = _context.RanchAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
+			if (batch.LayoffId != null) toRanchAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			var rpaResponse = _ranchPayrollAdjustmentRepo.Save(toRanchAdjustments);
+
 			// Ranch Summary Records
+			var toRanchSummaries = _context.RanchSummaries.Where(x => x.BatchId == batch.Id).ToList();
+			if (batch.LayoffId != null) toRanchSummaries.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			var rsResponse = _ranchSummariesRepo.Save(toRanchSummaries);
+
+			// PSL Updates
+			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
+				x.BatchId == batch.Id
+				&& x.ShiftDate >= batch.WeekEndDate.AddDays(-6)
+				&& x.ShiftDate <= batch.WeekEndDate).ToList());
+
 		}
 
 		private void CopyRanchDataFromQuickBase(Batch batch)

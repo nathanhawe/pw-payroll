@@ -62,6 +62,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		HoursWorked = 22,
 
 		/// <summary>
+		/// [OT DT WOT Hours] - Numeric
+		/// </summary>
+		OtDtWotHours = 23,
+
+		/// <summary>
 		/// [Pay Type] - Text (multiple choice)
 		/// </summary>
 		PayType = 24,
@@ -77,6 +82,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// rate paid instead of the application making that determination.
 		/// </summary>
 		PieceRate = 28,
+
+		/// <summary>
+		/// [OT DT WOT Rate] - Currency
+		/// </summary>
+		OtDtWotRate = 29,
 
 		/// <summary>
 		/// [Hourly Rate] - Formula currency
@@ -144,5 +154,30 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// hourly rate.
 		/// </summary>
 		UseOldHourlyRate = 49,
+
+		/// <summary>
+		/// [Batch ID] - Numeric
+		/// </summary>
+		BatchId = 88,
+
+		/// <summary>
+		/// [Calculated Hourly Rate] - Currency
+		/// </summary>
+		CalculatedHourlyRate = 89,
+
+		/// <summary>
+		/// [Calculated Gross From Hours] - Currency
+		/// </summary>
+		CalculatedGrossFromHours = 90,
+
+		/// <summary>
+		/// [Calculated Gross From Pieces] - Currency
+		/// </summary>
+		CalculatedGrossFromPieces = 91,
+
+		/// <summary>
+		/// [Calculated Total Gross] - Currency
+		/// </summary>
+		CalculatedTotalGross = 92,
 	}
 }

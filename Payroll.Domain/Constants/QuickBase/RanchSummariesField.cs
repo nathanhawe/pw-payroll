@@ -19,5 +19,6 @@ namespace Payroll.Domain.Constants.QuickBase
 		CulturalHours = 45,
 		LastCrew = 35,
 		LC600Hours = 161,
+		BatchId = 163
 	}
 }

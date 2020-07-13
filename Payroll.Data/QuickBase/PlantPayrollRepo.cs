@@ -65,15 +65,16 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{(line.Plant > 0 ? line.Plant.ToString() : "")},");
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
-				sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.PayType},");
+				sb.Append($"{line.OtDtWotHours},");
+				sb.Append($"{line.OtDtWotRate},");
 				sb.Append($"{line.HourlyRate},");
 				sb.Append($"{line.GrossFromHours},");
 				sb.Append($"{line.GrossFromPieces},");
 				sb.Append($"{line.GrossFromIncentive},");
 				sb.Append($"{line.OtherGross},");
 				sb.Append($"{line.TotalGross},");
-				sb.Append($"{line.HourlyRateOverride}");
+				sb.Append($"{line.BatchId}");
 				sb.Append("\n");
 			}
 
@@ -87,7 +88,6 @@ namespace Payroll.Data.QuickBase
 
 			return importResponse;
 		}
-			
 
 		/// <summary>
 		/// Converts an XElement object representing an API_DoQuery response from the Plant Payroll table in Quick Base into 
@@ -119,7 +119,7 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
 						case (int)PlantPayrollField.ShiftDate: temp.ShiftDate = ParseDate(field.Value); break;
 						case (int)PlantPayrollField.Plant: temp.Plant = ParseInt(field.Value) ?? 0; break;
-						case (int)PlantPayrollField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)PlantPayrollField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)PlantPayrollField.LaborCode: temp.LaborCode = ParseInt(field.Value) ?? 0; break;
 						case (int)PlantPayrollField.HoursWorked: temp.HoursWorked = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollField.PayType: temp.PayType = field.Value; break;
@@ -170,12 +170,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.HoursWorked}.");
 			sb.Append($"{(int)PlantPayrollField.PayType}.");
 			sb.Append($"{(int)PlantPayrollField.Pieces}.");
-			//sb.Append($"{(int)PlantPayrollField.HourlyRate}.");
-			//sb.Append($"{(int)PlantPayrollField.GrossFromHours}.");
-			//sb.Append($"{(int)PlantPayrollField.GrossFromPieces}.");
-			//sb.Append($"{(int)PlantPayrollField.GrossFromIncentive}.");
 			sb.Append($"{(int)PlantPayrollField.OtherGross}.");
-			//sb.Append($"{(int)PlantPayrollField.TotalGross}.");
 			sb.Append($"{(int)PlantPayrollField.AlternativeWorkWeek}.");
 			sb.Append($"{(int)PlantPayrollField.HourlyRateOverride}.");
 			sb.Append($"{(int)PlantPayrollField.EmployeeHourlyRate}.");
@@ -206,15 +201,16 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.Plant}.");
 			sb.Append($"{(int)PlantPayrollField.EmployeeNumber}.");
 			sb.Append($"{(int)PlantPayrollField.LaborCode}.");
-			sb.Append($"{(int)PlantPayrollField.HoursWorked}.");
 			sb.Append($"{(int)PlantPayrollField.PayType}.");
-			sb.Append($"{(int)PlantPayrollField.HourlyRate}.");
-			sb.Append($"{(int)PlantPayrollField.GrossFromHours}.");
-			sb.Append($"{(int)PlantPayrollField.GrossFromPieces}.");
-			sb.Append($"{(int)PlantPayrollField.GrossFromIncentive}.");
+			sb.Append($"{(int)PlantPayrollField.OtDtWotHours}.");
+			sb.Append($"{(int)PlantPayrollField.OtDtWotRate}.");
+			sb.Append($"{(int)PlantPayrollField.CalculatedHourlyRate}.");
+			sb.Append($"{(int)PlantPayrollField.CalculatedGrossFromHours}.");
+			sb.Append($"{(int)PlantPayrollField.CalculatedGrossFromPieces}.");
+			sb.Append($"{(int)PlantPayrollField.CalculatedGrossFromIncentive}.");
 			sb.Append($"{(int)PlantPayrollField.OtherGross}.");
-			sb.Append($"{(int)PlantPayrollField.TotalGross}.");
-			sb.Append($"{(int)PlantPayrollField.HourlyRateOverride}.");
+			sb.Append($"{(int)PlantPayrollField.CalculatedTotalGross}.");
+			sb.Append($"{(int)PlantPayrollField.BatchId}.");
 
 			return sb.ToString();
 		}

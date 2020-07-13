@@ -42,7 +42,7 @@ namespace Payroll.Data.QuickBase
 		{
 			var clist = GetImportFromCsvClist();
 
-			// Build the CDATA string
+			// Build the CDATA string.  This must match the order of fields as returned by GetImportFromCsvClist().
 			var sb = new StringBuilder();
 			foreach (var line in ranchSummaries)
 			{
@@ -53,7 +53,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.TotalGross},");
 				sb.Append($"{line.CulturalHours},");
 				sb.Append($"{(line.LastCrew > 0 ? line.LastCrew.ToString() : "")},");
-				sb.Append($"{line.CovidHours}");
+				sb.Append($"{line.CovidHours},");
+				sb.Append($"{line.BatchId},");
 				sb.Append("\n");
 			}
 
@@ -94,7 +95,18 @@ namespace Payroll.Data.QuickBase
 		/// <returns></returns>
 		private string GetImportFromCsvClist()
 		{
-			return GetDoQueryClist();
+			var sb = new StringBuilder();
+			sb.Append($"{(int)RanchSummariesField.LayoffRunId}.");
+			sb.Append($"{(int)RanchSummariesField.EmployeeNumber}.");
+			sb.Append($"{(int)RanchSummariesField.WeekEndDate}.");
+			sb.Append($"{(int)RanchSummariesField.TotalHours}.");
+			sb.Append($"{(int)RanchSummariesField.TotalGross}.");
+			sb.Append($"{(int)RanchSummariesField.CulturalHours}.");
+			sb.Append($"{(int)RanchSummariesField.LastCrew}.");
+			sb.Append($"{(int)RanchSummariesField.LC600Hours}.");
+			sb.Append($"{(int)RanchSummariesField.BatchId}.");
+
+			return sb.ToString();
 		}
 
 		/// <summary>
@@ -121,7 +133,7 @@ namespace Payroll.Data.QuickBase
 					switch (fieldId)
 					{
 						case (int)RanchSummariesField.LayoffRunId: temp.LayoffId = ParseInt(field.Value) ?? 0; break;
-						case (int)RanchSummariesField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)RanchSummariesField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)RanchSummariesField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
 						case (int)RanchSummariesField.TotalHours: temp.TotalHours = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchSummariesField.TotalGross: temp.TotalGross = ParseDecimal(field.Value) ?? 0; break;

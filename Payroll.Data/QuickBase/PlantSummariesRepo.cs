@@ -42,7 +42,7 @@ namespace Payroll.Data.QuickBase
 		{
 			var clist = GetImportFromCsvClist();
 
-			// Build the CDATA string
+			// Build the CDATA string. Fields must match the order from GetImportFromCsvClist().
 			var sb = new StringBuilder();
 			foreach (var line in plantSummaries)
 			{
@@ -51,7 +51,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.WeekEndDate:MM-dd-yyyy},");
 				sb.Append($"{line.TotalHours},");
 				sb.Append($"{line.TotalGross},");
-				sb.Append($"{line.CovidHours}");
+				sb.Append($"{line.CovidHours},");
+				sb.Append($"{line.BatchId}");
 				sb.Append("\n");
 			}
 
@@ -90,7 +91,16 @@ namespace Payroll.Data.QuickBase
 		/// <returns></returns>
 		private string GetImportFromCsvClist()
 		{
-			return GetDoQueryClist();
+			var sb = new StringBuilder();
+			sb.Append($"{(int)PlantSummariesField.LayoffRunId}.");
+			sb.Append($"{(int)PlantSummariesField.EmployeeNumber}.");
+			sb.Append($"{(int)PlantSummariesField.WeekEndDate}.");
+			sb.Append($"{(int)PlantSummariesField.TotalHours}.");
+			sb.Append($"{(int)PlantSummariesField.TotalGross}.");
+			sb.Append($"{(int)PlantSummariesField.LC600Hours}.");
+			sb.Append($"{(int)PlantSummariesField.BatchId}.");
+
+			return sb.ToString();
 		}
 
 		/// <summary>
@@ -117,7 +127,7 @@ namespace Payroll.Data.QuickBase
 					switch (fieldId)
 					{
 						case (int)PlantSummariesField.LayoffRunId: temp.LayoffId = ParseInt(field.Value) ?? 0; break;
-						case (int)PlantSummariesField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)PlantSummariesField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)PlantSummariesField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
 						case (int)PlantSummariesField.TotalHours: temp.TotalHours = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantSummariesField.TotalGross: temp.TotalGross = ParseDecimal(field.Value) ?? 0; break;

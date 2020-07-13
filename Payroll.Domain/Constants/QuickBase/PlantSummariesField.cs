@@ -47,6 +47,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// <summary>
 		/// [LC 600 Hours] - Numeric
 		/// </summary>
-		LC600Hours = 95
+		LC600Hours = 95,
+
+		/// <summary>
+		/// [Batch ID] - Numeric
+		/// </summary>
+		BatchId = 97,
 	}
 }

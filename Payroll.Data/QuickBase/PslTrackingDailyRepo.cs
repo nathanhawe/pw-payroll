@@ -130,7 +130,7 @@ namespace Payroll.Data.QuickBase
 
 					switch (fieldId)
 					{
-						case (int)PslTrackingDailyField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)PslTrackingDailyField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)PslTrackingDailyField.ShiftDate: temp.ShiftDate = ParseDate(field.Value); break;
 						case (int)PslTrackingDailyField.Company: temp.Company = field.Value ?? ""; break;
 						case (int)PslTrackingDailyField.Hours: temp.Hours = ParseDecimal(field.Value) ?? 0; break;

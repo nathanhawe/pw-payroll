@@ -65,18 +65,19 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{(line.Plant > 0 ? line.Plant.ToString() : "")},");
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
-				sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.PayType},");
-				sb.Append($"{line.HourlyRate},");
-				sb.Append($"{line.GrossFromHours},");
-				sb.Append($"{line.GrossFromPieces},");
-				sb.Append($"{line.GrossFromIncentive},");
-				sb.Append($"{line.OtherGross},");
-				sb.Append($"{line.TotalGross},");
 				sb.Append($"{line.WeekEndOfAdjustmentPaid:MM-dd-yyyy},");
 				sb.Append($"{(line.IsOriginal ? OriginalOrNewValue.Original : OriginalOrNewValue.New)},");
 				sb.Append($"{line.OldHourlyRate},");
-				sb.Append($"{(line.UseOldHourlyRate ? "1" : "0")}");
+				sb.Append($"{(line.UseOldHourlyRate ? "1" : "0")},");
+				sb.Append($"{line.OtDtWotHours},");
+				sb.Append($"{line.OtDtWotRate},");
+				sb.Append($"{line.HourlyRate},");
+				sb.Append($"{line.GrossFromHours},");
+				sb.Append($"{line.GrossFromPieces},");
+				sb.Append($"{line.OtherGross},");
+				sb.Append($"{line.TotalGross},");
+				sb.Append($"{line.BatchId}");
 				sb.Append("\n");
 			}
 
@@ -122,7 +123,7 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollAdjustmentField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
 						case (int)PlantPayrollAdjustmentField.ShiftDate: temp.ShiftDate = ParseDate(field.Value); break;
 						case (int)PlantPayrollAdjustmentField.Plant: temp.Plant = ParseInt(field.Value) ?? 0; break;
-						case (int)PlantPayrollAdjustmentField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)PlantPayrollAdjustmentField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)PlantPayrollAdjustmentField.LaborCode: temp.LaborCode = ParseInt(field.Value) ?? 0; break;
 						case (int)PlantPayrollAdjustmentField.HoursWorked: temp.HoursWorked = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollAdjustmentField.PayType: temp.PayType = field.Value; break;
@@ -172,12 +173,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollAdjustmentField.PayType}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.Pieces}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.PieceRate}.");
-			//sb.Append($"{(int)PlantPayrollAdjustmentField.HourlyRate}.");
-			//sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromHours}.");
-			//sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromPieces}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromIncentive}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.OtherGross}.");
-			//sb.Append($"{(int)PlantPayrollAdjustmentField.TotalGross}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.AlternativeWorkWeek}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.EmployeeHourlyRate}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.H2A}.");
@@ -203,18 +200,19 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollAdjustmentField.Plant}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.EmployeeNumber}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.LaborCode}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.HoursWorked}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.PayType}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.HourlyRate}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromHours}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromPieces}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.GrossFromIncentive}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.OtherGross}.");
-			sb.Append($"{(int)PlantPayrollAdjustmentField.TotalGross}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.WeekEndOfAdjustmentPaid}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.OriginalOrNew}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.OldHourlyRate}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.UseOldHourlyRate}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.OtDtWotHours}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.OtDtWotRate}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.CalculatedHourlyRate}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.CalculatedGrossFromHours}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.CalculatedGrossFromPieces}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.OtherGross}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.CalculatedTotalGross}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.BatchId}.");
 
 			return sb.ToString();
 		}

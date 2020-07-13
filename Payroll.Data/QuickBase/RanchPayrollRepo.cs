@@ -55,7 +55,7 @@ namespace Payroll.Data.QuickBase
 		{
 			var clist = GetImportFromCsvClist();
 
-			// Build the CDATA string
+			// Build the CDATA string. This must match the field order returned by GetImportFromCsvList().
 			var sb = new StringBuilder();
 			foreach (var line in ranchPayLines)
 			{
@@ -66,17 +66,19 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
 				sb.Append($"{(line.BlockId > 0 ? line.BlockId.ToString() : "")},");
-				sb.Append($"{line.HoursWorked},");
+				//sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.PayType},");
 				sb.Append($"{line.Pieces},");
 				sb.Append($"{line.PieceRate},");
+				sb.Append($"{line.OtherGross},");
+				sb.Append($"{(line.FiveEight ? "1" : "0")},");
 				sb.Append($"{line.HourlyRate},");
 				sb.Append($"{line.GrossFromHours},");
 				sb.Append($"{line.GrossFromPieces},");
-				sb.Append($"{line.OtherGross},");
 				sb.Append($"{line.TotalGross},");
-				sb.Append($"{(line.FiveEight ? "1" : "0")},");
-				sb.Append($"{line.HourlyRateOverride}");
+				sb.Append($"{line.BatchId},");
+				sb.Append($"{line.OtDtWotHours},");
+				sb.Append($"{line.OtDtWotRate}");
 				sb.Append("\n");
 			}
 
@@ -90,7 +92,59 @@ namespace Payroll.Data.QuickBase
 
 			return importResponse;
 		}
-			
+
+
+		/// <summary>
+		/// Creates a new API_ImportFromCSV request to the Ranch Payroll table in Quickbase for the provided list of <c>RanchPayLine</c>s.
+		/// Records with <c>QuickBaseRecordId</c> values greater than 0 will be updated while those with a value of 0 will be added new.
+		/// This method saves the hours worked value and is intended for saving crew boss ranch pay lines as they won't alreay have an
+		/// hours worked value.
+		/// </summary>
+		/// <param name="ranchPayLines"></param>
+		/// <returns></returns>
+		public XElement SaveWithHoursWorked(IEnumerable<RanchPayLine> ranchPayLines)
+		{
+			var clist = GetImportFromCsvClist(true);
+
+			// Build the CDATA string. This must match the field order returned by GetImportFromCsvList().
+			var sb = new StringBuilder();
+			foreach (var line in ranchPayLines)
+			{
+				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
+				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
+				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
+				sb.Append($"{(line.Crew > 0 ? line.Crew.ToString() : "")},");
+				sb.Append($"{line.EmployeeId},");
+				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
+				sb.Append($"{(line.BlockId > 0 ? line.BlockId.ToString() : "")},");
+				//sb.Append($"{line.HoursWorked},");
+				sb.Append($"{line.PayType},");
+				sb.Append($"{line.Pieces},");
+				sb.Append($"{line.PieceRate},");
+				sb.Append($"{line.OtherGross},");
+				sb.Append($"{(line.FiveEight ? "1" : "0")},");
+				sb.Append($"{line.HourlyRate},");
+				sb.Append($"{line.GrossFromHours},");
+				sb.Append($"{line.GrossFromPieces},");
+				sb.Append($"{line.TotalGross},");
+				sb.Append($"{line.BatchId},");
+				sb.Append($"{line.OtDtWotHours},");
+				sb.Append($"{line.OtDtWotRate},");
+				sb.Append($"{line.HoursWorked},");
+				sb.Append("\n");
+			}
+
+			// Create the request
+			var importResponse = _quickBaseConn.ImportFromCsv(
+				QuickBaseTable.RanchPayroll,
+				sb.ToString(),
+				clist,
+				percentageAsString: false,
+				skipFirstRow: false);
+
+			return importResponse;
+		}
+
 
 		/// <summary>
 		/// Converts an XElement object representing an API_DoQuery response from the Ranch Payroll table in Quick Base into 
@@ -123,7 +177,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchPayrollField.ShiftDate: temp.ShiftDate = ParseDate(field.Value); break;
 						case (int)RanchPayrollField.Crew: temp.Crew = ParseInt(field.Value) ?? 0; break;
 						case (int)RanchPayrollField.LastCrew: temp.LastCrew = ParseInt(field.Value) ?? 0; break;
-						case (int)RanchPayrollField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)RanchPayrollField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)RanchPayrollField.LaborCode: temp.LaborCode = ParseInt(field.Value) ?? 0; break;
 						case (int)RanchPayrollField.RelatedBlock: temp.BlockId = ParseInt(field.Value) ?? 0; break;
 						case (int)RanchPayrollField.HoursWorked: temp.HoursWorked = ParseDecimal(field.Value) ?? 0; break;
@@ -188,7 +242,7 @@ namespace Payroll.Data.QuickBase
 		/// A clist is required to properly map values to fields in Quick Base.
 		/// </summary>
 		/// <returns></returns>
-		private string GetImportFromCsvClist()
+		private string GetImportFromCsvClist(bool includeManualInputHours = false)
 		{
 			var sb = new StringBuilder();
 			sb.Append($"{(int)RanchPayrollField.RecordId}.");
@@ -198,17 +252,23 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollField.EmployeeNumber}.");
 			sb.Append($"{(int)RanchPayrollField.LaborCode}.");
 			sb.Append($"{(int)RanchPayrollField.RelatedBlock}.");
-			sb.Append($"{(int)RanchPayrollField.HoursWorked}.");
+			//sb.Append($"{(int)RanchPayrollField.HoursWorked}.");
 			sb.Append($"{(int)RanchPayrollField.PayType}.");
 			sb.Append($"{(int)RanchPayrollField.Pieces}.");
 			sb.Append($"{(int)RanchPayrollField.PieceRate}.");
-			sb.Append($"{(int)RanchPayrollField.HourlyRate}.");
-			sb.Append($"{(int)RanchPayrollField.GrossFromHours}.");
-			sb.Append($"{(int)RanchPayrollField.GrossFromPieces}.");
 			sb.Append($"{(int)RanchPayrollField.OtherGross}.");
-			sb.Append($"{(int)RanchPayrollField.TotalGross}.");
 			sb.Append($"{(int)RanchPayrollField.FiveEight}.");
-			sb.Append($"{(int)RanchPayrollField.HourlyRateOverride}");
+			sb.Append($"{(int)RanchPayrollField.CalculatedHourlyRate}.");
+			sb.Append($"{(int)RanchPayrollField.CalculatedGrossFromHours}.");
+			sb.Append($"{(int)RanchPayrollField.CalculatedGrossFromPieces}.");
+			sb.Append($"{(int)RanchPayrollField.CalculatedTotalGross}.");
+			sb.Append($"{(int)RanchPayrollField.BatchId}.");
+			sb.Append($"{(int)RanchPayrollField.OtDtWotHours}.");
+			sb.Append($"{(int)RanchPayrollField.OtDtWotRate}.");
+			if (includeManualInputHours)
+			{
+				sb.Append($"{(int)RanchPayrollField.ManualInputHoursWorked}.");
+			}
 
 			return sb.ToString();
 		}

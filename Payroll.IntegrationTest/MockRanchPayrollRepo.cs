@@ -17,5 +17,10 @@ namespace Payroll.IntegrationTest
 		{
 			throw new NotImplementedException();
 		}
+
+		public XElement SaveWithHoursWorked(IEnumerable<RanchPayLine> ranchPayLines)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

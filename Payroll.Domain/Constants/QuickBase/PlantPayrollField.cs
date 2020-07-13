@@ -67,6 +67,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		HoursWorked = 11,
 
 		/// <summary>
+		/// [OT DT WOT Hours] - Numeric
+		/// </summary>
+		OtDtWotHours = 12,
+
+		/// <summary>
 		/// [Pay Type] - Text (multiple choice)
 		/// </summary>
 		PayType = 13,
@@ -80,6 +85,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// [Hourly Rate] - Formula currency
 		/// </summary>
 		HourlyRate = 18,
+
+		/// <summary>
+		/// [OT DT WOT Rate] - Currency
+		/// </summary>
+		OtDtWotRate = 19,
 
 		/// <summary>
 		/// [Gross from Hours] - Formula currency
@@ -164,6 +174,37 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// <summary>
 		/// [Non Discretionary Bonus Rate] - Currency indicates the amount of bonus pay given per hour for non-LC555 pay lines
 		/// </summary>
-		NonDiscretionaryBonusRate = 189
+		NonDiscretionaryBonusRate = 189,
+
+		/// <summary>
+		/// [Batch ID] - Numeric
+		/// </summary>
+		BatchId = 194,
+
+		/// <summary>
+		/// [Calculated Hourly Rate] - Currency
+		/// </summary>
+		CalculatedHourlyRate = 195,
+
+		/// <summary>
+		/// [Calculated Gross From Hours] - Currency
+		/// </summary>
+		CalculatedGrossFromHours = 196,
+
+		/// <summary>
+		/// [Calculated Gross From Pieces] - Currency
+		/// </summary>
+		CalculatedGrossFromPieces = 197,
+
+		/// <summary>
+		/// [Calculated Gross From Incentive] - Currency
+		/// </summary>
+		CalculatedGrossFromIncentive = 198,
+
+		/// <summary>
+		/// [Calculated Total Gross] - Currency
+		/// </summary>
+		CalculatedTotalGross = 199,
+
 	}
 }

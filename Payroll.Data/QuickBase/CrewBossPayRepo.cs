@@ -54,20 +54,17 @@ namespace Payroll.Data.QuickBase
 		/// <returns></returns>
 		public XElement Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
 		{
-			var clist = $"{(int)CrewBossPayField.RecordId}.{(int)CrewBossPayField.LayoffRunId}.{(int)CrewBossPayField.ShiftDate}.{(int)CrewBossPayField.Crew}.{(int)CrewBossPayField.EmployeeNumber}.{(int)CrewBossPayField.CountOfWorkers}.{(int)CrewBossPayField.HoursWorkedByCB}.{(int)CrewBossPayField.HourlyRate}";
+			var clist = GetImportFromCsvClist();
 
-			// Build the CDATA string
+			// Build the CDATA string. This must match the order of fields returned from GetImportFromCsvClist().
 			var sb = new StringBuilder();
 			foreach (var line in crewBossPayLines)
 			{
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
-				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
-				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
-				sb.Append($"{(line.Crew > 0 ? line.Crew.ToString() : "")},");
-				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{line.WorkerCount},");
-				sb.Append($"{line.HoursWorked},");
-				sb.Append($"{line.HourlyRate}\n");
+				sb.Append($"{line.HourlyRate},");
+				sb.Append($"{line.Gross},");
+				sb.Append($"{line.BatchId}\n");
 			}
 
 			// Create the request
@@ -107,7 +104,7 @@ namespace Payroll.Data.QuickBase
 					
 					switch (fieldId)
 					{
-						case (int)CrewBossPayField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)CrewBossPayField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)CrewBossPayField.CBPayMethod: temp.PayMethod = field.Value; break;
 						//case (int)CrewBossPayField.CountOfWorkers: temp.WorkerCount = ParseInt(field.Value) ?? 0; break;
 						case (int)CrewBossPayField.Crew: temp.Crew = ParseInt(field.Value) ?? 0; break;
@@ -138,6 +135,22 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)CrewBossPayField.ShiftDate}.");
 			sb.Append($"{(int)CrewBossPayField.WeekEndDate}");
 
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Returns a properly formatted clist string for API_ImportFromCSV calls to the Ranch Payroll table in Quick Base.
+		/// A clist is required to properly map values to fields in Quick Base.
+		/// </summary>
+		/// <returns></returns>
+		private string GetImportFromCsvClist()
+		{
+			var sb = new StringBuilder();
+			sb.Append($"{(int)CrewBossPayField.RecordId}.");
+			sb.Append($"{(int)CrewBossPayField.CountOfWorkers}.");
+			sb.Append($"{(int)CrewBossPayField.CalculatedHourlyRate}.");
+			sb.Append($"{(int)CrewBossPayField.CalculatedGross}.");
+			sb.Append($"{(int)CrewBossPayField.BatchId}");
 			return sb.ToString();
 		}
 	}

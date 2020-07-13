@@ -66,21 +66,21 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
 				sb.Append($"{(line.BlockId > 0 ? line.BlockId.ToString() : "")},");
-				sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.PayType},");
 				sb.Append($"{line.Pieces},");
 				sb.Append($"{line.PieceRate},");
-				sb.Append($"{line.HourlyRate},");
-				sb.Append($"{line.GrossFromHours},");
-				sb.Append($"{line.GrossFromPieces},");
 				sb.Append($"{line.OtherGross},");
-				sb.Append($"{line.TotalGross},");
-				//sb.Append($"{(line.FiveEight ? "1" : "0")},");
-				//sb.Append($"{line.HourlyRateOverride},");
 				sb.Append($"{line.WeekEndOfAdjustmentPaid:MM-dd-yyyy},");
 				sb.Append($"{(line.IsOriginal ? OriginalOrNewValue.Original : OriginalOrNewValue.New)},");
 				sb.Append($"{line.OldHourlyRate},");
-				sb.Append($"{(line.UseOldHourlyRate ? "1" : "0")}");
+				sb.Append($"{(line.UseOldHourlyRate ? "1" : "0")},");
+				sb.Append($"{line.HourlyRate},");
+				sb.Append($"{line.GrossFromHours},");
+				sb.Append($"{line.GrossFromPieces},");
+				sb.Append($"{line.TotalGross},");
+				sb.Append($"{line.BatchId},");
+				sb.Append($"{line.OtDtWotHours},");
+				sb.Append($"{line.OtDtWotRate}");
 				sb.Append("\n");
 			}
 
@@ -126,7 +126,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchPayrollAdjustmentField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
 						case (int)RanchPayrollAdjustmentField.ShiftDate: temp.ShiftDate = ParseDate(field.Value); break;
 						case (int)RanchPayrollAdjustmentField.Crew: temp.Crew = ParseInt(field.Value) ?? 0; break;
-						case (int)RanchPayrollAdjustmentField.EmployeeNumber: temp.EmployeeId = field.Value; break;
+						case (int)RanchPayrollAdjustmentField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
 						case (int)RanchPayrollAdjustmentField.LaborCode: temp.LaborCode = ParseInt(field.Value) ?? 0; break;
 						case (int)RanchPayrollAdjustmentField.RelatedBlock: temp.BlockId = ParseInt(field.Value) ?? 0; break;
 						case (int)RanchPayrollAdjustmentField.HoursWorked: temp.HoursWorked = ParseDecimal(field.Value) ?? 0; break;
@@ -208,21 +208,22 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollAdjustmentField.EmployeeNumber}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.LaborCode}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.RelatedBlock}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.HoursWorked}.");
+			//sb.Append($"{(int)RanchPayrollAdjustmentField.HoursWorked}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PayType}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.Pieces}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PieceRate}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.HourlyRate}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromHours}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromPieces}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OtherGross}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.TotalGross}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.FiveEight}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.HourlyRateOverride}");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.WeekEndOfAdjustmentPaid}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OriginalOrNew}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OldHourlyRate}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.UseOldHourlyRate}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.CalculatedHourlyRate}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.CalculatedGrossFromHours}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.CalculatedGrossFromPieces}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.CalculatedTotalGross}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.BatchId}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.OtDtWotHours}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.OtDtWotRate}.");
 
 			return sb.ToString();
 		}
