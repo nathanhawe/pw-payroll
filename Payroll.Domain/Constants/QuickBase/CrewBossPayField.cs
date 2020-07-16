@@ -24,6 +24,11 @@ namespace Payroll.Domain.Constants.QuickBase
 		EmployeeNumber = 15,
 
 		/// <summary>
+		/// [Five Eight] - Checkbox
+		/// </summary>
+		FiveEight = 37,
+
+		/// <summary>
 		/// [Batch ID] - Numeric indicates the batch from time and attendance calculations that last processed this record.
 		/// </summary>
 		BatchId = 64,

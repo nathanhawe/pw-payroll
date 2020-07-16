@@ -112,6 +112,7 @@ namespace Payroll.Data.QuickBase
 						case (int)CrewBossPayField.LayoffRunId: temp.LayoffId = ParseInt(field.Value) ?? 0; break;
 						case (int)CrewBossPayField.ShiftDate: temp.ShiftDate = ParseDate(field.Value); break;
 						case (int)CrewBossPayField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
+						case (int)CrewBossPayField.FiveEight: temp.FiveEight = ParseBooleanFromCheckbox(field.Value); break;
 					}
 				}
 				crewBossPayLines.Add(temp);
@@ -133,7 +134,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)CrewBossPayField.HoursWorkedByCB}.");
 			sb.Append($"{(int)CrewBossPayField.LayoffRunId}.");
 			sb.Append($"{(int)CrewBossPayField.ShiftDate}.");
-			sb.Append($"{(int)CrewBossPayField.WeekEndDate}");
+			sb.Append($"{(int)CrewBossPayField.WeekEndDate}.");
+			sb.Append($"{(int)CrewBossPayField.FiveEight}.");
 
 			return sb.ToString();
 		}

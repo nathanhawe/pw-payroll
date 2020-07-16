@@ -74,10 +74,10 @@ namespace Payroll.UnitTest
 			var ranchPayLines = cbService.CalculateCrewBossPay(1);
 
 			Assert.AreEqual(4, ranchPayLines.Count());
-			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestHourlyTrees" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 1 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 215 && x.PayType == PayType.CBHourlyTrees).Count());
-			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestHourlyVines" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 2 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 215 && x.PayType == PayType.CBHourlyVines).Count());
-			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestSouthHourly" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 3 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 179 && x.PayType == PayType.CBSouthHourly).Count());
-			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestSouthDaily" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 4 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 170.05M && x.PayType == PayType.CBSouthDaily).Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestHourlyTrees" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 1 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 215 && x.PayType == PayType.CBHourlyTrees && !x.FiveEight).Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestHourlyVines" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 2 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 215 && x.PayType == PayType.CBHourlyVines && !x.FiveEight).Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestSouthHourly" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 3 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 179 && x.PayType == PayType.CBSouthHourly && x.FiveEight).Count());
+			Assert.AreEqual(1, ranchPayLines.Where(x => x.BatchId == 1 && x.EmployeeId == "TestSouthDaily" && x.ShiftDate == new DateTime(2020, 2, 10) && x.Crew == 4 && x.HoursWorked == 10 && x.HourlyRate == 0M && x.GrossFromHours == 0 && x.GrossFromPieces == 0 && x.OtherGross == 170.05M && x.PayType == PayType.CBSouthDaily && !x.FiveEight).Count());
 		}
 
 		private void MockCBTest(string dbName)
@@ -96,7 +96,7 @@ namespace Payroll.UnitTest
 			// Mock crew boss pay lines
 			var hourlyTreeCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 1, hoursWorked: 10, employeeId: "TestHourlyTrees", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyTrees);
 			var hourlyVineCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 2, hoursWorked: 10, employeeId: "TestHourlyVines", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyVines);
-			var hourlySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 3, hoursWorked: 10, employeeId: "TestSouthHourly", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthHourly);
+			var hourlySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 3, hoursWorked: 10, employeeId: "TestSouthHourly", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthHourly, fiveEight: true);
 			var dailySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2020, 2, 16), shiftDate: new DateTime(2020, 2, 10), crew: 4, hoursWorked: 10, employeeId: "TestSouthDaily", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthDaily);
 			context.AddRange(hourlyTreeCB, hourlyVineCB, hourlySouthCB, dailySouthCB);
 

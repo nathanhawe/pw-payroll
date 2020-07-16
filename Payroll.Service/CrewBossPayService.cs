@@ -123,7 +123,8 @@ namespace Payroll.Service
 				HoursWorked = crewBossPayLine.HoursWorked,
 				PayType = GetPayType(crewBossPayLine.PayMethod),
 				OtherGross = crewBossPayLine.Gross,
-				TotalGross = crewBossPayLine.Gross
+				TotalGross = crewBossPayLine.Gross,
+				FiveEight = crewBossPayLine.FiveEight,
 			};
 		}
 

@@ -23,5 +23,6 @@ namespace Payroll.Domain
 
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal Gross { get; set; }
+		public bool FiveEight { get; set; }
 	}
 }

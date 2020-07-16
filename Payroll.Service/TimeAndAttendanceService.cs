@@ -851,7 +851,7 @@ namespace Payroll.Service
 				.ToList();
 
 			var toRanchPayroll = _context.RanchPayLines
-				.Where(x => 
+				.Where(x =>
 					x.BatchId == batch.Id
 					&& x.PayType != PayType.CBCommission
 					&& x.PayType != PayType.CBDaily
@@ -1281,6 +1281,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.HoursWorked), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.HourlyRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.Gross), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.FiveEight), typeof(bool)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1302,6 +1303,7 @@ namespace Payroll.Service
 				row[nameof(CrewBossPayLine.HoursWorked)] = payLine.HoursWorked;
 				row[nameof(CrewBossPayLine.HourlyRate)] = payLine.HourlyRate;
 				row[nameof(CrewBossPayLine.Gross)] = payLine.Gross;
+				row[nameof(CrewBossPayLine.FiveEight)] = payLine.FiveEight;
 
 				table.Rows.Add(row);
 			}
