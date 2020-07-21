@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Payroll.Domain.Constants.QuickBase
+﻿namespace Payroll.Domain.Constants.QuickBase
 {
 	/// <summary>
 	/// Fields used in the Ranch Payroll Adjustment table in Quick Base.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Payroll.Domain.Constants.QuickBase
+﻿namespace Payroll.Domain.Constants.QuickBase
 {
 	/// <summary>
 	/// Valid values for the OriginalOrNew field in the Payroll: Ranch Payroll Adjustments and Payroll: Plant Payroll Adjustments tables in Quick Base.

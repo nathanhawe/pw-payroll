@@ -74,7 +74,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.GrossFromIncentive},");
 				sb.Append($"{line.OtherGross},");
 				sb.Append($"{line.TotalGross},");
-				sb.Append($"{line.BatchId}");
+				sb.Append($"{line.BatchId},");
+				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Locked}");
 				sb.Append("\n");
 			}
 
@@ -211,6 +212,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.OtherGross}.");
 			sb.Append($"{(int)PlantPayrollField.CalculatedTotalGross}.");
 			sb.Append($"{(int)PlantPayrollField.BatchId}.");
+			sb.Append($"{(int)PlantPayrollField.AuditLock}.");
 
 			return sb.ToString();
 		}

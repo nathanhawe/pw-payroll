@@ -66,7 +66,6 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
 				sb.Append($"{(line.BlockId > 0 ? line.BlockId.ToString() : "")},");
-				//sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.PayType},");
 				sb.Append($"{line.Pieces},");
 				sb.Append($"{line.PieceRate},");
@@ -78,7 +77,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.TotalGross},");
 				sb.Append($"{line.BatchId},");
 				sb.Append($"{line.OtDtWotHours},");
-				sb.Append($"{line.OtDtWotRate}");
+				sb.Append($"{line.OtDtWotRate},");
+				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Locked}");
 				sb.Append("\n");
 			}
 
@@ -117,7 +117,6 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
 				sb.Append($"{(line.BlockId > 0 ? line.BlockId.ToString() : "")},");
-				//sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.PayType},");
 				sb.Append($"{line.Pieces},");
 				sb.Append($"{line.PieceRate},");
@@ -131,6 +130,7 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.OtDtWotHours},");
 				sb.Append($"{line.OtDtWotRate},");
 				sb.Append($"{line.HoursWorked},");
+				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Locked}");
 				sb.Append("\n");
 			}
 
@@ -252,7 +252,6 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollField.EmployeeNumber}.");
 			sb.Append($"{(int)RanchPayrollField.LaborCode}.");
 			sb.Append($"{(int)RanchPayrollField.RelatedBlock}.");
-			//sb.Append($"{(int)RanchPayrollField.HoursWorked}.");
 			sb.Append($"{(int)RanchPayrollField.PayType}.");
 			sb.Append($"{(int)RanchPayrollField.Pieces}.");
 			sb.Append($"{(int)RanchPayrollField.PieceRate}.");
@@ -269,7 +268,7 @@ namespace Payroll.Data.QuickBase
 			{
 				sb.Append($"{(int)RanchPayrollField.ManualInputHoursWorked}.");
 			}
-
+			sb.Append($"{(int)RanchPayrollField.AuditLock}.");
 			return sb.ToString();
 		}
 	}

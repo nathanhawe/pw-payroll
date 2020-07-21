@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Payroll.Domain.Constants.QuickBase
+﻿namespace Payroll.Domain.Constants.QuickBase
 {
 	/// <summary>
 	/// Fields used in the Ranch Payroll table in Quick Base.
@@ -11,16 +7,11 @@ namespace Payroll.Domain.Constants.QuickBase
 	{
 		Unknown = 0,
 		RecordId = 3,
-		LayoffPay = 180,
-		LayoffRunId = 213,
-		WeekEndDate = 13,
-		ShiftDate = 11,
-		Crew = 23,
-		LastCrew = 114,
 		EmployeeNumber = 7,
-		LaborCode = 112,
+		ShiftDate = 11,
+		WeekEndDate = 13,
 		RelatedBlock = 19,
-
+		Crew = 23,
 
 		/// <summary>
 		/// [Manual Input Hours Worked] - Numeric
@@ -32,13 +23,15 @@ namespace Payroll.Domain.Constants.QuickBase
 		Pieces = 31,
 		PieceRate = 32,
 		HourlyRate = 33,
-		GrossFromHours = 39,
 		GrossFromPieces = 34,
+		EmployeeHourlyRate = 36,
+		GrossFromHours = 39,
 
 		/// <summary>
 		/// [OT DT WOT Rate] - Currency indicates the rate used for OT, DT, and WOT records.
 		/// </summary>
 		OtDtWotRate = 42,
+		
 		OtherGross = 43,
 		TotalGross = 44,
 		AlternativeWorkWeek = 50,
@@ -47,9 +40,19 @@ namespace Payroll.Domain.Constants.QuickBase
 		/// [OT DT WOT Hours] - Numeric indicates the number of hours for OT, DT, and WOT records.
 		/// </summary>
 		OtDtWotHours = 60,
+		
+		LaborCode = 112,
+		LastCrew = 114,
+
+		/// <summary>
+		/// [Audit Lock] - Multiple Choice Text indicates that a pay line has been "audit locked" and not editable by most users.
+		/// </summary>
+		AuditLock = 119,
+
 		FiveEight = 131,
 		HourlyRateOverride = 145,
-		EmployeeHourlyRate = 36,
+		LayoffPay = 180,
+		LayoffRunId = 213,
 
 		/// <summary>
 		/// [41.1 Approval] - Checkbox indicates that a pay line with pay type 41.1 is approved to be paid out.

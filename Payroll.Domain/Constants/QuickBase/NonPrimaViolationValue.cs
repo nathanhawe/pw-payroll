@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Payroll.Domain.Constants.QuickBase
+﻿namespace Payroll.Domain.Constants.QuickBase
 {
 	/// <summary>
 	/// Valid values for the Non Prima Violation field in the Payroll: Plant Payroll table in Quick Base.
