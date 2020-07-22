@@ -70,6 +70,8 @@ namespace Payroll.Domain
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal NonDiscretionaryBonusRate { get; set; }
 
+		public bool UseCrewLaborRateForMinimumAssurance { get; set; }
+
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }
 	}

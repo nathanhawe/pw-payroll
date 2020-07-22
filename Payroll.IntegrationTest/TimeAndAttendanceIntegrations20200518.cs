@@ -46,12 +46,13 @@ namespace Payroll.IntegrationTest
 
 			// Services
 			var minimumWageService = new MinimumWageService(context);
+			var crewLaborWageService = new CrewLaborWageService(context);
 			var roundingService = new RoundingService();
 			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
 			var grossFromPiecesCalculator = new GrossFromPiecesCalculator(roundingService);
 			var grossFromIncentiveCalculator = new GrossFromIncentiveCalculator(roundingService);
 			var totalGrossCalculator = new TotalGrossCalculator(roundingService);
-			var dailySummaryCalculator = new DailySummaryCalculator(context, minimumWageService, roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, minimumWageService, roundingService, crewLaborWageService);
 			
 
 			var paidSickLeaveService = new PaidSickLeaveService(context, roundingService);

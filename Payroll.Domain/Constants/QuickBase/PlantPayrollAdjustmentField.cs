@@ -175,5 +175,10 @@
 		/// [Calculated Total Gross] - Currency
 		/// </summary>
 		CalculatedTotalGross = 92,
+
+		/// <summary>
+		/// [# of Ranchers Working Plants] - Numeric.  A value greater than 0 indicates this is a ranch employee working in plants temporarily.
+		/// </summary>
+		CountOfRanchersWorkingPlants = 93
 	}
 }

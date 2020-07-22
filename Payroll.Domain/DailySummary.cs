@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Text;
 
 namespace Payroll.Domain
@@ -20,5 +21,6 @@ namespace Payroll.Domain
 		public decimal DoubleTimeHours { get; set; }
 		public decimal MinimumWage { get; set; }
 		public decimal NonProductiveGross { get; set; }
+		public bool UseCrewLaborRateForPlantMinimumAssurance { get; set; }
 	}
 }

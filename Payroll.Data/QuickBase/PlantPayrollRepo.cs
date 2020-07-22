@@ -147,6 +147,7 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollField.IncreasedRate: temp.IncreasedRate = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollField.SpecialAdjustmentApproval: temp.SpecialAdjustmentApproved = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)PlantPayrollField.NonDiscretionaryBonusRate: temp.NonDiscretionaryBonusRate = ParseDecimal(field.Value) ?? 0; break;
+						case (int)PlantPayrollField.CountOfRanchersWorkingPlants: temp.UseCrewLaborRateForMinimumAssurance = (ParseInt(field.Value) ?? 0) > 0; break;
 					}
 				}
 				PlantPayLines.Add(temp);
@@ -183,7 +184,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.PrimaRate}.");
 			sb.Append($"{(int)PlantPayrollField.IncreasedRate}.");
 			sb.Append($"{(int)PlantPayrollField.SpecialAdjustmentApproval}.");
-			sb.Append($"{(int)PlantPayrollField.NonDiscretionaryBonusRate}");
+			sb.Append($"{(int)PlantPayrollField.NonDiscretionaryBonusRate}.");
+			sb.Append($"{(int)PlantPayrollField.CountOfRanchersWorkingPlants}.");
 
 			return sb.ToString();
 		}

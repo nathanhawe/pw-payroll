@@ -18,6 +18,7 @@ namespace Payroll.UnitTest
 	{
 		private MockMinimumWageService _mockMinimumWageService = new MockMinimumWageService();
 		private RoundingService _roundingService = new RoundingService();
+		private MockCrewLaborWageService _mockCrewLaborWageService = new MockCrewLaborWageService(14M);
 
 		#region Ranch Pay Line Tests
 
@@ -62,7 +63,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -125,7 +126,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -191,7 +192,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -225,7 +226,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(2, rates.Count());
@@ -255,7 +256,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(2, rates.Count());
@@ -290,7 +291,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(4, rates.Count());
@@ -322,7 +323,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -385,7 +386,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -425,7 +426,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -478,7 +479,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -510,7 +511,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(2, rates.Count());
@@ -542,7 +543,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -596,7 +597,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -659,7 +660,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -725,7 +726,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -759,7 +760,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(2, rates.Count());
@@ -789,7 +790,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(2, rates.Count());
@@ -824,7 +825,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(4, rates.Count());
@@ -856,7 +857,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -919,7 +920,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -959,7 +960,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -1012,7 +1013,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -1044,7 +1045,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(2, rates.Count());
@@ -1076,7 +1077,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, rates.Count());
@@ -1174,7 +1175,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, rates.Count());
@@ -1231,7 +1232,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, rates.Count());
@@ -1294,7 +1295,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -1328,7 +1329,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(2, rates.Count());
@@ -1358,7 +1359,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(2, rates.Count());
@@ -1393,7 +1394,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(4, rates.Count());
@@ -1425,7 +1426,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, rates.Count());
@@ -1488,7 +1489,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -1528,7 +1529,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -1569,7 +1570,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -1622,7 +1623,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, rates.Count());
@@ -1654,12 +1655,81 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
 
 			Assert.AreEqual(2, rates.Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 367 && x.NonProductiveTime == .5M && x.EffectiveHourlyRate == 38.63M).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 285.05M && x.NonProductiveTime == .25M && x.EffectiveHourlyRate == 29.24M).Count());
+		}
+
+		[TestMethod]
+		public void PlantPayLine_CrewRateInMinimumAssurance_SelectsCrewRate()
+		{
+			var dbName = "PlantPayLine_CrewRateInMinimumAssurance_SelectsCrewRate";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+
+			// Mock plant pay lines
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (110 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (165 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (5.1M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+
+			context.SaveChanges();
+
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 17), 8.5M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 18), 8.75M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), 9M);
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+			Assert.AreEqual(6, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 150 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15 && x.MinimumWage == 14).Count());
 		}
 
 		#endregion
@@ -1707,7 +1777,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, rates.Count());
@@ -1770,7 +1840,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -1804,7 +1874,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(2, rates.Count());
@@ -1834,7 +1904,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 3, 1), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(2, rates.Count());
@@ -1869,7 +1939,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(4, rates.Count());
@@ -1901,7 +1971,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, alternativeWorkWeek: true));
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, rates.Count());
@@ -1964,7 +2034,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -2004,7 +2074,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -2045,7 +2115,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -2098,7 +2168,7 @@ namespace Payroll.UnitTest
 			context.SaveChanges();
 
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, rates.Count());
@@ -2130,7 +2200,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(2, rates.Count());
@@ -2226,7 +2296,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService);
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
 			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
 
 			Assert.AreEqual(6, rates.Count());
@@ -2236,6 +2306,77 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 150 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+		}
+
+		[TestMethod]
+		public void PlantAdjustmentLine_CrewRateInMinimumAssuranceFlag_SelectsCrewRate()
+		{
+			var dbName = "PlantAdjustmentLine_CrewRateInMinimumAssuranceFlag_SelectsCrewRate";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+
+			// Mock plant pay lines
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (110 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .25M, grossFromHours: 2.5M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (165 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .34M, grossFromHours: 5.1M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (5.1M + 0 + 0 + 0), payType: PayType.Regular, useCrewLaborRateForMinimumAssurance: true));
+
+			context.SaveChanges();
+
+
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 17), 8.5M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 18), 8.75M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), 9M);
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
+
+			Assert.AreEqual(6, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 100 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 150 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15 && x.MinimumWage == 14).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15 && x.MinimumWage == 14).Count());
+
 		}
 
 		#endregion

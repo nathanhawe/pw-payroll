@@ -1567,6 +1567,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.PrimaRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.UseIncreasedRate), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.NonDiscretionaryBonusRate), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.UseCrewLaborRateForMinimumAssurance), typeof(bool)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1606,6 +1607,7 @@ namespace Payroll.Service
 				row[nameof(PlantPayLine.PrimaRate)] = payLine.PrimaRate;
 				row[nameof(PlantPayLine.UseIncreasedRate)] = payLine.UseIncreasedRate;
 				row[nameof(PlantPayLine.NonDiscretionaryBonusRate)] = payLine.NonDiscretionaryBonusRate;
+				row[nameof(PlantPayLine.UseCrewLaborRateForMinimumAssurance)] = payLine.UseCrewLaborRateForMinimumAssurance;
 				table.Rows.Add(row);
 			}
 
@@ -1670,6 +1672,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsOriginal), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.OldHourlyRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.UseOldHourlyRate), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.UseCrewLaborRateForMinimumAssurance), typeof(bool)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var adjustmentLine in adjustmentLines)
@@ -1707,6 +1710,7 @@ namespace Payroll.Service
 				row[nameof(PlantAdjustmentLine.IsOriginal)] = adjustmentLine.IsOriginal;
 				row[nameof(PlantAdjustmentLine.OldHourlyRate)] = adjustmentLine.OldHourlyRate;
 				row[nameof(PlantAdjustmentLine.UseOldHourlyRate)] = adjustmentLine.UseOldHourlyRate;
+				row[nameof(PlantAdjustmentLine.UseCrewLaborRateForMinimumAssurance)] = adjustmentLine.UseCrewLaborRateForMinimumAssurance;
 				table.Rows.Add(row);
 			}
 

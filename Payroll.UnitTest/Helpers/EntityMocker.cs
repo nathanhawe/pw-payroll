@@ -342,7 +342,8 @@ namespace Payroll.UnitTest.Helpers
 			bool isIncentiveDisqualified = false,
 			bool hasNonPrimaViolation = false,
 			bool useIncreasedRate = false,
-			decimal nonDiscretionaryBonusRate = 0
+			decimal nonDiscretionaryBonusRate = 0,
+			bool useCrewLaborRateForMinimumAssurance = false
 			)
 		{
 			dateCreated ??= DateTime.Now;
@@ -382,7 +383,8 @@ namespace Payroll.UnitTest.Helpers
 				IsIncentiveDisqualified = isIncentiveDisqualified,
 				HasNonPrimaViolation = hasNonPrimaViolation,
 				UseIncreasedRate = useIncreasedRate,
-				NonDiscretionaryBonusRate = nonDiscretionaryBonusRate
+				NonDiscretionaryBonusRate = nonDiscretionaryBonusRate,
+				UseCrewLaborRateForMinimumAssurance = useCrewLaborRateForMinimumAssurance
 			};
 		}
 
@@ -415,7 +417,8 @@ namespace Payroll.UnitTest.Helpers
 			DateTime? weekEndOfAdjustmentPaid = null,
 			bool isOriginal = false,
 			decimal oldHourlyRate = 0,
-			bool useOldHourlyRate = false
+			bool useOldHourlyRate = false,
+			bool useCrewLaborRateForMinimumAssurance = false
 			)
 		{
 			dateCreated ??= DateTime.Now;
@@ -454,7 +457,8 @@ namespace Payroll.UnitTest.Helpers
 				WeekEndOfAdjustmentPaid = weekEndOfAdjustmentPaid.Value,
 				IsOriginal = isOriginal,
 				OldHourlyRate = oldHourlyRate,
-				UseOldHourlyRate = useOldHourlyRate
+				UseOldHourlyRate = useOldHourlyRate,
+				UseCrewLaborRateForMinimumAssurance = useCrewLaborRateForMinimumAssurance
 			};
 		}
 	}

@@ -146,6 +146,7 @@ namespace Payroll.Data.QuickBase
 							break;
 						case (int)PlantPayrollAdjustmentField.OldHourlyRate: temp.OldHourlyRate = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollAdjustmentField.UseOldHourlyRate: temp.UseOldHourlyRate = ParseBooleanFromCheckbox(field.Value); break;
+						case (int)PlantPayrollAdjustmentField.CountOfRanchersWorkingPlants: temp.UseCrewLaborRateForMinimumAssurance = (ParseInt(field.Value) ?? 0) > 0; break;
 
 
 					}
@@ -182,6 +183,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollAdjustmentField.OriginalOrNew}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.OldHourlyRate}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.UseOldHourlyRate}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.CountOfRanchersWorkingPlants}.");
 
 			return sb.ToString();
 		}

@@ -4,6 +4,7 @@ using Payroll.Domain.Constants;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 
@@ -17,6 +18,7 @@ namespace Payroll.Service
 		private readonly PayrollContext _context;
 		private readonly IMinimumWageService _minimumWageService;
 		private readonly IRoundingService _roundingService;
+		private readonly ICrewLaborWageService _crewLaborWageService;
 
 		private class CommonLineProperties
 		{
@@ -30,16 +32,20 @@ namespace Payroll.Service
 			public decimal TotalGross { get; set; }
 			public decimal HoursWorked { get; set; }
 			public decimal LaborCode { get; set; }
+			public bool UseCrewLaborRateForPlantMinimumAssurance { get; set; }
+
 		}
 
 		public DailySummaryCalculator(
 			PayrollContext context,
 			IMinimumWageService minimumWageService,
-			IRoundingService roundingService)
+			IRoundingService roundingService,
+			ICrewLaborWageService crewLaborWageService)
 		{
 			_context = context ?? throw new ArgumentNullException(nameof(context));
 			_minimumWageService = minimumWageService ?? throw new ArgumentNullException(nameof(context));
 			_roundingService = roundingService ?? throw new ArgumentNullException(nameof(roundingService));
+			_crewLaborWageService = crewLaborWageService ?? throw new ArgumentNullException(nameof(crewLaborWageService));
 		}
 
 		/// <summary>
@@ -224,7 +230,8 @@ namespace Payroll.Service
 					TotalGross = x.TotalGross,
 					HoursWorked = x.HoursWorked,
 					LaborCode = x.LaborCode,
-					QuickBaseRecordId = x.QuickBaseRecordId
+					QuickBaseRecordId = x.QuickBaseRecordId,
+					UseCrewLaborRateForPlantMinimumAssurance = x.UseCrewLaborRateForMinimumAssurance
 				})
 				.ToList();
 
@@ -264,7 +271,8 @@ namespace Payroll.Service
 					TotalGross = x.TotalGross,
 					HoursWorked = x.HoursWorked,
 					LaborCode = x.LaborCode,
-					QuickBaseRecordId = x.QuickBaseRecordId
+					QuickBaseRecordId = x.QuickBaseRecordId,
+					UseCrewLaborRateForPlantMinimumAssurance = x.UseCrewLaborRateForMinimumAssurance
 				})
 				.ToList();
 
@@ -340,6 +348,7 @@ namespace Payroll.Service
 					TotalHours = x.Sum(s => s.HoursWorked),
 					NonProductiveTime = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.HoursWorked),
 					NonProductiveGross = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.TotalGross),
+					UseCrewLaborRateForPlantMinimumAssurance = x.OrderByDescending(o => o.UseCrewLaborRateForPlantMinimumAssurance).First().UseCrewLaborRateForPlantMinimumAssurance
 				})
 				.ToList();
 
@@ -365,7 +374,17 @@ namespace Payroll.Service
 				{
 					x.EffectiveHourlyRate = 0;
 				}
+
 				x.MinimumWage = _minimumWageService.GetMinimumWageOnDate(x.ShiftDate);
+
+				// If crew labor rate should be used for minimum assurance use the larger of the current minimum wage
+				// and the current crew labor rate
+				if (x.UseCrewLaborRateForPlantMinimumAssurance)
+				{
+					x.MinimumWage = Math.Max(x.MinimumWage, _crewLaborWageService.GetWage(x.ShiftDate));
+				}
+				
+				
 			});
 		}
 	}

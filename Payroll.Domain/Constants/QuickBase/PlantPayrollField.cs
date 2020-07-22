@@ -207,5 +207,10 @@
 		/// </summary>
 		CalculatedTotalGross = 199,
 
+		/// <summary>
+		/// [# of Ranchers Working Plants] - Numeric.  A value greater than 0 indicates this is a ranch employee working in plants temporarily.
+		/// </summary>
+		CountOfRanchersWorkingPlants = 201
+
 	}
 }
