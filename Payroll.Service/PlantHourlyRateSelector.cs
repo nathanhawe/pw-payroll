@@ -131,6 +131,11 @@ namespace Payroll.Service
 				return Rate602(shiftDate, calculatedEmployeeRate);
 			}
 
+			if (laborCode == (int)PlantLaborCode.Covid19Sanitation)
+			{
+				return Rate603(shiftDate, calculatedEmployeeRate);
+			}
+
 			return EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 		}
 
@@ -328,6 +333,18 @@ namespace Payroll.Service
 			else
 			{
 				return calculatedEmployeeRate + 1.5M;
+			}
+		}
+
+		private decimal Rate603(DateTime shiftDate, decimal calculatedEmployeeRate)
+		{
+			if (shiftDate < new DateTime(2020, 7, 01))
+			{
+				return calculatedEmployeeRate;
+			}
+			else
+			{
+				return Math.Max(calculatedEmployeeRate, 14.5M);
 			}
 		}
 

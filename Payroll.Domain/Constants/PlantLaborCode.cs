@@ -20,6 +20,7 @@ namespace Payroll.Domain.Constants
 		TallyTagWriter = 555,
 		Covid19 = 600,
 		Covid19PreScreening = 602,
+		Covid19Sanitation = 603,
 		Receiving_Break = 9503
 	}
 }
