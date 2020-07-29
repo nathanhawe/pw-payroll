@@ -1,9 +1,11 @@
-﻿using Payroll.Data;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using Payroll.Data;
 using Payroll.Domain;
 using Payroll.Domain.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Payroll.Service
@@ -54,6 +56,28 @@ namespace Payroll.Service
 				})
 				.ToList();
 
+			return summaries;
+		}
+
+		/// <summary>
+		/// Create <c>PlantSummary</c> records based on the provided list of <c>PlantPayLine</c>s.  If the provided lines are
+		/// for more than one week end date there may be multiple summaries created per employee (one per unique week end date).
+		/// </summary>
+		/// <param name="plantPayLines"></param>
+		/// <returns></returns>
+		public List<PlantSummary> CreateSummariesFromList(List<PlantPayLine> plantPayLines)
+		{
+			var summaries = plantPayLines
+				.GroupBy(g => new { g.WeekEndDate, g.EmployeeId }, (key, group) => new PlantSummary
+				{
+					EmployeeId = key.EmployeeId,
+					WeekEndDate = key.WeekEndDate,
+					TotalHours = group.Sum(x => x.HoursWorked),
+					TotalGross = group.Sum(x => x.TotalGross),
+					CovidHours = group.Where(x => x.LaborCode == (int)PlantLaborCode.Covid19).Sum(x => x.HoursWorked)
+				})
+				.ToList();
+			
 			return summaries;
 		}
 	}

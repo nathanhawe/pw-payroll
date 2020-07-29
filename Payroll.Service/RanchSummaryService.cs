@@ -1,4 +1,5 @@
-﻿using Payroll.Data;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using Payroll.Data;
 using Payroll.Domain;
 using Payroll.Domain.Constants;
 using System;
@@ -55,6 +56,30 @@ namespace Payroll.Service
 					TotalGross = group.Sum(x => x.TotalGross),
 					CulturalHours = group.Where(x => x.Crew <= 60).Sum(x => x.TotalHours),
 					CovidHours = group.Where(x => x.LaborCode == (int)RanchLaborCode.Covid19).Sum(x => x.TotalHours)
+				})
+				.ToList();
+
+			return summaries;
+		}
+
+		/// <summary>
+		/// Create <c>RanchSummary</c> records based on the provided list of <c>RanchPayLine</c>s.  If the provided lines are
+		/// for more than one week end date there may be multiple summaries created per employee (one per unique week end date).
+		/// </summary>
+		/// <param name="ranchPayLines"></param>
+		/// <returns></returns>
+		public List<RanchSummary> CreateSummariesFromList(List<RanchPayLine> ranchPayLines)
+		{
+			var summaries = ranchPayLines
+				.GroupBy(g => new { g.WeekEndDate, g.EmployeeId }, (key, group) => new RanchSummary
+				{
+					EmployeeId = key.EmployeeId,
+					WeekEndDate = key.WeekEndDate,
+					LastCrew = group.Max(x => x.LastCrew),
+					TotalHours = group.Sum(x => x.HoursWorked),
+					TotalGross = group.Sum(x => x.TotalGross),
+					CulturalHours = group.Where(x => x.Crew <= 60).Sum(x => x.HoursWorked),
+					CovidHours = group.Where(x => x.LaborCode == (int)RanchLaborCode.Covid19).Sum(x => x.HoursWorked)
 				})
 				.ToList();
 

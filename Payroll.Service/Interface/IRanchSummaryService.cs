@@ -6,5 +6,6 @@ namespace Payroll.Service.Interface
 	public interface IRanchSummaryService
 	{
 		List<RanchSummary> CreateSummariesForBatch(int batchId);
+		List<RanchSummary> CreateSummariesFromList(List<RanchPayLine> ranchPayLines);
 	}
 }

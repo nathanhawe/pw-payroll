@@ -215,5 +215,123 @@ namespace Payroll.IntegrationTest
 			// Batch should now have an Id and the process can be executed
 			service.PerformCalculations(batch.Id);
 		}
+
+		[TestMethod]
+		[Ignore("Only Run To Change State")]
+		public void CreatePlantSummaries()
+		{
+			var weekEndingDate = new DateTime(2020, 7, 19);
+			var layoffId = 1129;
+
+			// Database context
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = PayrollData")
+				.Options;
+
+			using var context = new PayrollContext(options);
+
+			// Loggers
+			var apiLogger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var serviceLogger = new MockLogger<SummaryCreationService>();
+
+
+			// Quick Base Connection
+			var configuration = ConfigurationHelper.GetIConfigurationRoot();
+			var realm = configuration["QuickBase:Realm"];
+			var userToken = configuration["QuickBase:UserToken"];
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
+
+			// Repositories
+			var ranchPayrollRepo = new RanchPayrollRepo(quickBaseConnection);
+			var ranchSummariesRepo = new RanchSummariesRepo(quickBaseConnection);
+			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
+			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
+
+			// Services
+			var ranchSummaryService = new RanchSummaryService(context);
+			var plantSummaryService = new PlantSummaryService(context);
+
+			var service = new SummaryCreationService(
+				serviceLogger,
+				context,
+				ranchPayrollRepo,
+				ranchSummariesRepo,
+				plantPayrollRepo,
+				plantSummariesRepo,
+				ranchSummaryService,
+				plantSummaryService);
+
+			// Create a new batch
+			var summaryBatch = new SummaryBatch
+			{
+				WeekEndDate = weekEndingDate,
+				LayoffId = layoffId,
+				Company = Payroll.Domain.Constants.Company.Plants
+			};
+			context.Add(summaryBatch);
+			context.SaveChanges();
+
+			// Batch should now have an Id and the process can be executed
+			service.CreateSummaries(summaryBatch.Id);
+		}
+
+		[TestMethod]
+		[Ignore("Only Run To Change State")]
+		public void CreateRanchSummaries()
+		{
+			var weekEndingDate = new DateTime(2020, 7, 19);
+			var layoffId = 1143;
+
+			// Database context
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = PayrollData")
+				.Options;
+
+			using var context = new PayrollContext(options);
+
+			// Loggers
+			var apiLogger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var serviceLogger = new MockLogger<SummaryCreationService>();
+
+
+			// Quick Base Connection
+			var configuration = ConfigurationHelper.GetIConfigurationRoot();
+			var realm = configuration["QuickBase:Realm"];
+			var userToken = configuration["QuickBase:UserToken"];
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
+
+			// Repositories
+			var ranchPayrollRepo = new RanchPayrollRepo(quickBaseConnection);
+			var ranchSummariesRepo = new RanchSummariesRepo(quickBaseConnection);
+			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
+			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
+
+			// Services
+			var ranchSummaryService = new RanchSummaryService(context);
+			var plantSummaryService = new PlantSummaryService(context);
+
+			var service = new SummaryCreationService(
+				serviceLogger,
+				context,
+				ranchPayrollRepo,
+				ranchSummariesRepo,
+				plantPayrollRepo,
+				plantSummariesRepo,
+				ranchSummaryService,
+				plantSummaryService);
+
+			// Create a new batch
+			var summaryBatch = new SummaryBatch
+			{
+				WeekEndDate = weekEndingDate,
+				LayoffId = layoffId,
+				Company = Payroll.Domain.Constants.Company.Ranches
+			};
+			context.Add(summaryBatch);
+			context.SaveChanges();
+
+			// Batch should now have an Id and the process can be executed
+			service.CreateSummaries(summaryBatch.Id);
+		}
 	}
 }

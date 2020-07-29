@@ -107,8 +107,9 @@ namespace Payroll.UnitTest
 
 			_plantSummaryService = new PlantSummaryService(_context);
 		}
+		
 		[TestMethod]
-		public void SumOfHoursWorked()
+		public void FromBatch_SumOfHoursWorked()
 		{
 			var plantSummaries = _plantSummaryService.CreateSummariesForBatch(1);
 
@@ -120,7 +121,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void SumOfTotalGross()
+		public void FromBatch_SumOfTotalGross()
 		{
 			var plantSummaries = _plantSummaryService.CreateSummariesForBatch(1);
 
@@ -132,7 +133,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void SumOfCovidHours_AreHoursForLaborCode600()
+		public void FromBatch_SumOfCovidHours_AreHoursForLaborCode600()
 		{
 			var plantSummaries = _plantSummaryService.CreateSummariesForBatch(1);
 
@@ -154,7 +155,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void GroupsByWeekEndDate()
+		public void FromBatch_GroupsByWeekEndDate()
 		{
 			var plantSummaries = _plantSummaryService.CreateSummariesForBatch(2);
 
@@ -170,9 +171,89 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void GroupsByEmployeeId()
+		public void FromBatch_GroupsByEmployeeId()
 		{
 			var plantSummaries = _plantSummaryService.CreateSummariesForBatch(1);
+
+			Assert.AreEqual(4, plantSummaries.Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1").Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2").Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3").Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4").Count());
+		}
+
+		[TestMethod]
+		public void FromList_SumOfHoursWorked()
+		{
+			var plantPayLines = _context.PlantPayLines.Where(x => x.BatchId == 1).ToList();
+			var plantSummaries = _plantSummaryService.CreateSummariesFromList(plantPayLines);
+
+			Assert.AreEqual(4, plantSummaries.Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.TotalHours == 50).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.TotalHours == 50).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.TotalHours == 50).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.TotalHours == 50).Count());
+		}
+
+		[TestMethod]
+		public void FromList_SumOfTotalGross()
+		{
+			var plantPayLines = _context.PlantPayLines.Where(x => x.BatchId == 1).ToList();
+			var plantSummaries = _plantSummaryService.CreateSummariesFromList(plantPayLines);
+
+			Assert.AreEqual(4, plantSummaries.Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.TotalGross == 750).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.TotalGross == 750).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.TotalGross == 750).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.TotalGross == 750).Count());
+		}
+
+		[TestMethod]
+		public void FromList_SumOfCovidHours_AreHoursForLaborCode600()
+		{
+			var plantPayLines = _context.PlantPayLines.Where(x => x.BatchId == 1).ToList();
+			var plantSummaries = _plantSummaryService.CreateSummariesFromList(plantPayLines);
+
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.CovidHours == 20).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.CovidHours == 30).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.CovidHours == 50).Count());
+
+			plantPayLines = _context.PlantPayLines.Where(x => x.BatchId == 2).ToList();
+			plantSummaries = _plantSummaryService.CreateSummariesFromList(plantPayLines);
+
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 30).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 20).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.CovidHours == 0).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.CovidHours == 10).Count());
+		}
+
+		[TestMethod]
+		public void FromList_GroupsByWeekEndDate()
+		{
+			var plantPayLines = _context.PlantPayLines.Where(x => x.BatchId == 2).ToList();
+			var plantSummaries = _plantSummaryService.CreateSummariesFromList(plantPayLines);
+
+			Assert.AreEqual(8, plantSummaries.Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.TotalHours == 50 && x.TotalGross == 860).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.TotalHours == 50 && x.TotalGross == 860).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.TotalHours == 50 && x.TotalGross == 860).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 5) && x.TotalHours == 50 && x.TotalGross == 860).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.TotalHours == 50 && x.TotalGross == 750).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.TotalHours == 50 && x.TotalGross == 750).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee3" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.TotalHours == 50 && x.TotalGross == 750).Count());
+			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee4" && x.WeekEndDate == new DateTime(2020, 1, 12) && x.TotalHours == 50 && x.TotalGross == 750).Count());
+		}
+
+		[TestMethod]
+		public void FromList_GroupsByEmployeeId()
+		{
+			var plantPayLines = _context.PlantPayLines.Where(x => x.BatchId == 1).ToList();
+			var plantSummaries = _plantSummaryService.CreateSummariesFromList(plantPayLines);
 
 			Assert.AreEqual(4, plantSummaries.Count());
 			Assert.AreEqual(1, plantSummaries.Where(x => x.EmployeeId == "Employee1").Count());

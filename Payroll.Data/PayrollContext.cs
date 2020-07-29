@@ -24,6 +24,7 @@ namespace Payroll.Data
 		public DbSet<PlantSummary> PlantSummaries { get; set; }
 		public DbSet<UserAction> UserActions { get; set; }
 		public DbSet<ApplicationUserProfile> ApplicationUserProfiles {get; set;}
+		public DbSet<SummaryBatch> SummaryBatches { get; set; }
 
 		public PayrollContext()
 		{

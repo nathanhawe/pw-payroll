@@ -44,7 +44,21 @@ namespace QuickBase.IntegrationTests
 		[TestMethod]
 		public void DoQuery_WithLayoff()
 		{
-			var temp = _repo.Get(new DateTime(2020, 3, 1), 923);
+			var temp = _repo.Get(new DateTime(2020, 7, 19), 1143);
+			Print(temp);
+		}
+
+		[TestMethod]
+		public void DoQuery_ForSummaries_NoLayoff()
+		{
+			var temp = _repo.GetForSummaries(new DateTime(2020, 7, 19), 0);
+			Print(temp);
+		}
+
+		[TestMethod]
+		public void DoQuery_ForSummaries_WithLayoff()
+		{
+			var temp = _repo.GetForSummaries(new DateTime(2020, 7, 19), 1143);
 			Print(temp);
 		}
 

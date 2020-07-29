@@ -143,6 +143,8 @@ namespace Payroll
 			services.AddScoped<Service.Interface.IPlantSummaryService, Service.PlantSummaryService>();
 			services.AddScoped<Service.Interface.ITimeAndAttendanceService, Service.TimeAndAttendanceService>();
 			services.AddScoped<Service.Interface.IApplicationUserProfileService, Service.ApplicationUserProfileService>();
+			services.AddScoped<Service.Interface.ISummaryBatchService, Service.SummaryBatchService>();
+			services.AddScoped<Service.Interface.ISummaryCreationService, Service.SummaryCreationService>();
 
 
 			// Add application repositories

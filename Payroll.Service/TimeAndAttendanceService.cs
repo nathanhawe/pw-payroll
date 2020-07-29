@@ -313,13 +313,6 @@ namespace Payroll.Service
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Adjustments);
 			CalculatePlantAdjustments(batch.Id, company);
 
-			/* Create Summaries */
-			SetBatchStatus(batch.Id, BatchProcessingStatus.Summaries);
-			_logger.Log(LogLevel.Information, "Calculating plant summaries for batch {batchId}", batch.Id);
-			var summaries = _plantSummaryService.CreateSummariesForBatch(batch.Id);
-			_context.AddRange(summaries);
-			_context.SaveChanges();
-
 			/* Update records to Quick Base */
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
@@ -334,11 +327,6 @@ namespace Payroll.Service
 			var toPlantAdjustments = _context.PlantAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toPlantAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			var ppaResponse = _plantPayrollAdjustmentRepo.Save(toPlantAdjustments);
-
-			// Plant Summary Records
-			var toPlantSummaries = _context.PlantSummaries.Where(x => x.BatchId == batch.Id).ToList();
-			if (batch.LayoffId != null) toPlantSummaries.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var psResponse = _plantSummariesRepo.Save(toPlantSummaries);
 
 			// PSL Updates
 			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
@@ -818,13 +806,7 @@ namespace Payroll.Service
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Adjustments);
 			CalculateRanchAdjustments(batch.Id, company);
 
-			/* Create Summaries */
-			SetBatchStatus(batch.Id, BatchProcessingStatus.Summaries);
-			_logger.Log(LogLevel.Information, "Calculating ranch summaries for batch {batchId}", batch.Id);
-			var summaries = _ranchSummaryService.CreateSummariesForBatch(batch.Id);
-			_context.AddRange(summaries);
-			_context.SaveChanges();
-
+			
 			/* Update records to Quick Base */
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
@@ -872,11 +854,6 @@ namespace Payroll.Service
 			var toRanchAdjustments = _context.RanchAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toRanchAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			var rpaResponse = _ranchPayrollAdjustmentRepo.Save(toRanchAdjustments);
-
-			// Ranch Summary Records
-			var toRanchSummaries = _context.RanchSummaries.Where(x => x.BatchId == batch.Id).ToList();
-			if (batch.LayoffId != null) toRanchSummaries.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var rsResponse = _ranchSummariesRepo.Save(toRanchSummaries);
 
 			// PSL Updates
 			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>

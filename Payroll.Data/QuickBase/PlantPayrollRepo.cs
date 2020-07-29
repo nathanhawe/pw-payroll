@@ -27,6 +27,30 @@ namespace Payroll.Data.QuickBase
 		/// <param name="layoffId"></param>
 		public IEnumerable<PlantPayLine> Get(DateTime weekEndDate, int layoffId)
 		{
+			var clist = GetDoQueryClist();
+			var slist = $"{(int)PlantPayrollField.RecordId}";
+
+			return Get(weekEndDate, layoffId, clist, slist);
+		}
+
+		/// <summary>
+		/// Queries the Plant Payroll table in Quick Base for all records with the provided <c>weekEndDate</c>.  If <c>layoffId</c>
+		/// is greater than 0, records are filtered to only those with a matching [LayOffRunId].  If <c>layoffId</c> is equal
+		/// to 0, only records without a [LayOffRunId] are returned.  This method uses CLIST and SLIST values specifically for
+		/// the creation of plant summaries.
+		/// </summary>
+		/// <param name="weekEndDate"></param>
+		/// <param name="layoffId"></param>
+		public IEnumerable<PlantPayLine> GetForSummaries(DateTime weekEndDate, int layoffId)
+		{
+			var clist = GetDoQueryClistForSummaries();
+			var slist = $"{(int)PlantPayrollField.EmployeeNumber}";
+
+			return Get(weekEndDate, layoffId, clist, slist);
+		}
+
+		private IEnumerable<PlantPayLine> Get(DateTime weekEndDate, int layoffId, string clist, string slist)
+		{ 
 			var formattedDate = weekEndDate.ToString("MM-dd-yyyy");
 
 			var query = $"{{{(int)PlantPayrollField.WeekEndDate}.{ComparisonOperator.IR}.'{formattedDate}'}}";
@@ -38,9 +62,6 @@ namespace Payroll.Data.QuickBase
 			{
 				query += $"AND{{{(int)PlantPayrollField.LayoffPay}.{ComparisonOperator.EX}.0}}";
 			}
-
-			var clist = GetDoQueryClist();
-			var slist = $"{(int)PlantPayrollField.RecordId}";
 
 			return base.Get(QuickBaseTable.PlantPayroll, query, clist, slist, ConvertToPlantPayLines);
 		}
@@ -186,6 +207,23 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.SpecialAdjustmentApproval}.");
 			sb.Append($"{(int)PlantPayrollField.NonDiscretionaryBonusRate}.");
 			sb.Append($"{(int)PlantPayrollField.CountOfRanchersWorkingPlants}.");
+
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Returns a properly formatted clist string for API_DoQuery calls to the Plant Payroll table in Quick Base with a
+		/// specific emphasis on fields necessary for the creation of plant summaries.
+		/// </summary>
+		/// <returns></returns>
+		private string GetDoQueryClistForSummaries()
+		{
+			var sb = new StringBuilder();
+			sb.Append($"{(int)PlantPayrollField.EmployeeNumber}.");
+			sb.Append($"{(int)PlantPayrollField.WeekEndDate}.");
+			sb.Append($"{(int)PlantPayrollField.LaborCode}.");
+			sb.Append($"{(int)PlantPayrollField.HoursWorked}.");
+			sb.Append($"{(int)PlantPayrollField.TotalGross}.");
 
 			return sb.ToString();
 		}
