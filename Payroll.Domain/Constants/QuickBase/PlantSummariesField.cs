@@ -16,19 +16,9 @@
 		RecordId = 3,
 
 		/// <summary>
-		/// [Layoff Run ID] - Numeric indicates the lay off run used to create this summary.
-		/// </summary>
-		LayoffRunId = 86,
-
-		/// <summary>
 		/// [Employee Number] - Text foreign key to Employee Master table.
 		/// </summary>
 		EmployeeNumber = 6,
-
-		/// <summary>
-		/// [Week End Date] - Date
-		/// </summary>
-		WeekEndDate = 12,
 
 		/// <summary>
 		/// [Total Hours] - Numeric
@@ -39,6 +29,21 @@
 		/// [Total Gross] - Currency
 		/// </summary>
 		TotalGross = 11,
+
+		/// <summary>
+		/// [Week End Date] - Date
+		/// </summary>
+		WeekEndDate = 12,
+
+		/// <summary>
+		/// [Lay Off Check] = Checkbox indicates this is a layoff check
+		/// </summary>
+		LayoffCheck = 82,
+
+		/// <summary>
+		/// [Layoff Run ID] - Numeric indicates the lay off run used to create this summary.
+		/// </summary>
+		LayoffRunId = 86,
 
 		/// <summary>
 		/// [LC 600 Hours] - Numeric

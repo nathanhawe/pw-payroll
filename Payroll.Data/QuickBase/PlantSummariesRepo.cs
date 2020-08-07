@@ -52,7 +52,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.TotalHours},");
 				sb.Append($"{line.TotalGross},");
 				sb.Append($"{line.CovidHours},");
-				sb.Append($"{line.BatchId}");
+				sb.Append($"{line.BatchId},");
+				sb.Append($"{(line.LayoffId > 0 ? 1 : 0)}");
 				sb.Append("\n");
 			}
 
@@ -99,6 +100,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantSummariesField.TotalGross}.");
 			sb.Append($"{(int)PlantSummariesField.LC600Hours}.");
 			sb.Append($"{(int)PlantSummariesField.BatchId}.");
+			sb.Append($"{(int)PlantSummariesField.LayoffCheck}.");
 
 			return sb.ToString();
 		}

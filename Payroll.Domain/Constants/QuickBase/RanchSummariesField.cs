@@ -14,6 +14,8 @@
 		TotalGross = 11,
 		CulturalHours = 45,
 		LastCrew = 35,
+		SeparationCheckPaidInAdvance = 121,
+		LayoffRunDate = 141,
 		LC600Hours = 161,
 		BatchId = 163
 	}

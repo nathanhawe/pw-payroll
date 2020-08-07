@@ -55,6 +55,15 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{(line.LastCrew > 0 ? line.LastCrew.ToString() : "")},");
 				sb.Append($"{line.CovidHours},");
 				sb.Append($"{line.BatchId},");
+				sb.Append($"{(line.LayoffId > 0 ? 1 : 0)},");
+				if(line.LayoffId > 0)
+				{
+					sb.Append($"{DateTime.Now:MM-dd-yyyy}");
+				}
+				else
+				{
+					sb.Append($"");
+				}
 				sb.Append("\n");
 			}
 
@@ -105,6 +114,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchSummariesField.LastCrew}.");
 			sb.Append($"{(int)RanchSummariesField.LC600Hours}.");
 			sb.Append($"{(int)RanchSummariesField.BatchId}.");
+			sb.Append($"{(int)RanchSummariesField.SeparationCheckPaidInAdvance}.");
+			sb.Append($"{(int)RanchSummariesField.LayoffRunDate}.");
 
 			return sb.ToString();
 		}
