@@ -54,7 +54,7 @@ namespace Payroll.Data.QuickBase
 			var sb = new StringBuilder();
 			foreach (var line in paidSickLeaves)
 			{
-				sb.Append($"{line.EmployeeId} {line.ShiftDate:M/d/yyyy},");
+				sb.Append($"{line.EmployeeId} {line.ShiftDate:M/d/yyyy} {line.Company},");
 				sb.Append($"{line.EmployeeId},");
 				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
 				sb.Append($"{line.Company},");
