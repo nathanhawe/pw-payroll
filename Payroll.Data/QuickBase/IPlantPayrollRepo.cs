@@ -10,5 +10,7 @@ namespace Payroll.Data.QuickBase
 		public IEnumerable<PlantPayLine> Get(DateTime weekEndDate, int layoffId);
 		public IEnumerable<PlantPayLine> GetForSummaries(DateTime weekEndDate, int layoffId);
 		public XElement Save(IEnumerable<PlantPayLine> plantPayLines);
+		public XElement Lock(IEnumerable<PlantPayLine> plantPayLines);
+		public XElement Unlock(IEnumerable<PlantPayLine> plantPayLines);
 	}
 }

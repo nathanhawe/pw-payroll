@@ -38,7 +38,7 @@ namespace Payroll.Service
 		/// <returns></returns>
 		public bool CanAddSummaryBatch()
 		{
-			return _context.SummaryBatches.Where(x => !x.IsComplete).Count() == 0;
+			return _context.SummaryBatches.Where(x => !x.IsDeleted && !x.IsComplete).Count() == 0;
 		}
 
 		/// <summary>
@@ -56,8 +56,8 @@ namespace Payroll.Service
 		/// <summary>
 		/// Returns all of the <c>SummaryBatch</c> records with pagination.
 		/// </summary>
-		/// <param name="pageNumber"></param>
-		/// <param name="itemsPerPage"></param>
+		/// <param name="offset"></param>
+		/// <param name="limit"></param>
 		/// <param name="orderByDescending"></param>
 		/// <returns></returns>
 		public List<SummaryBatch> GetSummaryBatches(int offset, int limit, bool orderByDescending)
@@ -90,7 +90,7 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
-		/// Returns the count of active <c>Batch</c> records in the database.
+		/// Returns the count of active <c>SummaryBatch</c> records in the database.
 		/// </summary>
 		/// <returns></returns>
 		public int GetTotalSummaryBatchCount()

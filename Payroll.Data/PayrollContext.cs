@@ -25,6 +25,7 @@ namespace Payroll.Data
 		public DbSet<UserAction> UserActions { get; set; }
 		public DbSet<ApplicationUserProfile> ApplicationUserProfiles {get; set;}
 		public DbSet<SummaryBatch> SummaryBatches { get; set; }
+		public DbSet<AuditLockBatch> AuditLockBatches { get; set; }
 
 		public PayrollContext()
 		{

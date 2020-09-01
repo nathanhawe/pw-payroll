@@ -333,5 +333,108 @@ namespace Payroll.IntegrationTest
 			// Batch should now have an Id and the process can be executed
 			service.CreateSummaries(summaryBatch.Id);
 		}
+
+
+		[TestMethod]
+		[Ignore("Only Run To Change State")]
+		public void AuditLock_Plants()
+		{
+			var weekEndingDate = new DateTime(2020, 8, 16);
+			var layoffId = 0;
+			bool auditLock = true;
+
+			// Database context
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = PayrollData")
+				.Options;
+
+			using var context = new PayrollContext(options);
+
+			// Loggers
+			var apiLogger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var serviceLogger = new MockLogger<AuditLockService>();
+
+
+			// Quick Base Connection
+			var configuration = ConfigurationHelper.GetIConfigurationRoot();
+			var realm = configuration["QuickBase:Realm"];
+			var userToken = configuration["QuickBase:UserToken"];
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
+
+			// Repositories
+			var ranchPayrollRepo = new RanchPayrollRepo(quickBaseConnection);
+			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
+
+			var service = new AuditLockService(
+				serviceLogger,
+				context,
+				ranchPayrollRepo,
+				plantPayrollRepo);
+
+			// Create a new batch
+			var auditLockBatch = new AuditLockBatch
+			{
+				WeekEndDate = weekEndingDate,
+				LayoffId = layoffId,
+				Company = Payroll.Domain.Constants.Company.Plants,
+				Lock = auditLock
+			};
+			context.Add(auditLockBatch);
+			context.SaveChanges();
+
+			// Batch should now have an Id and the process can be executed
+			service.ProcessAuditLockBatch(auditLockBatch.Id);
+		}
+
+		[TestMethod]
+		[Ignore("Only Run To Change State")]
+		public void AuditLock_Ranches()
+		{
+			var weekEndingDate = new DateTime(2020, 8, 9);
+			var layoffId = 0;
+			bool auditLock = true;
+
+			// Database context
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = PayrollData")
+				.Options;
+
+			using var context = new PayrollContext(options);
+
+			// Loggers
+			var apiLogger = new MockLogger<QuickBase.Api.QuickBaseConnection>();
+			var serviceLogger = new MockLogger<AuditLockService>();
+
+
+			// Quick Base Connection
+			var configuration = ConfigurationHelper.GetIConfigurationRoot();
+			var realm = configuration["QuickBase:Realm"];
+			var userToken = configuration["QuickBase:UserToken"];
+			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
+
+			// Repositories
+			var ranchPayrollRepo = new RanchPayrollRepo(quickBaseConnection);
+			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
+
+			var service = new AuditLockService(
+				serviceLogger,
+				context,
+				ranchPayrollRepo,
+				plantPayrollRepo);
+
+			// Create a new batch
+			var auditLockBatch = new AuditLockBatch
+			{
+				WeekEndDate = weekEndingDate,
+				LayoffId = layoffId,
+				Company = Payroll.Domain.Constants.Company.Ranches,
+				Lock = auditLock
+			};
+			context.Add(auditLockBatch);
+			context.SaveChanges();
+
+			// Batch should now have an Id and the process can be executed
+			service.ProcessAuditLockBatch(auditLockBatch.Id);
+		}
 	}
 }

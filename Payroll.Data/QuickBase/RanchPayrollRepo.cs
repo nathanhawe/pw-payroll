@@ -166,6 +166,70 @@ namespace Payroll.Data.QuickBase
 			return importResponse;
 		}
 
+		/// <summary>
+		/// Audit locks all <c>RanchPayLine</c>s through a new API_ImportFromCSV request to the Ranch Payroll table in Quickbase.
+		/// Only records with <c>QuickBaseRecordId</c> values greater than 0 will be updated.
+		/// </summary>
+		/// <param name="ranchPayLines"></param>
+		/// <returns></returns>
+		public XElement Lock(IEnumerable<RanchPayLine> ranchPayLines)
+		{
+			var clist = GetAuditLockClist();
+
+			// Build the CDATA string. This must match the field order in clist.
+			var sb = new StringBuilder();
+			foreach (var line in ranchPayLines)
+			{
+				if (line.QuickBaseRecordId <= 0) continue;
+
+				sb.Append($"{line.QuickBaseRecordId},");
+				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Locked}");
+				sb.Append("\n");
+			}
+
+			// Create the request
+			var importResponse = _quickBaseConn.ImportFromCsv(
+				QuickBaseTable.RanchPayroll,
+				sb.ToString(),
+				clist,
+				percentageAsString: false,
+				skipFirstRow: false);
+
+			return importResponse;
+		}
+
+		/// <summary>
+		/// Audit unlocks all <c>RanchPayLine</c>s through a new API_ImportFromCSV request to the Ranch Payroll table in Quickbase.
+		/// Only records with <c>QuickBaseRecordId</c> values greater than 0 will be updated.
+		/// </summary>
+		/// <param name="ranchPayLines"></param>
+		/// <returns></returns>
+		public XElement Unlock(IEnumerable<RanchPayLine> ranchPayLines)
+		{
+			var clist = GetAuditLockClist();
+
+			// Build the CDATA string. This must match the field order in clist.
+			var sb = new StringBuilder();
+			foreach (var line in ranchPayLines)
+			{
+				if (line.QuickBaseRecordId <= 0) continue;
+
+				sb.Append($"{line.QuickBaseRecordId},");
+				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Unlocked}");
+				sb.Append("\n");
+			}
+
+			// Create the request
+			var importResponse = _quickBaseConn.ImportFromCsv(
+				QuickBaseTable.RanchPayroll,
+				sb.ToString(),
+				clist,
+				percentageAsString: false,
+				skipFirstRow: false);
+
+			return importResponse;
+		}
+
 
 		/// <summary>
 		/// Converts an XElement object representing an API_DoQuery response from the Ranch Payroll table in Quick Base into 
@@ -305,6 +369,19 @@ namespace Payroll.Data.QuickBase
 			{
 				sb.Append($"{(int)RanchPayrollField.ManualInputHoursWorked}.");
 			}
+			sb.Append($"{(int)RanchPayrollField.AuditLock}.");
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Returns a properly formatted clist string for audit lock API_ImportFromCSV calls to the Ranch Payroll table in Quick Base.
+		/// A clist is required to properly map values to fields in Quick Base.
+		/// </summary>
+		/// <returns></returns>
+		private string GetAuditLockClist()
+		{
+			var sb = new StringBuilder();
+			sb.Append($"{(int)RanchPayrollField.RecordId}.");
 			sb.Append($"{(int)RanchPayrollField.AuditLock}.");
 			return sb.ToString();
 		}

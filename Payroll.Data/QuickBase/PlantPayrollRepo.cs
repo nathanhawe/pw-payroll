@@ -112,6 +112,70 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
+		/// Audit locks the provided <c>PlantPayLine</c> records by creating a new API_ImportFromCSV request to the Plant Payroll table in Quickbase
+		/// that updates the value of the Audit Lock field to set it to "Locked".  Only records with <c>QuickBaseRecordId</c> values greater than 0 are updated.
+		/// </summary>
+		/// <param name="plantPayLines"></param>
+		/// <returns></returns>
+		public XElement Lock(IEnumerable<PlantPayLine> plantPayLines)
+		{
+			var clist = GetAuditLockClist();
+
+			// Build the CDATA string
+			var sb = new StringBuilder();
+			foreach (var line in plantPayLines)
+			{
+				if (line.QuickBaseRecordId == 0) continue;
+
+				sb.Append($"{line.QuickBaseRecordId},");
+				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Locked}");
+				sb.Append("\n");
+			}
+
+			// Create the request
+			var importResponse = _quickBaseConn.ImportFromCsv(
+				QuickBaseTable.PlantPayroll,
+				sb.ToString(),
+				clist,
+				percentageAsString: false,
+				skipFirstRow: false);
+
+			return importResponse;
+		}
+
+		/// <summary>
+		/// Audit unlocks the provided <c>PlantPayLine</c> records by creating a new API_ImportFromCSV request to the Plant Payroll table in Quickbase
+		/// that updates the value of the Audit Lock field to set it to "".  Only records with <c>QuickBaseRecordId</c> values greater than 0 are updated.
+		/// </summary>
+		/// <param name="plantPayLines"></param>
+		/// <returns></returns>
+		public XElement Unlock(IEnumerable<PlantPayLine> plantPayLines)
+		{
+			var clist = GetAuditLockClist();
+
+			// Build the CDATA string
+			var sb = new StringBuilder();
+			foreach (var line in plantPayLines)
+			{
+				if (line.QuickBaseRecordId == 0) continue;
+
+				sb.Append($"{line.QuickBaseRecordId},");
+				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Unlocked}");
+				sb.Append("\n");
+			}
+
+			// Create the request
+			var importResponse = _quickBaseConn.ImportFromCsv(
+				QuickBaseTable.PlantPayroll,
+				sb.ToString(),
+				clist,
+				percentageAsString: false,
+				skipFirstRow: false);
+
+			return importResponse;
+		}
+
+		/// <summary>
 		/// Converts an XElement object representing an API_DoQuery response from the Plant Payroll table in Quick Base into 
 		/// a collection of <c>PlantPayLine</c> objects.
 		/// </summary>
@@ -252,6 +316,20 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.OtherGross}.");
 			sb.Append($"{(int)PlantPayrollField.CalculatedTotalGross}.");
 			sb.Append($"{(int)PlantPayrollField.BatchId}.");
+			sb.Append($"{(int)PlantPayrollField.AuditLock}.");
+
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Returns a properly formatted clist string for API_ImportFromCSV calls to the Plant Payroll table in Quick Base for the
+		/// purpose of performing audit locks and unlocks.  A clist is required to properly map values to fields in Quick Base.
+		/// </summary>
+		/// <returns></returns>
+		private string GetAuditLockClist()
+		{
+			var sb = new StringBuilder();
+			sb.Append($"{(int)PlantPayrollField.RecordId}.");
 			sb.Append($"{(int)PlantPayrollField.AuditLock}.");
 
 			return sb.ToString();

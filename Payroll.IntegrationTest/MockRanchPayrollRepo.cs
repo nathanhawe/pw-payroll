@@ -18,12 +18,22 @@ namespace Payroll.IntegrationTest
 			throw new NotImplementedException();
 		}
 
+		public XElement Lock(IEnumerable<RanchPayLine> ranchPayLines)
+		{
+			throw new NotImplementedException();
+		}
+
 		public XElement Save(IEnumerable<RanchPayLine> ranchPayLines)
 		{
 			throw new NotImplementedException();
 		}
 
 		public XElement SaveWithHoursWorked(IEnumerable<RanchPayLine> ranchPayLines)
+		{
+			throw new NotImplementedException();
+		}
+
+		public XElement Unlock(IEnumerable<RanchPayLine> ranchPayLines)
 		{
 			throw new NotImplementedException();
 		}

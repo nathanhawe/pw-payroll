@@ -11,5 +11,7 @@ namespace Payroll.Data.QuickBase
 		public IEnumerable<RanchPayLine> GetForSummaries(DateTime weekEndDate, int layoffId);
 		public XElement Save(IEnumerable<RanchPayLine> ranchPayLines);
 		public XElement SaveWithHoursWorked(IEnumerable<RanchPayLine> ranchPayLines);
+		public XElement Lock(IEnumerable<RanchPayLine> ranchPayLines);
+		public XElement Unlock(IEnumerable<RanchPayLine> ranchPayLines);
 	}
 }
