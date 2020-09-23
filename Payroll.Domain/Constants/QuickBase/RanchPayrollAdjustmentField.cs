@@ -57,5 +57,10 @@
 		/// [Calculated Total Gross] - Currency indicates the final total gross value for this adjustment pay line.
 		/// </summary>
 		CalculatedTotalGross = 102,
+
+		/// <summary>
+		/// [FiveEight] - Checkbox indicates that the pay line should be paid as an office/clerical wage order.
+		/// </summary>
+		FiveEight = 103
 	}
 }

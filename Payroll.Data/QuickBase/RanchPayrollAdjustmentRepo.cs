@@ -80,7 +80,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.TotalGross},");
 				sb.Append($"{line.BatchId},");
 				sb.Append($"{line.OtDtWotHours},");
-				sb.Append($"{line.OtDtWotRate}");
+				sb.Append($"{line.OtDtWotRate},");
+				sb.Append($"{line.FiveEight}");
 				sb.Append("\n");
 			}
 
@@ -141,8 +142,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchPayrollAdjustmentField.AlternativeWorkWeek: 
 							temp.AlternativeWorkWeek = ((!string.IsNullOrWhiteSpace(field.Value) && field.Value.Trim().ToLower() == AlternativeWorkWeekValue.FourTen.ToLower()) ? true : false);
 							break;
-						//case (int)RanchPayrollAdjustmentField.FiveEight: temp.FiveEight = ParseBooleanFromCheckbox(field.Value); break;
-						//case (int)RanchPayrollAdjustmentField.HourlyRateOverride: temp.HourlyRateOverride = ParseDecimal(field.Value) ?? 0; break;
+						case (int)RanchPayrollAdjustmentField.FiveEight: temp.FiveEight = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)RanchPayrollAdjustmentField.EmployeeHourlyRate: temp.EmployeeHourlyRate = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchPayrollAdjustmentField.WeekEndOfAdjustmentPaid: temp.WeekEndOfAdjustmentPaid = ParseDate(field.Value); break;
 						case (int)RanchPayrollAdjustmentField.OriginalOrNew:
@@ -176,19 +176,15 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PayType}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.Pieces}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PieceRate}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.HourlyRate}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromHours}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.GrossFromPieces}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OtherGross}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.TotalGross}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.AlternativeWorkWeek}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.FiveEight}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.HourlyRateOverride}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.EmployeeHourlyRate}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.WeekEndOfAdjustmentPaid}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OriginalOrNew}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OldHourlyRate}.");
-			sb.Append($"{(int)RanchPayrollAdjustmentField.UseOldHourlyRate}");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.UseOldHourlyRate}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.FiveEight}.");
+
 
 			return sb.ToString();
 		}
@@ -208,7 +204,6 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollAdjustmentField.EmployeeNumber}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.LaborCode}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.RelatedBlock}.");
-			//sb.Append($"{(int)RanchPayrollAdjustmentField.HoursWorked}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PayType}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.Pieces}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.PieceRate}.");
@@ -224,6 +219,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollAdjustmentField.BatchId}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OtDtWotHours}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OtDtWotRate}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.FiveEight}.");
 
 			return sb.ToString();
 		}
