@@ -14,7 +14,6 @@
 		Crew = 34,
 		EmployeeNumber = 29,
 		LaborCode = 59,
-		RelatedBlock = 39,
 		HoursWorked = 15,
 		OtDtWotHours = 16,
 		PayType = 17,
@@ -61,6 +60,12 @@
 		/// <summary>
 		/// [FiveEight] - Checkbox indicates that the pay line should be paid as an office/clerical wage order.
 		/// </summary>
-		FiveEight = 103
+		FiveEight = 103,
+
+		/// <summary>
+		/// [Related Block] - ID of related block in Block List.
+		/// </summary>
+		RelatedBlock = 106,
+
 	}
 }

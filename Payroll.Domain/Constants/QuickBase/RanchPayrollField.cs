@@ -10,7 +10,6 @@
 		EmployeeNumber = 7,
 		ShiftDate = 11,
 		WeekEndDate = 13,
-		RelatedBlock = 19,
 		Crew = 23,
 
 		/// <summary>
@@ -82,6 +81,11 @@
 		/// <summary>
 		/// [Calculated Total Gross] - The final total gross value for the line.
 		/// </summary>
-		CalculatedTotalGross = 285
+		CalculatedTotalGross = 285,
+
+		/// <summary>
+		/// [Related Block] - Id of related Block
+		/// </summary>
+		RelatedBlock = 294,
 	}
 }
