@@ -652,7 +652,7 @@ namespace Payroll.UnitTest
 
 
 		[TestMethod]
-		public void LaborCode_536_NightShiftSupervision()
+		public void LaborCode_536_NightShiftSupervision_Before20201019()
 		{
 			/*
 				Always returns 3 + [EmployeeHourlyRateCalc].  The formula for [EmployeeHourlyRateCalc] is:
@@ -661,16 +661,39 @@ namespace Payroll.UnitTest
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
 			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
+			var shiftDate = new DateTime(2020, 10, 18);
 
 			// Override
-			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: shiftDate));
 
 			// Employee Hourly Rate
-			Assert.AreEqual(18.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M));
+			Assert.AreEqual(18.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: shiftDate));
 
 			// Minimum Wage
-			Assert.AreEqual(18.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M));
+			Assert.AreEqual(18.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: shiftDate));
 		}
+
+		[TestMethod]
+		public void LaborCode_536_NightShiftSupervision_OnOrAfter20201019()
+		{
+			// Always returns the employee hourly rate
+			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
+			var startDate = new DateTime(2020, 10, 19);
+			var endDate = startDate.AddYears(5);
+
+			// Override
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: startDate));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: endDate));
+
+			// Employee Hourly Rate
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+		}
+
 
 		[TestMethod]
 		public void LaborCode_602_Covid19PreScreening_Before20200427()

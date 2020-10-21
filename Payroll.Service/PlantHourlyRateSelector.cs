@@ -106,8 +106,7 @@ namespace Payroll.Service
 			
 			if (laborCode == (int)PlantLaborCode.NightShiftSupervision)
 			{
-				// [536 Rate] = [EmployeeHourlyRateCalc] + 3
-				return (calculatedEmployeeRate + 3M);
+				return Rate536(shiftDate, calculatedEmployeeRate);
 			}
 			
 			if (laborCode == (int)PlantLaborCode.NightShiftAuditor)
@@ -138,7 +137,7 @@ namespace Payroll.Service
 
 			return EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 		}
-
+		
 		/// <summary>
 		/// Returns the effective H-2A rate for the provided shift date.
 		/// </summary>
@@ -316,6 +315,22 @@ namespace Payroll.Service
 					return Math.Max(calculatedEmployeeRate, 14.77M);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Returns the calculated rate for Night Shift Supervision
+		/// </summary>
+		/// <param name="shiftDate"></param>
+		/// <param name="calculatedEmployeeRate"></param>
+		/// <returns></returns>
+		private decimal Rate536(DateTime shiftDate, decimal calculatedEmployeeRate)
+		{
+			if (shiftDate < new DateTime(2020, 10, 19))
+			{
+				return (calculatedEmployeeRate + 3M);
+			}
+			else return calculatedEmployeeRate;
+			
 		}
 
 		/// <summary>
