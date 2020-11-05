@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Payroll.Data;
 using Payroll.Data.QuickBase;
 using Payroll.Domain;
+using Payroll.Domain.Constants;
 using Payroll.Service;
 using System;
+using System.Linq;
 
 namespace Payroll.IntegrationTest
 {
@@ -49,7 +52,7 @@ namespace Payroll.IntegrationTest
 			var minimumWageService = new MinimumWageService(context);
 			var crewLaborWageService = new CrewLaborWageService(context);
 			var roundingService = new RoundingService();
-			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
+			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context), minimumWageService), new PlantHourlyRateSelector(minimumWageService), roundingService);
 			var grossFromPiecesCalculator = new GrossFromPiecesCalculator(roundingService);
 			var grossFromIncentiveCalculator = new GrossFromIncentiveCalculator(roundingService);
 			var totalGrossCalculator = new TotalGrossCalculator(roundingService);
@@ -118,7 +121,8 @@ namespace Payroll.IntegrationTest
 		[Ignore("Only Run To Change State")]
 		public void RunRanchesProcess()
 		{
-			var weekEndingDate = new DateTime(2020, 6, 28);
+			var weekEndingDate = new DateTime(2020, 9, 13);
+			int? layoffId = 1279;
 
 			// Database context
 			var options = new DbContextOptionsBuilder<PayrollContext>()
@@ -151,7 +155,7 @@ namespace Payroll.IntegrationTest
 			var minimumWageService = new MinimumWageService(context);
 			var crewLaborWageService = new CrewLaborWageService(context);
 			var roundingService = new RoundingService();
-			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
+			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context), minimumWageService), new PlantHourlyRateSelector(minimumWageService), roundingService);
 			var grossFromPiecesCalculator = new GrossFromPiecesCalculator(roundingService);
 			var grossFromIncentiveCalculator = new GrossFromIncentiveCalculator(roundingService);
 			var totalGrossCalculator = new TotalGrossCalculator(roundingService);
@@ -206,14 +210,14 @@ namespace Payroll.IntegrationTest
 			var batch = new Batch
 			{
 				WeekEndDate = weekEndingDate,
-				LayoffId = null,
+				LayoffId = layoffId,
 				Company = Payroll.Domain.Constants.Company.Ranches
 			};
 			context.Add(batch);
 			context.SaveChanges();
 
 			// Batch should now have an Id and the process can be executed
-			service.PerformCalculations(batch.Id);
+		service.PerformCalculations(batch.Id);
 		}
 
 		[TestMethod]

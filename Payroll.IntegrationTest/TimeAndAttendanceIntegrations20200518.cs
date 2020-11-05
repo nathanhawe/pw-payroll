@@ -48,7 +48,7 @@ namespace Payroll.IntegrationTest
 			var minimumWageService = new MinimumWageService(context);
 			var crewLaborWageService = new CrewLaborWageService(context);
 			var roundingService = new RoundingService();
-			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context)), new PlantHourlyRateSelector(minimumWageService), roundingService);
+			var grossFromHoursCalculator = new GrossFromHoursCalculator(new RanchHourlyRateSelector(new CrewLaborWageService(context), minimumWageService), new PlantHourlyRateSelector(minimumWageService), roundingService);
 			var grossFromPiecesCalculator = new GrossFromPiecesCalculator(roundingService);
 			var grossFromIncentiveCalculator = new GrossFromIncentiveCalculator(roundingService);
 			var totalGrossCalculator = new TotalGrossCalculator(roundingService);

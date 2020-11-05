@@ -12,10 +12,12 @@ namespace Payroll.Service
 	public class RanchHourlyRateSelector : IRanchHourlyRateSelector
 	{
 		private readonly ICrewLaborWageService _crewLaborWageService;
+		private readonly IMinimumWageService _minimumWageService;
 
-		public RanchHourlyRateSelector(ICrewLaborWageService crewLaborWageService)
+		public RanchHourlyRateSelector(ICrewLaborWageService crewLaborWageService, IMinimumWageService minimumWageService)
 		{
 			_crewLaborWageService = crewLaborWageService ?? throw new ArgumentNullException(nameof(crewLaborWageService));
+			_minimumWageService = minimumWageService ?? throw new ArgumentNullException(nameof(minimumWageService));
 		}
 
 		/// <summary>
@@ -32,26 +34,28 @@ namespace Payroll.Service
 		public decimal GetHourlyRate(string payType, int crew, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, DateTime shiftDate, decimal payLineHourlyRate)
 		{
 			if (!IsAnAcceptablePayType(payType)) return 0;
+
+			var minimumWageRate = _minimumWageService.GetMinimumWageOnDate(shiftDate);
 				
 			if (hourlyRateOverride > 0) return hourlyRateOverride;
 			if (payType == PayType.SickLeave) return payLineHourlyRate;
-			if (payType == PayType.Covid19) return Math.Max(payLineHourlyRate, CulturalRate(shiftDate, employeeHourlyRate));
-			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay) return AlmondHarvestEquipmentOperatorDay(shiftDate, employeeHourlyRate);
-			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight) return AlmondHarvestEquipmentOperatorNight(shiftDate, employeeHourlyRate);
-			if (laborCode == (int)RanchLaborCode.AlmondHarvestGeneral) return AlmondHarvestGeneral(shiftDate, crew, employeeHourlyRate);
-			if (laborCode == (int)RanchLaborCode.GrapeHarvestCrewHelper) return GrapeHarvestCrewHelper();
+			if (payType == PayType.Covid19) return Math.Max(payLineHourlyRate, CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate));
+			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay) return AlmondHarvestEquipmentOperatorDay(shiftDate, employeeHourlyRate, minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight) return AlmondHarvestEquipmentOperatorNight(shiftDate, employeeHourlyRate, minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.AlmondHarvestGeneral) return AlmondHarvestGeneral(shiftDate, crew, employeeHourlyRate, minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.GrapeHarvestCrewHelper) return GrapeHarvestCrewHelper(minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.GrapeHarvestCrewHelper_BonusRate) return GrapeHarvestCrewHelper_BonusRate();
-			if (laborCode == (int)RanchLaborCode.GrapeHarvestSupport) return CulturalRate(shiftDate, employeeHourlyRate);
-			if (laborCode == (int)RanchLaborCode.Girdling && shiftDate >= new DateTime(2020, 3, 21)) return GirdlingRate();
+			if (laborCode == (int)RanchLaborCode.GrapeHarvestSupport) return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.Girdling && shiftDate >= new DateTime(2020, 3, 21)) return GirdlingRate(minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.RecoveryTime) return RecoveryTimeRate();
 			if (laborCode == (int)RanchLaborCode.NonProductiveTime) return NonProductiveTimeRate();
-			if (laborCode == (int)RanchLaborCode.QualityControl && shiftDate >= new DateTime(2020, 5, 11)) return QualityControlRate(shiftDate, employeeHourlyRate);
-			if (crew == (int)Crew.WestTractor_Night) return WestTractor_NightRate(shiftDate, employeeHourlyRate);
-			if (crew == (int)Crew.LightDuty_East) return CrewLaborRate(shiftDate);
-			if (crew == (int)Crew.LightDuty_West) return CrewLaborRate(shiftDate);
-			if (crew == (int)Crew.JoseLuisRodriguez && laborCode == (int)RanchLaborCode.Grafting_BuddingExpertCrew) return GraftingBuddingExpertCrewRate(shiftDate);
-			if (crew > 100) return CrewLaborRate(shiftDate);
-			return CulturalRate(shiftDate, employeeHourlyRate);
+			if (laborCode == (int)RanchLaborCode.QualityControl && shiftDate >= new DateTime(2020, 5, 11)) return QualityControlRate(shiftDate, employeeHourlyRate, minimumWageRate);
+			if (crew == (int)Crew.WestTractor_Night) return WestTractor_NightRate(shiftDate, employeeHourlyRate, minimumWageRate);
+			if (crew == (int)Crew.LightDuty_East) return CrewLaborRate(shiftDate, minimumWageRate);
+			if (crew == (int)Crew.LightDuty_West) return CrewLaborRate(shiftDate, minimumWageRate);
+			if (crew == (int)Crew.JoseLuisRodriguez && laborCode == (int)RanchLaborCode.Grafting_BuddingExpertCrew) return GraftingBuddingExpertCrewRate(shiftDate, minimumWageRate);
+			if (crew > 100) return CrewLaborRate(shiftDate, minimumWageRate);
+			return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate);
 		}
 		
 		/// <summary>
@@ -79,89 +83,92 @@ namespace Payroll.Service
 			return false;
 		}
 
-		private decimal AlmondHarvestEquipmentOperatorDay(DateTime shiftDate, decimal employeeHourlyRate)
+		private decimal AlmondHarvestEquipmentOperatorDay(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
-			if(employeeHourlyRate > CrewLaborRate(shiftDate))
+			var crewLaborRate = CrewLaborRate(shiftDate, minimumWageRate);
+			if (employeeHourlyRate > crewLaborRate)
 			{
 				return employeeHourlyRate;
 			}
 			else
 			{
-				return 14.25M;
+				return Math.Max(14.25M, minimumWageRate);
 			}
 		}
 
-		private decimal AlmondHarvestEquipmentOperatorNight(DateTime shiftDate, decimal employeeHourlyRate)
+		private decimal AlmondHarvestEquipmentOperatorNight(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
-			if(employeeHourlyRate > CrewLaborRate(shiftDate))
+			var crewLaborRate = CrewLaborRate(shiftDate, minimumWageRate);
+			if(employeeHourlyRate > crewLaborRate)
 			{
 				return employeeHourlyRate + 1M;
 			}
 			else
 			{
-				return 15.25M;
+				return Math.Max(15.25M, minimumWageRate);
 			}
 		}
 
-		private decimal AlmondHarvestGeneral(DateTime shiftDate, int crew, decimal employeeHourlyRate)
+		private decimal AlmondHarvestGeneral(DateTime shiftDate, int crew, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
+			var crewLaborRate = CrewLaborRate(shiftDate, minimumWageRate);
 			if(crew == (int)Crew.AlmondHarvest_Nights)
 			{
-				if(employeeHourlyRate > CrewLaborRate(shiftDate))
+				if(employeeHourlyRate > crewLaborRate)
 				{
 					return employeeHourlyRate;
 				}
 				else
 				{
-					return 14M;
+					return Math.Max(14M, minimumWageRate);
 				}
 			}
 			else
 			{
-				return CulturalRate(shiftDate, employeeHourlyRate);
+				return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate);
 			}
 		}
 
-		private decimal GrapeHarvestCrewHelper() => 12M;
+		private decimal GrapeHarvestCrewHelper(decimal minimumWageRate) => Math.Max(12M, minimumWageRate);
 
 		private decimal GrapeHarvestCrewHelper_BonusRate() => 0M;
 
-		private decimal GirdlingRate() => 15.50M;
+		private decimal GirdlingRate(decimal minimumWageRate) => Math.Max(15.50M, minimumWageRate);
 
 		private decimal RecoveryTimeRate() => 0M;
 
 		private decimal NonProductiveTimeRate() => 0M;
 
-		private decimal QualityControlRate(DateTime shiftDate, decimal employeeHourlyRate)
+		private decimal QualityControlRate(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
-			return Math.Max(employeeHourlyRate, CrewLaborRate(shiftDate)+.25M);
+			return Math.Max(employeeHourlyRate, CrewLaborRate(shiftDate, minimumWageRate) + .25M);
 		}
 
-		private decimal WestTractor_NightRate(DateTime shiftDate, decimal employeeHourlyRate)
+		private decimal WestTractor_NightRate(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
-			return CulturalRate(shiftDate, employeeHourlyRate) + .5M;
+			return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate) + .5M;
 		}
 
-		private decimal GraftingBuddingExpertCrewRate(DateTime shiftDate)
+		private decimal GraftingBuddingExpertCrewRate(DateTime shiftDate, decimal minimumWageRate)
 		{
 			if(shiftDate < new DateTime(2018, 2, 2))
 			{
-				return 14M;
+				return Math.Max(14M, minimumWageRate);
 			}
 			else
 			{
-				return 15M;
+				return Math.Max(15M, minimumWageRate);
 			}
 		}
 
-		private decimal CulturalRate(DateTime shiftDate, decimal employeeHourlyRate)
+		private decimal CulturalRate(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
-			return Math.Max(employeeHourlyRate, CrewLaborRate(shiftDate));
+			return Math.Max(employeeHourlyRate, CrewLaborRate(shiftDate, minimumWageRate));
 		}
 
-		private decimal CrewLaborRate(DateTime shiftDate)
+		private decimal CrewLaborRate(DateTime shiftDate, decimal minimumWageRate)
 		{
-			return _crewLaborWageService.GetWage(shiftDate);
+			return Math.Max(_crewLaborWageService.GetWage(shiftDate), minimumWageRate);
 		}
 	}
 }

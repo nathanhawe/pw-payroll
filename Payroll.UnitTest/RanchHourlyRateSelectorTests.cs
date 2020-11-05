@@ -16,8 +16,10 @@ namespace Payroll.UnitTest
 	public class RanchHourlyRateSelectorTests
 	{
 		private readonly decimal _crewLaborRate = 15M;
+		private readonly decimal _minimumWageRate = 14M;
 		private ICrewLaborWageService _mockCrewLaborWageService;
 		private RanchHourlyRateSelector _ranchHourlyRateSelector;
+		private MockMinimumWageService _mockMinimumWageService;
 
 		[TestInitialize]
 		public void Setup()
@@ -25,8 +27,12 @@ namespace Payroll.UnitTest
 			// Create a mock of the crew labor wage selector that always returns the crew labor rate
 			_mockCrewLaborWageService = new MockCrewLaborWageService(_crewLaborRate);
 
+			// Create a mock of the minimum wage selector that always returns less than the crew labor rate
+			_mockMinimumWageService = new MockMinimumWageService();
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2000, 1, 1), _minimumWageRate);
+
 			// Setup common instance of rate selector to test
-			_ranchHourlyRateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService);
+			_ranchHourlyRateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService, _mockMinimumWageService);
 		}
 
 		private decimal DefaultTest(
@@ -36,10 +42,17 @@ namespace Payroll.UnitTest
 			decimal employeeHourlyRate = 14,
 			decimal hourlyRateOverride = 0,
 			DateTime? shiftDate = null,
-			decimal payLineHourlyRate = 0)
+			decimal payLineHourlyRate = 0,
+			decimal minimumWage = 10)
 		{
 			shiftDate ??= new DateTime(2020, 1, 1);
-			return _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride, shiftDate.Value, payLineHourlyRate);
+			
+			// Setup new services to mock the passed in minimum wage
+			var minimumWageService = new MockMinimumWageService();
+			minimumWageService.Test_AddMinimumWage(shiftDate.Value, minimumWage);
+			var rateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService, minimumWageService);
+
+			return rateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride, shiftDate.Value, payLineHourlyRate);
 		}
 
 		[TestMethod]
@@ -49,7 +62,7 @@ namespace Payroll.UnitTest
 			var crew = 100;
 			var laborCode = -1;
 			var employeeHourly = 15;
-			var hourlyOverride = 42;
+			var hourlyOverride = 42M;
 			var shiftDate = new DateTime(2020, 1, 1);
 
 			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate, 0);
@@ -74,6 +87,20 @@ namespace Payroll.UnitTest
 			// Crew 100 should receive the regular crew labor rate of 15 but hourly rate override will ensure it is 42
 			laborCode = -1;
 			hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate, 0);
+			Assert.AreEqual(hourlyOverride, hourlyRate);
+		}
+
+		[TestMethod]
+		public void HourlyRateOverride_SupercedesMinimumWage()
+		{
+			var payType = Payroll.Domain.Constants.PayType.Regular;
+			var crew = 100;
+			var laborCode = -1;
+			var employeeHourly = 15;
+			var hourlyOverride = _minimumWageRate - 1;
+			var shiftDate = new DateTime(2020, 1, 1);
+
+			var hourlyRate = _ranchHourlyRateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourly, hourlyOverride, shiftDate, 0);
 			Assert.AreEqual(hourlyOverride, hourlyRate);
 		}
 
@@ -184,6 +211,9 @@ namespace Payroll.UnitTest
 			// Crew labor rate is greater
 			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M));
 
+			// Minimum wage is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2));
+
 			// Override still applies
 			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M));
 
@@ -284,6 +314,10 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: 15M));
+			Assert.AreEqual(_crewLaborRate + 2M , DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2));
 		}
 
 		[TestMethod]
@@ -294,6 +328,10 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(16M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: 16M));
+			Assert.AreEqual(_crewLaborRate + 4, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 4));
 		}
 
 		[TestMethod]
@@ -308,6 +346,12 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate, minimumWage: 15M));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 1));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2));
 		}
 
 		[TestMethod]
@@ -318,6 +362,9 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(12M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(12M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(12M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: 15M));
 		}
 
 		[TestMethod]
@@ -339,6 +386,9 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 2M));
 		}
 
 		[TestMethod]
@@ -358,6 +408,10 @@ namespace Payroll.UnitTest
 			var laborCode = (int)RanchLaborCode.Girdling;
 			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2020, 3, 21)));
 			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2030, 12, 31)));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 1M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2020, 3, 21), minimumWage: _crewLaborRate + 1M));
+			Assert.AreEqual(_crewLaborRate + 1M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2030, 12, 31), minimumWage: _crewLaborRate + 1M));
 		}
 
 		[TestMethod]
@@ -402,6 +456,10 @@ namespace Payroll.UnitTest
 			// Return the employee hourly rate when it is greater than crew labor rate + .25
 			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate));
 			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate.AddYears(10)));
+
+			// Returns minimum wage + .25 when minimum wage is greater than employee and crew labor rates
+			Assert.AreEqual((_crewLaborRate + 1.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate, minimumWage: _crewLaborRate + 1M));
+			Assert.AreEqual((_crewLaborRate + 1.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate.AddYears(10), minimumWage: _crewLaborRate + 1M));
 		}
 
 		[TestMethod]
@@ -422,12 +480,13 @@ namespace Payroll.UnitTest
 		[TestMethod]
 		public void CrewLabor()
 		{
-			// Crews over 100 always get the crew labor rate.
+			// Crews over 100 always get the crew labor rate unless minimum wage is higher.
 			for (int i = 101; i < 1000; i++)
 			{
 				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate - 1));
 				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate));
 				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1));
+				Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
 			}
 		}
 
@@ -444,6 +503,7 @@ namespace Payroll.UnitTest
 				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate - 1));
 				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate));
 				Assert.AreEqual(_crewLaborRate + 1, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1));
+				Assert.AreEqual(_crewLaborRate + 2, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
 			}
 		}
 
@@ -454,6 +514,9 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate + 1.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage + .5
+			Assert.AreEqual(_crewLaborRate + 2.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
 		}
 
 		[TestMethod]
@@ -463,6 +526,9 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: (int)Crew.LightDuty_East, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: (int)Crew.LightDuty_East, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: (int)Crew.LightDuty_East, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: (int)Crew.LightDuty_East, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
 		}
 
 		[TestMethod]
@@ -472,6 +538,9 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: (int)Crew.LightDuty_West, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: (int)Crew.LightDuty_West, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: (int)Crew.LightDuty_West, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: (int)Crew.LightDuty_West, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
 		}
 
 		[TestMethod]
@@ -487,6 +556,10 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate - 1));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate + 1));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
 		}
 
 		#endregion
