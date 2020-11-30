@@ -47,6 +47,8 @@ namespace Payroll.IntegrationTest
 			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
 			var plantPayrollAdjustmentRepo = new PlantPayrollAdjustmentRepo(quickBaseConnection);
 			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
+			var ranchPayrollOutRepo = new RanchPayrollOutRepo(quickBaseConnection);
+			var ranchPayrollAdjustmentOutRepo = new RanchPayrollAdjustmentOutRepo(quickBaseConnection);
 
 			// Services
 			var minimumWageService = new MinimumWageService(context);
@@ -101,7 +103,9 @@ namespace Payroll.IntegrationTest
 				plantWeeklySummaryCalculator,
 				plantWeeklyOverTimeHoursCalculator,
 				plantMinimumMakeUpCalculator,
-				plantSummaryService);
+				plantSummaryService,
+				ranchPayrollOutRepo,
+				ranchPayrollAdjustmentOutRepo);
 
 			// Create a new batch
 			var batch = new Batch
@@ -121,8 +125,8 @@ namespace Payroll.IntegrationTest
 		[Ignore("Only Run To Change State")]
 		public void RunRanchesProcess()
 		{
-			var weekEndingDate = new DateTime(2020, 9, 13);
-			int? layoffId = 1279;
+			var weekEndingDate = new DateTime(2020, 11, 29);
+			int? layoffId = 1438;
 
 			// Database context
 			var options = new DbContextOptionsBuilder<PayrollContext>()
@@ -150,6 +154,8 @@ namespace Payroll.IntegrationTest
 			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
 			var plantPayrollAdjustmentRepo = new PlantPayrollAdjustmentRepo(quickBaseConnection);
 			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
+			var ranchPayrollOutRepo = new RanchPayrollOutRepo(quickBaseConnection);
+			var ranchPayrollAdjustmentOutRepo = new RanchPayrollAdjustmentOutRepo(quickBaseConnection);
 
 			// Services
 			var minimumWageService = new MinimumWageService(context);
@@ -204,7 +210,9 @@ namespace Payroll.IntegrationTest
 				plantWeeklySummaryCalculator,
 				plantWeeklyOverTimeHoursCalculator,
 				plantMinimumMakeUpCalculator,
-				plantSummaryService);
+				plantSummaryService,
+				ranchPayrollOutRepo,
+				ranchPayrollAdjustmentOutRepo);
 
 			// Create a new batch
 			var batch = new Batch
@@ -217,7 +225,7 @@ namespace Payroll.IntegrationTest
 			context.SaveChanges();
 
 			// Batch should now have an Id and the process can be executed
-		service.PerformCalculations(batch.Id);
+			service.PerformCalculations(batch.Id);
 		}
 
 		[TestMethod]
@@ -225,7 +233,7 @@ namespace Payroll.IntegrationTest
 		public void CreatePlantSummaries()
 		{
 			var weekEndingDate = new DateTime(2020, 7, 19);
-			var layoffId = 1129;
+			int? layoffId = null;
 
 			// Database context
 			var options = new DbContextOptionsBuilder<PayrollContext>()

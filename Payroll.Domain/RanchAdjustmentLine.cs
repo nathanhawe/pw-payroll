@@ -61,5 +61,7 @@ namespace Payroll.Domain
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal OldHourlyRate { get; set; }
 		public bool UseOldHourlyRate { get; set; }
+		public string StartTime { get; set; }
+		public string EndTime { get; set; }
 	}
 }

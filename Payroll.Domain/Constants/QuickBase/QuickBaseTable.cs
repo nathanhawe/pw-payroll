@@ -16,5 +16,8 @@
 		public const string PlantSummaries = "bfb4hpupx";
 
 		public const string PslTrackingDaily = "bj2mtwbze";
+
+		public const string RanchPayrollOut = "bqz8m7uwu";
+		public const string RanchPayrollAdjustmentOut = "bq2aikki3";
 	}
 }

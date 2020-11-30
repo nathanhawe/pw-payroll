@@ -37,14 +37,14 @@ namespace QuickBase.IntegrationTests
 		[TestMethod]
 		public void DoQuery_NoLayoff()
 		{
-			var temp = _repo.Get(new DateTime(2020, 3, 1), 0);
+			var temp = _repo.Get(new DateTime(2020, 11, 15), 0);
 			Print(temp);
 		}
 
 		[TestMethod]
 		public void DoQuery_WithLayoff()
 		{
-			var temp = _repo.Get(new DateTime(2020, 3, 1), 922);
+			var temp = _repo.Get(new DateTime(2020, 11, 29), 1438);
 			Print(temp);
 		}
 

@@ -12,6 +12,7 @@ namespace QuickBase.Api.Constants
 		Unknown = 0,
 		API_DoQuery,
 		API_DoQueryCount,
-		API_ImportFromCSV
+		API_ImportFromCSV,
+		API_PurgeRecords,
 	}
 }

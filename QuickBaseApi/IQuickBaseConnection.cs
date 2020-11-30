@@ -41,5 +41,9 @@ namespace QuickBase.Api
 			int mergeFieldId = 0,
 			bool useUtcTime = false,
 			string udata = null);
+
+		public XElement PurgeRecords(
+			string tableId,
+			string query);
 	}
 }

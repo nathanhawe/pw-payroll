@@ -150,6 +150,10 @@ namespace Payroll.Data.QuickBase
 							break;
 						case (int)RanchPayrollAdjustmentField.OldHourlyRate: temp.OldHourlyRate = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchPayrollAdjustmentField.UseOldHourlyRate: temp.UseOldHourlyRate = ParseBooleanFromCheckbox(field.Value); break;
+
+						// Pass through the start/end time values until the Quick Base table is changed to use Time of Day instead of numeric.
+						case (int)RanchPayrollAdjustmentField.StartTime: temp.StartTime = string.IsNullOrWhiteSpace(field.Value) ? null : field.Value; break;
+						case (int)RanchPayrollAdjustmentField.EndTime: temp.EndTime = string.IsNullOrWhiteSpace(field.Value) ? null : field.Value; break;
 					}
 				}
 				ranchAdjustmentLines.Add(temp);
@@ -184,6 +188,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollAdjustmentField.OldHourlyRate}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.UseOldHourlyRate}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.FiveEight}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.StartTime}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.EndTime}.");
 
 
 			return sb.ToString();

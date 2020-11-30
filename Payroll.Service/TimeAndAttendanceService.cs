@@ -32,6 +32,8 @@ namespace Payroll.Service
 		private readonly IPlantPayrollRepo _plantPayrollRepo;
 		private readonly IPlantPayrollAdjustmentRepo _plantPayrollAdjustmentRepo;
 		private readonly IPlantSummariesRepo _plantSummariesRepo;
+		private readonly IRanchPayrollOutRepo _ranchPayrollOutRepo;
+		private readonly IRanchPayrollAdjustmentOutRepo _ranchPayrollAdjustmentOutRepo;
 
 		// Services
 		private readonly IGrossFromHoursCalculator _grossFromHoursCalculator;
@@ -83,7 +85,9 @@ namespace Payroll.Service
 			IPlantWeeklySummaryCalculator plantWeeklySummaryCalculator,
 			IPlantWeeklyOTHoursCalculator plantWeeklyOTHoursCalculator,
 			IPlantMinimumMakeUpCalculator plantMinimumMakeUpCalculator,
-			IPlantSummaryService plantSummaryService)
+			IPlantSummaryService plantSummaryService,
+			IRanchPayrollOutRepo ranchPayrollOutRepo,
+			IRanchPayrollAdjustmentOutRepo ranchPayrollAdjustmentOutRepo)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_context = payrollContext ?? throw new ArgumentNullException(nameof(payrollContext));
@@ -113,6 +117,8 @@ namespace Payroll.Service
 			_plantWeeklyOverTimeHoursCalculator = plantWeeklyOTHoursCalculator ?? throw new ArgumentNullException(nameof(plantWeeklyOTHoursCalculator));
 			_plantMinimumMakeUpCalculator = plantMinimumMakeUpCalculator ?? throw new ArgumentNullException(nameof(plantMinimumMakeUpCalculator));
 			_plantSummaryService = plantSummaryService ?? throw new ArgumentNullException(nameof(plantSummaryService));
+			_ranchPayrollOutRepo = ranchPayrollOutRepo ?? throw new ArgumentNullException(nameof(ranchPayrollOutRepo));
+			_ranchPayrollAdjustmentOutRepo = ranchPayrollAdjustmentOutRepo ?? throw new ArgumentNullException(nameof(ranchPayrollAdjustmentOutRepo));
 		}
 
 		public void PerformCalculations(int batchId)
@@ -811,6 +817,12 @@ namespace Payroll.Service
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
 
+			// Purge records from earlier calculations of the same week ending date and layoff ID before
+			// writing new calculations.
+			var purgeResponse = _ranchPayrollOutRepo.Delete(batch.WeekEndDate, batch.LayoffId ?? 0);
+			var adjPurgeResponse = _ranchPayrollAdjustmentOutRepo.Delete(batch.WeekEndDate, batch.LayoffId ?? 0);
+
+
 			// Crew Boss Pay Records
 			var toCrewBossPay = _context.CrewBossPayLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toCrewBossPay.ForEach(x => x.LayoffId = batch.LayoffId.Value);
@@ -847,13 +859,20 @@ namespace Payroll.Service
 				cbLinesToRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 				toRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			}
+			// Write to both Ranch Payroll and Ranch Payroll Out until output tables are 
+			// fully adopted.
 			var cbrpResponse = _ranchPayrollRepo.SaveWithHoursWorked(cbLinesToRanchPayroll);
 			var rpResponse = _ranchPayrollRepo.Save(toRanchPayroll);
+			var cbrpOutResponse = _ranchPayrollOutRepo.Save(cbLinesToRanchPayroll);
+			var rpOutResponse = _ranchPayrollOutRepo.Save(toRanchPayroll);
 
 			// Ranch Adjustment Records
 			var toRanchAdjustments = _context.RanchAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toRanchAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
+			// Write to both Ranch Payroll Adjustment and Ranch Payroll Adjustment Out until output
+			// tables are fully adopted.
 			var rpaResponse = _ranchPayrollAdjustmentRepo.Save(toRanchAdjustments);
+			var rpaOutResponse = _ranchPayrollAdjustmentOutRepo.Save(toRanchAdjustments);
 
 			// PSL Updates
 			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
@@ -1343,6 +1362,8 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.HourlyRateOverride), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.TotalGross), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.LastCrew), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.EndTime), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.StartTime), typeof(string)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1377,6 +1398,8 @@ namespace Payroll.Service
 				row[nameof(RanchPayLine.HourlyRateOverride)] = payLine.HourlyRateOverride;
 				row[nameof(RanchPayLine.TotalGross)] = payLine.TotalGross;
 				row[nameof(RanchPayLine.LastCrew)] = payLine.LastCrew;
+				row[nameof(RanchPayLine.EndTime)] = payLine.EndTime;
+				row[nameof(RanchPayLine.StartTime)] = payLine.StartTime;
 				table.Rows.Add(row);
 			}
 
@@ -1441,6 +1464,8 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.IsOriginal), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.OldHourlyRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.UseOldHourlyRate), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.StartTime), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(RanchAdjustmentLine.EndTime), typeof(string)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var adjustmentLine in adjustmentLines)
@@ -1478,6 +1503,8 @@ namespace Payroll.Service
 				row[nameof(RanchAdjustmentLine.IsOriginal)] = adjustmentLine.IsOriginal;
 				row[nameof(RanchAdjustmentLine.OldHourlyRate)] = adjustmentLine.OldHourlyRate;
 				row[nameof(RanchAdjustmentLine.UseOldHourlyRate)] = adjustmentLine.UseOldHourlyRate;
+				row[nameof(RanchAdjustmentLine.StartTime)] = adjustmentLine.StartTime;
+				row[nameof(RanchAdjustmentLine.EndTime)] = adjustmentLine.EndTime;
 				table.Rows.Add(row);
 			}
 

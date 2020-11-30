@@ -115,6 +115,18 @@ namespace QuickBase.Api
 			return Post(uri, payload);
 		}
 
+		public XElement PurgeRecords(
+			string tableId,
+			string query)
+		{
+			var uri = GetBaseUriForId(tableId);
+			var payload = new Payloads.PurgeRecordsPayload(
+				UserToken,
+				query);
+
+			return Post(uri, payload);
+		}
+
 		private Uri GetBaseUriForId(string id) => new Uri($"https://{Realm}.quickbase.com/db/{id}");
 
 		private XElement Post(Uri uri, Payloads.Payload payLoad)

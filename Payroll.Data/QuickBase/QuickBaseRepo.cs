@@ -78,5 +78,19 @@ namespace Payroll.Data.QuickBase
 			if (!string.IsNullOrWhiteSpace(value) && (value.Trim() == "1" || value.Trim().ToLower() == "yes")) return true;
 			return false;
 		}
+
+		protected string ParseTimeOfDay(string value)
+		{
+			if (string.IsNullOrWhiteSpace(value)) return null;
+
+			// Quickbase returns milliseconds since 12:00AM to represent time of day but expects
+			// HH:MM (AM|PM) for posting back.
+			if (!long.TryParse(value, out long milliseconds)) milliseconds = 0;
+			var totalMinutes = milliseconds / 60000;
+			var hourPart = totalMinutes / 60;
+			var minutePart = totalMinutes % 60;
+
+			return $"{(hourPart < 10 ? "0":"")}{hourPart}:{(minutePart < 10 ? "0":"")}{minutePart}";
+		}
 	}
 }

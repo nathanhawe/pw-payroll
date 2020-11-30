@@ -7,13 +7,19 @@
 	{
 		Unknown = 0,
 		RecordId = 3,
-		Layoff = 92,
-		LayoffRunId = 86,
-		WeekEndDate = 9,
 		ShiftDate = 7,
-		Crew = 34,
-		EmployeeNumber = 29,
-		LaborCode = 59,
+		WeekEndDate = 9,
+
+		/// <summary>
+		/// [Start Time] - Numeric (but should be Time of Day to match Ranch Payroll)
+		/// </summary>
+		StartTime = 11,
+
+		/// <summary>
+		/// [End Time] - Numeric (but should be Time of Day to match Ranch Payroll)
+		/// </summary>
+		EndTime = 12,
+
 		HoursWorked = 15,
 		OtDtWotHours = 16,
 		PayType = 17,
@@ -21,16 +27,22 @@
 		PieceRate = 19,
 		HourlyRate = 20,
 		OtDtWotRate = 21,
-		GrossFromHours = 23,
 		GrossFromPieces = 22,
+		GrossFromHours = 23,
 		OtherGross = 24,
 		TotalGross = 25,
+		OriginalOrNew = 27,
+		WeekEndOfAdjustmentPaid = 28,
+		EmployeeNumber = 29,
 		AlternativeWorkWeek = 32,
 		EmployeeHourlyRate = 33,
-		WeekEndOfAdjustmentPaid = 28,
-		OriginalOrNew = 27,
+		Crew = 34,
 		OldHourlyRate = 51,
 		UseOldHourlyRate = 52,
+		LaborCode = 59,
+		LayoffRunId = 86,
+		Layoff = 92,
+
 
 		/// <summary>
 		/// [Batch ID] - Numeric indicates the BatchId value during the last calculations this record was used in.

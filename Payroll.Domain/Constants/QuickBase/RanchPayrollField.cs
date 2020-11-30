@@ -13,6 +13,16 @@
 		Crew = 23,
 
 		/// <summary>
+		/// [Start Time] - Time of Day
+		/// </summary>
+		StartTime = 25,
+
+		/// <summary>
+		/// [End Time] - Time of Day
+		/// </summary>
+		EndTime = 26,
+
+		/// <summary>
 		/// [Manual Input Hours Worked] - Numeric
 		/// </summary>
 		ManualInputHoursWorked = 28,
