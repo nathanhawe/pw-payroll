@@ -24,7 +24,17 @@
 		/// [Plant]
 		/// </summary>
 		Plant = 8,
+
+		/// <summary>
+		/// [Start Time] - Date/Time
+		/// </summary>
+		StartTime = 9,
 		
+		/// <summary>
+		/// [End Time] - Date/Time
+		/// </summary>
+		EndTime = 10,
+
 		/// <summary>
 		/// [Hours Worked] - Numeric
 		/// </summary>
@@ -39,6 +49,16 @@
 		/// [Pay Type] - Text (multiple choice)
 		/// </summary>
 		PayType = 13,
+
+		/// <summary>
+		/// [Box Style] - Numeric
+		/// </summary>
+		BoxStyle = 14,
+
+		/// <summary>
+		/// [Box Style Description] - Text
+		/// </summary>
+		BoxStyleDescription = 15,
 
 		/// <summary>
 		/// [Pieces] - Numeric
@@ -166,6 +186,11 @@
 		/// [H-2A] - Reference checkbox from Employee Master that indicates an H-2A employee.
 		/// </summary>
 		H2A = 163,
+
+		/// <summary>
+		/// [H-2A Hours Offered] - Numeric
+		/// </summary>
+		H2AHoursOffered = 165,
 
 		/// <summary>
 		/// [41.1 Approval] - Checkbox indicates that a pay line with pay type 41.1 is approved to be paid out.

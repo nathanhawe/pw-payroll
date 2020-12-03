@@ -18,7 +18,8 @@ namespace Payroll.IntegrationTest
 		[Ignore("Only Run To Change State")]
 		public void RunPlantsProcess()
 		{
-			var weekEndingDate = new DateTime(2020, 6, 28);
+			var weekEndingDate = new DateTime(2020, 11, 29);
+			int? layoffId = null;
 
 			// Database context
 			var options = new DbContextOptionsBuilder<PayrollContext>()
@@ -49,6 +50,9 @@ namespace Payroll.IntegrationTest
 			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
 			var ranchPayrollOutRepo = new RanchPayrollOutRepo(quickBaseConnection);
 			var ranchPayrollAdjustmentOutRepo = new RanchPayrollAdjustmentOutRepo(quickBaseConnection);
+			var plantPayrollOutRepo = new PlantPayrollOutRepo(quickBaseConnection);
+			var plantPayrollAdjustmentOutRepo = new PlantPayrollAdjustmentOutRepo(quickBaseConnection);
+
 
 			// Services
 			var minimumWageService = new MinimumWageService(context);
@@ -105,13 +109,15 @@ namespace Payroll.IntegrationTest
 				plantMinimumMakeUpCalculator,
 				plantSummaryService,
 				ranchPayrollOutRepo,
-				ranchPayrollAdjustmentOutRepo);
+				ranchPayrollAdjustmentOutRepo,
+				plantPayrollOutRepo,
+				plantPayrollAdjustmentOutRepo);
 
 			// Create a new batch
 			var batch = new Batch
 			{
 				WeekEndDate = weekEndingDate,
-				LayoffId = null,
+				LayoffId = layoffId,
 				Company = Payroll.Domain.Constants.Company.Plants
 			};
 			context.Add(batch);
@@ -156,6 +162,8 @@ namespace Payroll.IntegrationTest
 			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
 			var ranchPayrollOutRepo = new RanchPayrollOutRepo(quickBaseConnection);
 			var ranchPayrollAdjustmentOutRepo = new RanchPayrollAdjustmentOutRepo(quickBaseConnection);
+			var plantPayrollOutRepo = new PlantPayrollOutRepo(quickBaseConnection);
+			var plantPayrollAdjustmentOutRepo = new PlantPayrollAdjustmentOutRepo(quickBaseConnection);
 
 			// Services
 			var minimumWageService = new MinimumWageService(context);
@@ -212,7 +220,9 @@ namespace Payroll.IntegrationTest
 				plantMinimumMakeUpCalculator,
 				plantSummaryService,
 				ranchPayrollOutRepo,
-				ranchPayrollAdjustmentOutRepo);
+				ranchPayrollAdjustmentOutRepo,
+				plantPayrollOutRepo,
+				plantPayrollAdjustmentOutRepo);
 
 			// Create a new batch
 			var batch = new Batch

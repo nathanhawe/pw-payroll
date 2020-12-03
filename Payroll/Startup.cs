@@ -160,6 +160,9 @@ namespace Payroll
 			services.AddScoped<Data.QuickBase.IPlantSummariesRepo, Data.QuickBase.PlantSummariesRepo>();
 			services.AddScoped<Data.QuickBase.IRanchPayrollOutRepo, Data.QuickBase.RanchPayrollOutRepo>();
 			services.AddScoped<Data.QuickBase.IRanchPayrollAdjustmentOutRepo, Data.QuickBase.RanchPayrollAdjustmentOutRepo>();
+			services.AddScoped<Data.QuickBase.IPlantPayrollOutRepo, Data.QuickBase.PlantPayrollOutRepo>();
+			services.AddScoped<Data.QuickBase.IPlantPayrollAdjustmentOutRepo, Data.QuickBase.PlantPayrollAdjustmentOutRepo>();
+
 
 			// Add hosted services
 			services.AddHostedService<Infrastructure.HostedServices.QueuedHostedService>();

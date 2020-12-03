@@ -19,5 +19,7 @@
 
 		public const string RanchPayrollOut = "bqz8m7uwu";
 		public const string RanchPayrollAdjustmentOut = "bq2aikki3";
+		public const string PlantPayrollOut = "bq2qbk4pg";
+		public const string PlantPayrollAdjustmentOut = "bq2sg3jwk";
 	}
 }

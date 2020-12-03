@@ -147,7 +147,12 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollAdjustmentField.OldHourlyRate: temp.OldHourlyRate = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollAdjustmentField.UseOldHourlyRate: temp.UseOldHourlyRate = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)PlantPayrollAdjustmentField.CountOfRanchersWorkingPlants: temp.UseCrewLaborRateForMinimumAssurance = (ParseInt(field.Value) ?? 0) > 0; break;
-
+						case (int)PlantPayrollAdjustmentField.BoxStyle: temp.BoxStyle = ParseInt(field.Value) ?? 0;break;
+						case (int)PlantPayrollAdjustmentField.BoxStyleDescription: temp.BoxStyleDescription = field.Value; break;
+						case (int)PlantPayrollAdjustmentField.EndTime: temp.EndTime = (!string.IsNullOrWhiteSpace(field.Value) ? ParseDate(field.Value) : (DateTime?)null); break;
+						case (int)PlantPayrollAdjustmentField.H2AHoursOffered: temp.H2AHoursOffered = ParseDecimal(field.Value) ?? 0; break;
+						case (int)PlantPayrollAdjustmentField.IncentiveDisqualified: temp.IsIncentiveDisqualified = ParseBooleanFromCheckbox(field.Value); break;
+						case (int)PlantPayrollAdjustmentField.StartTime: temp.StartTime = (!string.IsNullOrWhiteSpace(field.Value) ? ParseDate(field.Value) : (DateTime?)null); break;
 
 					}
 				}
@@ -184,6 +189,12 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollAdjustmentField.OldHourlyRate}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.UseOldHourlyRate}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.CountOfRanchersWorkingPlants}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.BoxStyle}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.BoxStyleDescription}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.EndTime}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.H2AHoursOffered}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.IncentiveDisqualified}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.StartTime}.");
 
 			return sb.ToString();
 		}

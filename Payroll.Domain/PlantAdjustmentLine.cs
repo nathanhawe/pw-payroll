@@ -64,5 +64,14 @@ namespace Payroll.Domain
 		public decimal OldHourlyRate { get; set; }
 		public bool UseOldHourlyRate { get; set; }
 		public bool UseCrewLaborRateForMinimumAssurance { get; set; }
+
+		public int BoxStyle { get; set; }
+		public string BoxStyleDescription { get; set; }
+		public DateTime? EndTime { get; set; }
+
+		[Column(TypeName = "decimal(18,2)")]
+		public decimal H2AHoursOffered { get; set; }
+		public bool IsIncentiveDisqualified { get; set; }
+		public DateTime? StartTime { get; set; }
 	}
 }

@@ -34,6 +34,8 @@ namespace Payroll.Service
 		private readonly IPlantSummariesRepo _plantSummariesRepo;
 		private readonly IRanchPayrollOutRepo _ranchPayrollOutRepo;
 		private readonly IRanchPayrollAdjustmentOutRepo _ranchPayrollAdjustmentOutRepo;
+		private readonly IPlantPayrollOutRepo _plantPayrollOutRepo;
+		private readonly IPlantPayrollAdjustmentOutRepo _plantPayrollAdjustmentOutRepo;
 
 		// Services
 		private readonly IGrossFromHoursCalculator _grossFromHoursCalculator;
@@ -87,7 +89,9 @@ namespace Payroll.Service
 			IPlantMinimumMakeUpCalculator plantMinimumMakeUpCalculator,
 			IPlantSummaryService plantSummaryService,
 			IRanchPayrollOutRepo ranchPayrollOutRepo,
-			IRanchPayrollAdjustmentOutRepo ranchPayrollAdjustmentOutRepo)
+			IRanchPayrollAdjustmentOutRepo ranchPayrollAdjustmentOutRepo,
+			IPlantPayrollOutRepo plantPayrollOutRepo,
+			IPlantPayrollAdjustmentOutRepo plantPayrollAdjustmentOutRepo)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_context = payrollContext ?? throw new ArgumentNullException(nameof(payrollContext));
@@ -119,6 +123,8 @@ namespace Payroll.Service
 			_plantSummaryService = plantSummaryService ?? throw new ArgumentNullException(nameof(plantSummaryService));
 			_ranchPayrollOutRepo = ranchPayrollOutRepo ?? throw new ArgumentNullException(nameof(ranchPayrollOutRepo));
 			_ranchPayrollAdjustmentOutRepo = ranchPayrollAdjustmentOutRepo ?? throw new ArgumentNullException(nameof(ranchPayrollAdjustmentOutRepo));
+			_plantPayrollOutRepo = plantPayrollOutRepo ?? throw new ArgumentNullException(nameof(plantPayrollOutRepo));
+			_plantPayrollAdjustmentOutRepo = plantPayrollAdjustmentOutRepo ?? throw new ArgumentNullException(nameof(plantPayrollAdjustmentOutRepo));
 		}
 
 		public void PerformCalculations(int batchId)
@@ -323,16 +329,21 @@ namespace Payroll.Service
 			SetBatchStatus(batch.Id, BatchProcessingStatus.Uploading);
 			_logger.Log(LogLevel.Information, "Updating Quick Base for batch {batchId}", batch.Id);
 
+			// Purge output table records for same weekending date and layoff ID before uploading
+			var purgeResponse = _plantPayrollOutRepo.Delete(batch.WeekEndDate, batch.LayoffId ?? 0);
+			var adjPurgeResponse = _plantPayrollAdjustmentOutRepo.Delete(batch.WeekEndDate, batch.LayoffId ?? 0);
 
 			// Plant Payroll Records
 			var toPlantPayroll = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toPlantPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			var ppResponse = _plantPayrollRepo.Save(toPlantPayroll);
+			var ppOutResponse = _plantPayrollOutRepo.Save(toPlantPayroll);
 
 			// Plant Adjustment Records
 			var toPlantAdjustments = _context.PlantAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toPlantAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			var ppaResponse = _plantPayrollAdjustmentRepo.Save(toPlantAdjustments);
+			var ppaOutResponse = _plantPayrollAdjustmentOutRepo.Save(toPlantAdjustments);
 
 			// PSL Updates
 			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
@@ -1544,8 +1555,8 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.BatchId), typeof(int)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.LayoffId), typeof(int)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.QuickBaseRecordId), typeof(int)));
-			table.Columns.Add(new DataColumn(nameof(PlantPayLine.WeekEndDate), typeof(System.DateTime)));
-			table.Columns.Add(new DataColumn(nameof(PlantPayLine.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.WeekEndDate), typeof(DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.ShiftDate), typeof(DateTime)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.Plant), typeof(int)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.EmployeeId), typeof(string)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.LaborCode), typeof(int)));
@@ -1572,6 +1583,11 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.UseIncreasedRate), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.NonDiscretionaryBonusRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.UseCrewLaborRateForMinimumAssurance), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.BoxStyle), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.BoxStyleDescription), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.EndTime), typeof(DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.H2AHoursOffered), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.StartTime), typeof(DateTime)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1612,6 +1628,11 @@ namespace Payroll.Service
 				row[nameof(PlantPayLine.UseIncreasedRate)] = payLine.UseIncreasedRate;
 				row[nameof(PlantPayLine.NonDiscretionaryBonusRate)] = payLine.NonDiscretionaryBonusRate;
 				row[nameof(PlantPayLine.UseCrewLaborRateForMinimumAssurance)] = payLine.UseCrewLaborRateForMinimumAssurance;
+				row[nameof(PlantPayLine.BoxStyle)] = payLine.BoxStyle;
+				row[nameof(PlantPayLine.BoxStyleDescription)] = payLine.BoxStyleDescription;
+				row[nameof(PlantPayLine.EndTime)] = payLine.EndTime ?? (object)DBNull.Value;
+				row[nameof(PlantPayLine.H2AHoursOffered)] = payLine.H2AHoursOffered;
+				row[nameof(PlantPayLine.StartTime)] = payLine.StartTime ?? (object)DBNull.Value;
 				table.Rows.Add(row);
 			}
 
@@ -1645,14 +1666,14 @@ namespace Payroll.Service
 			var tableName = "PlantAdjustmentLines";
 			var table = new DataTable(tableName);
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.Id), typeof(int)));
-			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.DateCreated), typeof(System.DateTime)));
-			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.DateCreated), typeof(DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.DateModified), typeof(DateTime)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsDeleted), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.BatchId), typeof(int)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.LayoffId), typeof(int)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.QuickBaseRecordId), typeof(int)));
-			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.WeekEndDate), typeof(System.DateTime)));
-			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.ShiftDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.WeekEndDate), typeof(DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.ShiftDate), typeof(DateTime)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.Plant), typeof(int)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.EmployeeId), typeof(string)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.LaborCode), typeof(int)));
@@ -1672,11 +1693,17 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.HourlyRateOverride), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.EmployeeHourlyRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsH2A), typeof(bool)));
-			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.WeekEndOfAdjustmentPaid), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.WeekEndOfAdjustmentPaid), typeof(DateTime)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsOriginal), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.OldHourlyRate), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.UseOldHourlyRate), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.UseCrewLaborRateForMinimumAssurance), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.BoxStyle), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.BoxStyleDescription), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.EndTime), typeof(DateTime)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.H2AHoursOffered), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsIncentiveDisqualified), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.StartTime), typeof(DateTime)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var adjustmentLine in adjustmentLines)
@@ -1715,6 +1742,12 @@ namespace Payroll.Service
 				row[nameof(PlantAdjustmentLine.OldHourlyRate)] = adjustmentLine.OldHourlyRate;
 				row[nameof(PlantAdjustmentLine.UseOldHourlyRate)] = adjustmentLine.UseOldHourlyRate;
 				row[nameof(PlantAdjustmentLine.UseCrewLaborRateForMinimumAssurance)] = adjustmentLine.UseCrewLaborRateForMinimumAssurance;
+				row[nameof(PlantAdjustmentLine.BoxStyle)] = adjustmentLine.BoxStyle;
+				row[nameof(PlantAdjustmentLine.BoxStyleDescription)] = adjustmentLine.BoxStyleDescription;
+				row[nameof(PlantAdjustmentLine.EndTime)] = adjustmentLine.EndTime ?? (object)DBNull.Value;
+				row[nameof(PlantAdjustmentLine.H2AHoursOffered)] = adjustmentLine.H2AHoursOffered;
+				row[nameof(PlantAdjustmentLine.IsIncentiveDisqualified)] = adjustmentLine.IsIncentiveDisqualified;
+				row[nameof(PlantAdjustmentLine.StartTime)] = adjustmentLine.StartTime ?? (object)DBNull.Value;
 				table.Rows.Add(row);
 			}
 

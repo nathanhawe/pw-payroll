@@ -16,21 +16,19 @@
 		RecordId = 3,
 
 		/// <summary>
-		/// [Lay Off Pay] - Formula checkbox that indicates the layoff run Id value is greater than 0.
-		/// This field is necessary because [Lay Off Run ID] is optional and it's not possible to query
-		/// for null field values in reports or through the API.
+		/// [Employee Number] - Text foreign key to the Employee Master table.
 		/// </summary>
-		LayoffPay = 82,
+		EmployeeNumber = 6,
 
 		/// <summary>
-		/// [Lay Off Run ID] - Foreign key to the layoff runs table.
+		/// [Alternative Work Week] - Reference text from Employee Master that can indicate an alternative work week.
 		/// </summary>
-		LayoffRunId = 78,
+		AlternativeWorkWeek = 11,
 
 		/// <summary>
-		/// [Week End Date] - Formula date field that gives the date of the Sunday on or after [Shift Date].
+		/// [Labor Code] - Numeric foreign key to Master Pull Table: Labor Code Master
 		/// </summary>
-		WeekEndDate = 17,
+		LaborCode = 12,
 
 		/// <summary>
 		/// [Shift Date] - Date
@@ -38,19 +36,24 @@
 		ShiftDate = 15,
 
 		/// <summary>
+		/// [Week End Date] - Formula date field that gives the date of the Sunday on or after [Shift Date].
+		/// </summary>
+		WeekEndDate = 17,
+
+		/// <summary>
 		/// [Plant] - Numeric
 		/// </summary>
 		Plant = 19,
 
 		/// <summary>
-		/// [Employee Number] - Text foreign key to the Employee Master table.
+		/// [Start Time] - Date/Time
 		/// </summary>
-		EmployeeNumber = 6,
+		StartTime = 20,
 
 		/// <summary>
-		/// [Labor Code] - Numeric foreign key to Master Pull Table: Labor Code Master
+		/// [End Time] - Date/Time
 		/// </summary>
-		LaborCode = 12,
+		EndTime = 21,
 
 		/// <summary>
 		/// [Hours Worked] - Numeric
@@ -66,6 +69,16 @@
 		/// [Pay Type] - Text (multiple choice)
 		/// </summary>
 		PayType = 24,
+
+		/// <summary>
+		/// [Box Style] - Numeric
+		/// </summary>
+		BoxStyle = 25,
+
+		/// <summary>
+		/// [Box Style Description] - Text
+		/// </summary>
+		BoxStyleDescription = 26,
 
 		/// <summary>
 		/// [Pieces] - Numeric
@@ -85,24 +98,14 @@
 		OtDtWotRate = 29,
 
 		/// <summary>
-		/// [Hourly Rate] - Formula currency
-		/// </summary>
-		HourlyRate = 39,
-
-		/// <summary>
-		/// [Gross from Hours] - Formula currency
-		/// </summary>
-		GrossFromHours = 31,
-
-		/// <summary>
 		/// [Gross from Pieces] - Formula currency
 		/// </summary>
 		GrossFromPieces = 30,
 
 		/// <summary>
-		/// [Gross from Incentive] - Currency
+		/// [Gross from Hours] - Formula currency
 		/// </summary>
-		GrossFromIncentive = 56,
+		GrossFromHours = 31,
 
 		/// <summary>
 		/// [Other Gross] - Currency
@@ -115,29 +118,24 @@
 		TotalGross = 33,
 
 		/// <summary>
-		/// [Alternative Work Week] - Reference text from Employee Master that can indicate an alternative work week.
+		/// [Original or New] - Text (multiple choice) indicates whether the adjustment line reflects the original or new value.
 		/// </summary>
-		AlternativeWorkWeek = 11,
-
-		/// <summary>
-		/// [Employee Hourly Rate] - Reference currency from Employee Master that indicates a per-employee rate to factor in to rate selection.
-		/// </summary>
-		EmployeeHourlyRate = 41,
-
-		/// <summary>
-		/// [H-2A] - Reference checkbox from Employee Master that indicates an H-2A employee.
-		/// </summary>
-		H2A = 84,
-
+		OriginalOrNew = 35,
+		
 		/// <summary>
 		/// [Week End of Adjustment Paid] - Date that indicates which week ending the adjustment is being paid in.
 		/// </summary>
 		WeekEndOfAdjustmentPaid = 36,
 
 		/// <summary>
-		/// [Original or New] - Text (multiple choice) indicates whether the adjustment line reflects the original or new value.
+		/// [Hourly Rate] - Formula currency
 		/// </summary>
-		OriginalOrNew = 35,
+		HourlyRate = 39,
+
+		/// <summary>
+		/// [Employee Hourly Rate] - Reference currency from Employee Master that indicates a per-employee rate to factor in to rate selection.
+		/// </summary>
+		EmployeeHourlyRate = 41,
 
 		/// <summary>
 		/// [Old Hourly Rate] - Currency indicates the original hourly rate.  Can also be used as [Hourly Rate Override] in other 
@@ -150,6 +148,38 @@
 		/// hourly rate.
 		/// </summary>
 		UseOldHourlyRate = 49,
+
+		/// <summary>
+		/// [Incentive Disqualified] - Checkbox
+		/// </summary>
+		IncentiveDisqualified = 53,
+
+		/// <summary>
+		/// [Gross from Incentive] - Currency
+		/// </summary>
+		GrossFromIncentive = 56,
+
+		/// <summary>
+		/// [Lay Off Run ID] - Foreign key to the layoff runs table.
+		/// </summary>
+		LayoffRunId = 78,
+
+		/// <summary>
+		/// [Lay Off Pay] - Formula checkbox that indicates the layoff run Id value is greater than 0.
+		/// This field is necessary because [Lay Off Run ID] is optional and it's not possible to query
+		/// for null field values in reports or through the API.
+		/// </summary>
+		LayoffPay = 82,
+
+		/// <summary>
+		/// [H-2A] - Reference checkbox from Employee Master that indicates an H-2A employee.
+		/// </summary>
+		H2A = 84,
+
+		/// <summary>
+		/// [H-2A Hours Offered] - Numeric
+		/// </summary>
+		H2AHoursOffered = 85,
 
 		/// <summary>
 		/// [Batch ID] - Numeric
