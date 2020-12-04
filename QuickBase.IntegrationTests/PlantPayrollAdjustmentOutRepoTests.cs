@@ -95,6 +95,21 @@ namespace QuickBase.IntegrationTests
 		}
 
 		[TestMethod]
+		[Ignore("This test can create new records in Quick Base.")]
+		public void ImportFromCSV_CommaInStrings()
+		{
+			var PlantAdjustmentLines = new List<PlantAdjustmentLine>
+			{
+				new PlantAdjustmentLine{ ShiftDate = new DateTime(2019, 1, 1), EmployeeId = "1,2,3,", BoxStyleDescription = "This is a test, only a test.", PayType = "42-Commas," },
+				new PlantAdjustmentLine{ ShiftDate = new DateTime(2019, 1, 2), EmployeeId = "1,2,3,", BoxStyleDescription = "This is a test, only a test.", PayType = "42-Commas," },
+				new PlantAdjustmentLine{ ShiftDate = new DateTime(2019, 1, 3), EmployeeId = "1,2,3,", BoxStyleDescription = "This is a test, only a test.", PayType = "42-Commas," },
+			};
+
+			var response = _repo.Save(PlantAdjustmentLines);
+			Console.WriteLine(response);
+		}
+
+		[TestMethod]
 		[Ignore]
 		public void Delete()
 		{

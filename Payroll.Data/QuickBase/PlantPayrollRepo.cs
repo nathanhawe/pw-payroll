@@ -84,9 +84,9 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
 				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
 				sb.Append($"{(line.Plant > 0 ? line.Plant.ToString() : "")},");
-				sb.Append($"{line.EmployeeId},");
+				sb.Append($"\"{line.EmployeeId}\",");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
-				sb.Append($"{line.PayType},");
+				sb.Append($"\"{line.PayType}\",");
 				sb.Append($"{line.OtDtWotHours},");
 				sb.Append($"{line.OtDtWotRate},");
 				sb.Append($"{line.HourlyRate},");

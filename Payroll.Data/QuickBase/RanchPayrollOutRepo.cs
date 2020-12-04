@@ -32,14 +32,14 @@ namespace Payroll.Data.QuickBase
 			var sb = new StringBuilder();
 			foreach (var line in ranchPayLines)
 			{
-				sb.Append($"{line.EmployeeId},");
+				sb.Append($"\"{line.EmployeeId}\",");
 				sb.Append($"{(line.BlockId > 0 ? line.BlockId.ToString() : "")},");
 				sb.Append($"{(line.Crew > 0 ? line.Crew.ToString() : "")},");
 				sb.Append($"{(line.LaborCode > 0 ? line.LaborCode.ToString() : "")},");
 				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
 				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
 				sb.Append($"{line.BatchId},");
-				sb.Append($"{line.EndTime},");
+				sb.Append($"\"{line.EndTime}\",");
 				sb.Append($"{(line.FiveEight ? "1" : "0")},");
 				sb.Append($"{line.GrossFromHours},");
 				sb.Append($"{line.GrossFromPieces},");
@@ -49,10 +49,10 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.OtDtWotRate},");
 				sb.Append($"{line.HoursWorked},");
 				sb.Append($"{line.OtherGross},");
-				sb.Append($"{line.PayType},");
+				sb.Append($"\"{line.PayType}\",");
 				sb.Append($"{line.PieceRate},");
 				sb.Append($"{line.Pieces},");
-				sb.Append($"{line.StartTime},");
+				sb.Append($"\"{line.StartTime}\",");
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
 				
 				sb.Append("\n");

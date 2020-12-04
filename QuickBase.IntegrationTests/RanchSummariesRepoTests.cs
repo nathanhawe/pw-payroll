@@ -40,19 +40,20 @@ namespace QuickBase.IntegrationTests
 			Print(temp);
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
+		[Ignore]
 		public void ImportFromCSV()
 		{
 			var ranchSummaries = new List<RanchSummary>
 			{
-				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "2518C", TotalHours = 100M, TotalGross = 1000.99M, CulturalHours = 9.99M },
-				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "2937D", TotalHours = 110M, TotalGross = 1001M, CulturalHours = 9.98M },
-				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "4870C", TotalHours = 120M, TotalGross = 1001.01M, CulturalHours = 9.97M },
-				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "4867C", TotalHours = 130M, TotalGross = 1001.02M, CulturalHours = 9.96M },
-				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "2518C", TotalHours = 140M, TotalGross = 1001.03M, CulturalHours = 9.95M },
-				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "2937D", TotalHours = 150M, TotalGross = 1001.04M, CulturalHours = 9.94M },
-				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "4870C", TotalHours = 160M, TotalGross = 1001.05M, CulturalHours = 9.93M },
-				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "4867C", TotalHours = 170M, TotalGross = 1001.06M, CulturalHours = 9.92M }
+				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "25,18C", TotalHours = 100M, TotalGross = 1000.99M, CulturalHours = 9.99M },
+				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "29,37D", TotalHours = 110M, TotalGross = 1001M, CulturalHours = 9.98M },
+				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "48,70C", TotalHours = 120M, TotalGross = 1001.01M, CulturalHours = 9.97M },
+				new RanchSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), LastCrew = 1002, EmployeeId = "48,67C", TotalHours = 130M, TotalGross = 1001.02M, CulturalHours = 9.96M },
+				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "25,18C", TotalHours = 140M, TotalGross = 1001.03M, CulturalHours = 9.95M },
+				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "29,37D", TotalHours = 150M, TotalGross = 1001.04M, CulturalHours = 9.94M },
+				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "48,70C", TotalHours = 160M, TotalGross = 1001.05M, CulturalHours = 9.93M },
+				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "48,67C", TotalHours = 170M, TotalGross = 1001.06M, CulturalHours = 9.92M }
 			};
 
 			var response = _repo.Save(ranchSummaries);

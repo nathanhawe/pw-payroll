@@ -47,14 +47,14 @@ namespace QuickBase.IntegrationTests
 		{
 			var PlantSummaries = new List<PlantSummary>
 			{
-				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "2518C", TotalHours = 100M, TotalGross = 1000.99M },
-				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "2937D", TotalHours = 110M, TotalGross = 1001M },
-				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "4870C", TotalHours = 120M, TotalGross = 1001.01M },
-				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "4867C", TotalHours = 130M, TotalGross = 1001.02M },
-				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "2518C", TotalHours = 140M, TotalGross = 1001.03M },
-				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "2937D", TotalHours = 150M, TotalGross = 1001.04M },
-				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "4870C", TotalHours = 160M, TotalGross = 1001.05M },
-				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "4867C", TotalHours = 170M, TotalGross = 1001.06M }
+				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "25,18C", TotalHours = 100M, TotalGross = 1000.99M },
+				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "29,37D", TotalHours = 110M, TotalGross = 1001M },
+				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "48,70C", TotalHours = 120M, TotalGross = 1001.01M },
+				new PlantSummary{ LayoffId = 0, WeekEndDate = new DateTime(2019, 1, 6), EmployeeId = "48,67C", TotalHours = 130M, TotalGross = 1001.02M },
+				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "25,18C", TotalHours = 140M, TotalGross = 1001.03M },
+				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "29,37D", TotalHours = 150M, TotalGross = 1001.04M },
+				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "48,70C", TotalHours = 160M, TotalGross = 1001.05M },
+				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "48,67C", TotalHours = 170M, TotalGross = 1001.06M }
 			};
 
 			var response = _repo.Save(PlantSummaries);

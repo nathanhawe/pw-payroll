@@ -47,7 +47,7 @@ namespace Payroll.Data.QuickBase
 			foreach (var line in plantSummaries)
 			{
 				sb.Append($"{(line.LayoffId > 0 ? line.LayoffId.ToString() : "")},");
-				sb.Append($"{line.EmployeeId},");
+				sb.Append($"\"{line.EmployeeId}\",");
 				sb.Append($"{line.WeekEndDate:MM-dd-yyyy},");
 				sb.Append($"{line.TotalHours},");
 				sb.Append($"{line.TotalGross},");

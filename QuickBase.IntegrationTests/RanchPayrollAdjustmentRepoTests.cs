@@ -86,6 +86,25 @@ namespace QuickBase.IntegrationTests
 			Console.WriteLine(response);
 		}
 
+		[TestMethod]
+		[Ignore]
+		public void ImportFromCSV_CommasInStrings()
+		{
+			var ranchAdjustmentLines = new List<RanchAdjustmentLine>
+			{
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "25,18C", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false },
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "29,37D", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false },
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "48,70C", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false },
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "48,67C", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false },
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "25,18C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false },
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "29,37D", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false },
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "48,70C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false },
+				new RanchAdjustmentLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "48,67C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 1), IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = false }
+			};
+
+			var response = _repo.Save(ranchAdjustmentLines);
+			Console.WriteLine(response);
+		}
 
 		private void Print(IEnumerable<RanchAdjustmentLine> lines)
 		{

@@ -102,6 +102,26 @@ namespace QuickBase.IntegrationTests
 			Console.WriteLine(response);
 		}
 
+		[TestMethod]
+		[Ignore("This test can create new records in Quick Base.")]
+		public void ImportFromCSV_CommasInStrings()
+		{
+			var PlantPayLines = new List<PlantPayLine>
+			{
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "25,18C", LaborCode = 207, HoursWorked = 9M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "29,37D", LaborCode = 207, HoursWorked = 9M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "48,70C", LaborCode = 207, HoursWorked = 9M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "48,67C", LaborCode = 207, HoursWorked = 9M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "25,18C", LaborCode = 208, HoursWorked = 10M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "29,37D", LaborCode = 208, HoursWorked = 10M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "48,70C", LaborCode = 208, HoursWorked = 10M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "48,67C", LaborCode = 208, HoursWorked = 10M, PayType = "42,Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M }
+			};
+
+			var response = _repo.Save(PlantPayLines);
+			Console.WriteLine(response);
+		}
+
 
 		private void Print(IEnumerable<PlantPayLine> lines)
 		{

@@ -100,6 +100,25 @@ namespace QuickBase.IntegrationTests
 			Console.WriteLine(response);
 		}
 
+		[TestMethod]
+		[Ignore]
+		public void ImportFromCSV_CommasInStrings()
+		{
+			var ranchPayLines = new List<RanchPayLine>
+			{
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "25,18C", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M },
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "29,37D", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M },
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "48,70C", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M },
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, EmployeeId = "48,67C", LaborCode = 207, BlockId = 0, HoursWorked = 9M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M },
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "25,18C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M },
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "29,37D", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M },
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "48,70C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M },
+				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "48,67C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M }
+			};
+
+			var response = _repo.Save(ranchPayLines);
+			Console.WriteLine(response);
+		}
 
 		private void Print(IEnumerable<RanchPayLine> lines)
 		{

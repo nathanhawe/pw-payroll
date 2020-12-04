@@ -41,15 +41,16 @@ namespace QuickBase.IntegrationTests
 			Print(temp);
 		}
 
-		[TestMethod, Ignore("This test can create Quick Base records when run.")]
+		[TestMethod]
+		[Ignore("This test can create Quick Base records when run.")]
 		public void ImportFromCSV()
 		{
 			var paidSickLeaves = new List<PaidSickLeave>
 			{
-				new PaidSickLeave{ EmployeeId = "2519C", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Plants, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 },
-				new PaidSickLeave{ EmployeeId = "2937D", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Ranches, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 },
-				new PaidSickLeave{ EmployeeId = "4870C", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Plants, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 },
-				new PaidSickLeave{ EmployeeId = "4867C", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Plants, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 }
+				new PaidSickLeave{ EmployeeId = "25,19C", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Plants, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 },
+				new PaidSickLeave{ EmployeeId = "29,37D", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Ranches, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 },
+				new PaidSickLeave{ EmployeeId = "48,70C", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Plants, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 },
+				new PaidSickLeave{ EmployeeId = "48,67C", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Plants, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 }
 			};
 
 			var response = _repo.Save(paidSickLeaves);

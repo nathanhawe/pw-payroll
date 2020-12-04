@@ -94,6 +94,36 @@ namespace QuickBase.IntegrationTests
 			Console.WriteLine(response);
 		}
 
+
+		[TestMethod]
+		[Ignore("This test can create new records in Quick Base.")]
+		public void ImportFromCSV_CommasInStrings()
+		{
+			var layoffId = 0;
+			var PlantPayLines = new List<PlantPayLine>
+			{
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "2518C,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M, StartTime = new DateTime(2019, 1, 1, 7, 30, 0), EndTime = new DateTime(2019, 1, 1, 15, 45, 0)},
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "2937D,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "4870C,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "4867C,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "2518C,", LaborCode = 114, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "2937D,", LaborCode = 114, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4870C,", LaborCode = 114, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4867C,", LaborCode = 114, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, HourlyRateOverride = 0M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7287999, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 2, EmployeeId = "2518C,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 10M, TotalGross = 0M, HourlyRateOverride = 15M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288000, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "778973,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 11M, TotalGross = 0M, HourlyRateOverride = 15.01M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288001, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "4870C,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 12M, TotalGross = 0M, HourlyRateOverride = 15.05M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288002, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "4867C,", LaborCode = 122, HoursWorked = 9M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 13M, TotalGross = 0M, HourlyRateOverride = 15.99M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288003, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "2518C,", LaborCode = 114, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 14.99M, TotalGross = 0M, HourlyRateOverride = 16.03M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288004, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "2937D,", LaborCode = 114, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 15.00M, TotalGross = 0M, HourlyRateOverride = 17.08M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288005, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4870C,", LaborCode = 114, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 15.01M, TotalGross = 0M, HourlyRateOverride = 17.98M },
+				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288006, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4867C,", LaborCode = 503, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 15.02M, TotalGross = 0M, HourlyRateOverride = 17.99M }
+			};
+
+			var response = _repo.Save(PlantPayLines);
+			Console.WriteLine(response);
+		}
+
 		[TestMethod]
 		[Ignore]
 		public void Delete()

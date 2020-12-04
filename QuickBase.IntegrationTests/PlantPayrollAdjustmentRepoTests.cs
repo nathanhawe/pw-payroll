@@ -88,6 +88,21 @@ namespace QuickBase.IntegrationTests
 			Console.WriteLine(response);
 		}
 
+		[TestMethod]
+		[Ignore("This test can create new records in Quick Base.")]
+		public void ImportFromCSV_CommasInString()
+		{
+			var PlantAdjustmentLines = new List<PlantAdjustmentLine>
+			{
+				new PlantAdjustmentLine{ ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "2518,C", PayType = "42-Comma," },
+				new PlantAdjustmentLine{ ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "2518,C", PayType = "42-Comma," },
+				new PlantAdjustmentLine{ ShiftDate = new DateTime(2019, 1, 3), Plant = 5, EmployeeId = "2518,C", PayType = "42-Comma," },
+			};
+
+			var response = _repo.Save(PlantAdjustmentLines);
+			Console.WriteLine(response);
+		}
+
 
 		private void Print(IEnumerable<PlantAdjustmentLine> lines)
 		{
