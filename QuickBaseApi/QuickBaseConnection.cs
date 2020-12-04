@@ -183,9 +183,10 @@ namespace QuickBase.Api
 		{
 			var errorCode = document?.Element("errcode")?.Value;
 			var errorText = document?.Element("errtext")?.Value ?? string.Empty;
+			var errorDetail = document?.Element("errdetail")?.Value ?? string.Empty;
 
 			if (string.IsNullOrWhiteSpace(errorCode)) throw new QuickBaseException("Unable to read errorcode value.");
-			if (errorCode != "0") throw new QuickBaseException(errorCode, errorText);
+			if (errorCode != "0") throw new QuickBaseException(errorCode, $"{errorText} {errorDetail}");
 		}
 	}
 }
