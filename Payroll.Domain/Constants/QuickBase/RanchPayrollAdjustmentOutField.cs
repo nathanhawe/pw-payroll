@@ -136,5 +136,10 @@
 		/// [Layoff Pay] - Formula Checkbox indicating if the record is part of a layoff pay run
 		/// </summary>
 		LayoffPay = 50,
+
+		/// <summary>
+		/// [Sick Leave Requested] - Numeric
+		/// </summary>
+		SickLeaveRequested = 51,
 	}
 }

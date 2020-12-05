@@ -238,6 +238,7 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollField.EndTime: temp.EndTime = (!string.IsNullOrWhiteSpace(field.Value) ? ParseDate(field.Value) : (DateTime?)null); break;
 						case (int)PlantPayrollField.H2AHoursOffered: temp.H2AHoursOffered = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollField.StartTime: temp.StartTime = (!string.IsNullOrWhiteSpace(field.Value) ? ParseDate(field.Value) : (DateTime?)null); break;
+						case (int)PlantPayrollField.SickLeaveRequested: temp.SickLeaveRequested = ParseDecimal(field.Value) ?? 0; break;
 					}
 				}
 				PlantPayLines.Add(temp);
@@ -281,6 +282,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.EndTime}.");
 			sb.Append($"{(int)PlantPayrollField.H2AHoursOffered}.");
 			sb.Append($"{(int)PlantPayrollField.StartTime}.");
+			sb.Append($"{(int)PlantPayrollField.SickLeaveRequested}.");
 
 			return sb.ToString();
 		}

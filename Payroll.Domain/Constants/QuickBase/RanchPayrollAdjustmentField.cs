@@ -79,5 +79,10 @@
 		/// </summary>
 		RelatedBlock = 106,
 
+		/// <summary>
+		/// [Sick Leave Requested] - Numeric
+		/// </summary>
+		SickLeaveRequested = 113,
+
 	}
 }

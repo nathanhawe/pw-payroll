@@ -159,5 +159,10 @@
 		/// [Layoff Pay] - Formula Checkbox
 		/// </summary>
 		LayoffPay = 50,
+
+		/// <summary>
+		/// [Sick Leave Requested] - Numeric
+		/// </summary>
+		SickLeaveRequested = 51,
 	}
 }

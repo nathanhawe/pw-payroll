@@ -154,6 +154,7 @@ namespace Payroll.Data.QuickBase
 						// Pass through the start/end time values until the Quick Base table is changed to use Time of Day instead of numeric.
 						case (int)RanchPayrollAdjustmentField.StartTime: temp.StartTime = string.IsNullOrWhiteSpace(field.Value) ? null : field.Value; break;
 						case (int)RanchPayrollAdjustmentField.EndTime: temp.EndTime = string.IsNullOrWhiteSpace(field.Value) ? null : field.Value; break;
+						case (int)RanchPayrollAdjustmentField.SickLeaveRequested: temp.SickLeaveRequested = ParseDecimal(field.Value) ?? 0; break;
 					}
 				}
 				ranchAdjustmentLines.Add(temp);
@@ -190,6 +191,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollAdjustmentField.FiveEight}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.StartTime}.");
 			sb.Append($"{(int)RanchPayrollAdjustmentField.EndTime}.");
+			sb.Append($"{(int)RanchPayrollAdjustmentField.SickLeaveRequested}.");
 
 
 			return sb.ToString();

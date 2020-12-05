@@ -80,6 +80,9 @@ namespace Payroll.Domain
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal H2AHoursOffered { get; set; }
 
+		[Column(TypeName = "decimal(18,2)")]
+		public decimal SickLeaveRequested { get; set; }
+
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }
 	}

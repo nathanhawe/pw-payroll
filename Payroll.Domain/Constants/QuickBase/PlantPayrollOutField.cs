@@ -165,5 +165,10 @@
 		/// </summary>
 		SourceRid = 96,
 
+		/// <summary>
+		/// [Sick Leave Requested] - Numeric
+		/// </summary>
+		SickLeaveRequested = 97,
+
 	}
 }

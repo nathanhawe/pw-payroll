@@ -59,7 +59,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.ShiftDate:MM-dd-yyyy},");
 				sb.Append($"{line.StartTime:MM-dd-yyyy H:mm},");
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
-				
+				sb.Append($"{line.SickLeaveRequested},");
+
 				sb.Append("\n");
 			}
 
@@ -138,6 +139,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollOutField.ShiftDate}.");
 			sb.Append($"{(int)PlantPayrollOutField.StartTime}.");
 			sb.Append($"{(int)PlantPayrollOutField.SourceRid}.");
+			sb.Append($"{(int)PlantPayrollOutField.SickLeaveRequested}.");
 
 			return sb.ToString();
 		}

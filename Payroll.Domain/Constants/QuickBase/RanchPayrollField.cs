@@ -97,5 +97,10 @@
 		/// [Related Block] - Id of related Block
 		/// </summary>
 		RelatedBlock = 294,
+
+		/// <summary>
+		/// [Sick Leave Requested] - Numeric used for displaying the amount of requested sick leave on vouchers
+		/// </summary>
+		SickLeaveRequested = 300,
 	}
 }

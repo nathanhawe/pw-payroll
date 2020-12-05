@@ -283,6 +283,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchPayrollField.SpecialAdjustmentApproval: temp.SpecialAdjustmentApproved = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)RanchPayrollField.StartTime: temp.StartTime = ParseTimeOfDay(field.Value); break;
 						case (int)RanchPayrollField.EndTime: temp.EndTime = ParseTimeOfDay(field.Value); break;
+						case (int)RanchPayrollField.SickLeaveRequested: temp.SickLeaveRequested = ParseDecimal(field.Value) ?? 0; break;
 					}
 				}
 				ranchPayLines.Add(temp);
@@ -318,6 +319,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollField.SpecialAdjustmentApproval}.");
 			sb.Append($"{(int)RanchPayrollField.StartTime}.");
 			sb.Append($"{(int)RanchPayrollField.EndTime}.");
+			sb.Append($"{(int)RanchPayrollField.SickLeaveRequested}.");
 
 			return sb.ToString();
 		}

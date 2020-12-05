@@ -54,7 +54,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.Pieces},");
 				sb.Append($"\"{line.StartTime}\",");
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
-				
+				sb.Append($"{line.SickLeaveRequested},");
+
 				sb.Append("\n");
 			}
 
@@ -127,6 +128,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollOutField.Pieces}.");
 			sb.Append($"{(int)RanchPayrollOutField.StartTime}.");
 			sb.Append($"{(int)RanchPayrollOutField.SourceRid}.");
+			sb.Append($"{(int)RanchPayrollOutField.SickLeaveRequested}.");
 
 			return sb.ToString();
 		}

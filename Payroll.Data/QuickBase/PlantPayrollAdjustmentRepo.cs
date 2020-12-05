@@ -153,6 +153,7 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollAdjustmentField.H2AHoursOffered: temp.H2AHoursOffered = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollAdjustmentField.IncentiveDisqualified: temp.IsIncentiveDisqualified = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)PlantPayrollAdjustmentField.StartTime: temp.StartTime = (!string.IsNullOrWhiteSpace(field.Value) ? ParseDate(field.Value) : (DateTime?)null); break;
+						case (int)PlantPayrollAdjustmentField.SickLeaveRequested: temp.SickLeaveRequested = ParseDecimal(field.Value) ?? 0; break;
 
 					}
 				}
@@ -195,6 +196,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollAdjustmentField.H2AHoursOffered}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.IncentiveDisqualified}.");
 			sb.Append($"{(int)PlantPayrollAdjustmentField.StartTime}.");
+			sb.Append($"{(int)PlantPayrollAdjustmentField.SickLeaveRequested}.");
 
 			return sb.ToString();
 		}

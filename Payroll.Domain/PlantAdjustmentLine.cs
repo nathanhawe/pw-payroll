@@ -73,5 +73,8 @@ namespace Payroll.Domain
 		public decimal H2AHoursOffered { get; set; }
 		public bool IsIncentiveDisqualified { get; set; }
 		public DateTime? StartTime { get; set; }
+
+		[Column(TypeName = "decimal(18,2)")]
+		public decimal SickLeaveRequested { get; set; }
 	}
 }

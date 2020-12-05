@@ -63,5 +63,8 @@ namespace Payroll.Domain
 		public bool UseOldHourlyRate { get; set; }
 		public string StartTime { get; set; }
 		public string EndTime { get; set; }
+
+		[Column(TypeName = "decimal(18,2)")]
+		public decimal SickLeaveRequested { get; set; }
 	}
 }

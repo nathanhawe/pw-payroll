@@ -209,6 +209,11 @@
 		/// <summary>
 		/// [# of Ranchers Working Plants] - Numeric.  A value greater than 0 indicates this is a ranch employee working in plants temporarily.
 		/// </summary>
-		CountOfRanchersWorkingPlants = 93
+		CountOfRanchersWorkingPlants = 93,
+
+		/// <summary>
+		/// [Sick Leave Requested] - Numeric
+		/// </summary>
+		SickLeaveRequested = 102,
 	}
 }

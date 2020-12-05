@@ -58,6 +58,9 @@ namespace Payroll.Domain
 		public string StartTime { get; set; }
 		public string EndTime { get; set; }
 
+		[Column(TypeName = "decimal(18,2)")]
+		public decimal SickLeaveRequested { get; set; }
+
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }
 	}
