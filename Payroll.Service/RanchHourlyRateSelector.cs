@@ -43,8 +43,8 @@ namespace Payroll.Service
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay) return AlmondHarvestEquipmentOperatorDay(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight) return AlmondHarvestEquipmentOperatorNight(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestGeneral) return AlmondHarvestGeneral(shiftDate, crew, employeeHourlyRate, minimumWageRate);
-			if (laborCode == (int)RanchLaborCode.GrapeHarvestCrewHelper) return GrapeHarvestCrewHelper(minimumWageRate);
-			if (laborCode == (int)RanchLaborCode.GrapeHarvestCrewHelper_BonusRate) return GrapeHarvestCrewHelper_BonusRate();
+			if (laborCode == (int)RanchLaborCode.CrewHelper) return CrewHelper(shiftDate, minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.CrewHelper_BonusRate) return CrewHelper_BonusRate(shiftDate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.GrapeHarvestSupport) return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.Girdling && shiftDate >= new DateTime(2020, 3, 21)) return GirdlingRate(minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.RecoveryTime) return RecoveryTimeRate();
@@ -129,9 +129,23 @@ namespace Payroll.Service
 			}
 		}
 
-		private decimal GrapeHarvestCrewHelper(decimal minimumWageRate) => Math.Max(12M, minimumWageRate);
+		private decimal CrewHelper(DateTime shiftDate, decimal minimumWageRate)
+		{
+			// Before 12/7/2020 this is GrapeHarvestCrewHelper
+			if(shiftDate < new DateTime(2020, 12, 7)) return Math.Max(12M, minimumWageRate);
 
-		private decimal GrapeHarvestCrewHelper_BonusRate() => 0M;
+			// On or after 12/7/2020 this is CrewHelper
+			return CrewLaborRate(shiftDate, minimumWageRate);
+		}
+
+		private decimal CrewHelper_BonusRate(DateTime shiftDate, decimal minimumWageRate)
+		{
+			// Before 12/7/2020 this is GrapeHarvestCrewHelper_BonusRate
+			if (shiftDate < new DateTime(2020, 12, 7)) return 0M;
+
+			// On or after 12/7/2020 this is CrewHelper_BonusRate
+			return CrewLaborRate(shiftDate, minimumWageRate);
+		}
 
 		private decimal GirdlingRate(decimal minimumWageRate) => Math.Max(15.50M, minimumWageRate);
 
