@@ -111,6 +111,11 @@
 		LaborCode = 39,
 
 		/// <summary>
+		/// [Packer Number] - Numeric packer number from pieces import.
+		/// </summary>
+		PackerNumber = 42,
+
+		/// <summary>
 		/// [Week End Date] - Formula date field that gives the date of the Sunday on or after [Shift Date].
 		/// </summary>
 		WeekEndDate = 44,
@@ -159,6 +164,11 @@
 		/// [Audit Lock] - Multiple Choice Text indicates that a pay line has been "audit locked" and not editable by most users.
 		/// </summary>
 		AuditLock = 64,
+
+		/// <summary>
+		/// [PackLine] - Text packline from pieces and/or swipe import.
+		/// </summary>
+		Packline = 74,
 
 		/// <summary>
 		/// [Increased Rate] - Checkbox indicates that notwithstanding non-Primas the [IncreasedRate] should be used for pieces.

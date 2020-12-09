@@ -264,9 +264,9 @@ namespace Payroll.IntegrationTest
 			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
 
 			// Repositories
-			var ranchPayrollRepo = new RanchPayrollRepo(quickBaseConnection);
+			var ranchPayrollOutRepo = new RanchPayrollOutRepo(quickBaseConnection);
 			var ranchSummariesRepo = new RanchSummariesRepo(quickBaseConnection);
-			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
+			var plantPayrollOutRepo = new PlantPayrollOutRepo(quickBaseConnection);
 			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
 
 			// Services
@@ -276,9 +276,9 @@ namespace Payroll.IntegrationTest
 			var service = new SummaryCreationService(
 				serviceLogger,
 				context,
-				ranchPayrollRepo,
+				ranchPayrollOutRepo,
 				ranchSummariesRepo,
-				plantPayrollRepo,
+				plantPayrollOutRepo,
 				plantSummariesRepo,
 				ranchSummaryService,
 				plantSummaryService);
@@ -323,9 +323,9 @@ namespace Payroll.IntegrationTest
 			var quickBaseConnection = new QuickBase.Api.QuickBaseConnection(realm, userToken, apiLogger);
 
 			// Repositories
-			var ranchPayrollRepo = new RanchPayrollRepo(quickBaseConnection);
+			var ranchPayrollOutRepo = new RanchPayrollOutRepo(quickBaseConnection);
 			var ranchSummariesRepo = new RanchSummariesRepo(quickBaseConnection);
-			var plantPayrollRepo = new PlantPayrollRepo(quickBaseConnection);
+			var plantPayrollOutRepo = new PlantPayrollOutRepo(quickBaseConnection);
 			var plantSummariesRepo = new PlantSummariesRepo(quickBaseConnection);
 
 			// Services
@@ -335,9 +335,9 @@ namespace Payroll.IntegrationTest
 			var service = new SummaryCreationService(
 				serviceLogger,
 				context,
-				ranchPayrollRepo,
+				ranchPayrollOutRepo,
 				ranchSummariesRepo,
-				plantPayrollRepo,
+				plantPayrollOutRepo,
 				plantSummariesRepo,
 				ranchSummaryService,
 				plantSummaryService);

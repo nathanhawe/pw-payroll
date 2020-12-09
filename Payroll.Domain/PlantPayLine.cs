@@ -83,6 +83,9 @@ namespace Payroll.Domain
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal SickLeaveRequested { get; set; }
 
+		public int PackerNumber { get; set; }
+		public string Packline { get; set; }
+
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }
 	}

@@ -24,9 +24,9 @@ namespace Payroll.Service
 		private readonly Data.PayrollContext _context;
 
 		// Repositories
-		private readonly IRanchPayrollRepo _ranchPayrollRepo;
+		private readonly IRanchPayrollOutRepo _ranchPayrollOutRepo;
 		private readonly IRanchSummariesRepo _ranchSummariesRepo;
-		private readonly IPlantPayrollRepo _plantPayrollRepo;
+		private readonly IPlantPayrollOutRepo _plantPayrollOutRepo;
 		private readonly IPlantSummariesRepo _plantSummariesRepo;
 
 		// Services
@@ -36,18 +36,18 @@ namespace Payroll.Service
 		public SummaryCreationService(
 			ILogger<SummaryCreationService> logger,
 			Data.PayrollContext payrollContext,
-			IRanchPayrollRepo ranchPayrollRepo,
+			IRanchPayrollOutRepo ranchPayrollOutRepo,
 			IRanchSummariesRepo ranchSummariesRepo,
-			IPlantPayrollRepo plantPayrollRepo,
+			IPlantPayrollOutRepo plantPayrollOutRepo,
 			IPlantSummariesRepo plantSummariesRepo,
 			IRanchSummaryService ranchSummaryService,
 			IPlantSummaryService plantSummaryService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_context = payrollContext ?? throw new ArgumentNullException(nameof(payrollContext));
-			_ranchPayrollRepo = ranchPayrollRepo ?? throw new ArgumentNullException(nameof(ranchPayrollRepo));
+			_ranchPayrollOutRepo = ranchPayrollOutRepo ?? throw new ArgumentNullException(nameof(ranchPayrollOutRepo));
 			_ranchSummariesRepo = ranchSummariesRepo ?? throw new ArgumentNullException(nameof(ranchSummariesRepo));
-			_plantPayrollRepo = plantPayrollRepo ?? throw new ArgumentNullException(nameof(plantPayrollRepo));
+			_plantPayrollOutRepo = plantPayrollOutRepo ?? throw new ArgumentNullException(nameof(plantPayrollOutRepo));
 			_plantSummariesRepo = plantSummariesRepo ?? throw new ArgumentNullException(nameof(plantSummariesRepo));
 			_ranchSummaryService = ranchSummaryService ?? throw new ArgumentNullException(nameof(ranchSummaryService));
 			_plantSummaryService = plantSummaryService ?? throw new ArgumentNullException(nameof(plantSummaryService));
@@ -84,8 +84,7 @@ namespace Payroll.Service
 			_logger.Log(LogLevel.Information, "Downloading plant payroll data from Quick Base for {summaryBatchId}", summaryBatch.Id);
 			SetSummaryBatchStatus(summaryBatch.Id, BatchProcessingStatus.Downloading);
 			
-			var plantPayLines = _plantPayrollRepo.GetForSummaries(summaryBatch.WeekEndDate, summaryBatch.LayoffId ?? 0).ToList();
-			plantPayLines = plantPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
+			var plantPayLines = _plantPayrollOutRepo.GetForSummaries(summaryBatch.WeekEndDate, summaryBatch.LayoffId ?? 0).ToList();
 
 			/* Create Summaries */
 			SetSummaryBatchStatus(summaryBatch.Id, BatchProcessingStatus.Summaries);
@@ -114,8 +113,7 @@ namespace Payroll.Service
 			_logger.Log(LogLevel.Information, "Downloading ranch payroll data from Quick Base for {summaryBatchId}", summaryBatch.Id);
 			SetSummaryBatchStatus(summaryBatch.Id, BatchProcessingStatus.Downloading);
 			
-			var ranchPayLines = _ranchPayrollRepo.GetForSummaries(summaryBatch.WeekEndDate, summaryBatch.LayoffId ?? 0).ToList();
-			ranchPayLines = ranchPayLines.Where(x => x.PayType != PayType.SpecialAdjustment || x.SpecialAdjustmentApproved).ToList();
+			var ranchPayLines = _ranchPayrollOutRepo.GetForSummaries(summaryBatch.WeekEndDate, summaryBatch.LayoffId ?? 0).ToList();
 
 			/* Create Summaries */
 			SetSummaryBatchStatus(summaryBatch.Id, BatchProcessingStatus.Summaries);

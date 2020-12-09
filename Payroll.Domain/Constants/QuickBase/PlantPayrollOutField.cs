@@ -161,6 +161,11 @@
 		StartTime = 94,
 
 		/// <summary>
+		/// [Total Gross] - Formula Currency
+		/// </summary>
+		TotalGross = 95,
+
+		/// <summary>
 		/// [Source RID] - Numeric
 		/// </summary>
 		SourceRid = 96,
@@ -169,6 +174,16 @@
 		/// [Sick Leave Requested] - Numeric
 		/// </summary>
 		SickLeaveRequested = 97,
+
+		/// <summary>
+		/// [Packer Number] - Numeric
+		/// </summary>
+		PackerNumber = 98,
+
+		/// <summary>
+		/// [Packline] - Text
+		/// </summary>
+		Packline = 99,
 
 	}
 }

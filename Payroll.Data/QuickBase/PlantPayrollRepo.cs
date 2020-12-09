@@ -239,6 +239,8 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollField.H2AHoursOffered: temp.H2AHoursOffered = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollField.StartTime: temp.StartTime = (!string.IsNullOrWhiteSpace(field.Value) ? ParseDate(field.Value) : (DateTime?)null); break;
 						case (int)PlantPayrollField.SickLeaveRequested: temp.SickLeaveRequested = ParseDecimal(field.Value) ?? 0; break;
+						case (int)PlantPayrollField.PackerNumber: temp.PackerNumber = ParseInt(field.Value) ?? 0; break;
+						case (int)PlantPayrollField.Packline: temp.Packline = field.Value; break;
 					}
 				}
 				PlantPayLines.Add(temp);
@@ -283,6 +285,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.H2AHoursOffered}.");
 			sb.Append($"{(int)PlantPayrollField.StartTime}.");
 			sb.Append($"{(int)PlantPayrollField.SickLeaveRequested}.");
+			sb.Append($"{(int)PlantPayrollField.PackerNumber}.");
+			sb.Append($"{(int)PlantPayrollField.Packline}.");
 
 			return sb.ToString();
 		}

@@ -18,6 +18,38 @@ namespace Payroll.Data.QuickBase
 		public RanchPayrollOutRepo(IQuickBaseConnection quickBaseConnection)
 			: base(quickBaseConnection)	{ }
 
+		/// <summary>
+		/// Queries the Ranch Payroll Out table in Quick Base for all records with the provided <c>weekEndDate</c>.  If <c>layoffId</c>
+		/// is greater than 0, records are filtered to only those with a matching [LayOffRunId].  If <c>layoffId</c> is equal
+		/// to 0, only records without a [LayOffRunId] are returned.  This method uses CLIST and SLIST values specifically for
+		/// the creation of ranch summaries.
+		/// </summary>
+		/// <param name="weekEndDate"></param>
+		/// <param name="layoffId"></param>
+		public IEnumerable<RanchPayLine> GetForSummaries(DateTime weekEndDate, int layoffId)
+		{
+			var clist = GetDoQueryClistForSummaries();
+			var slist = $"{(int)RanchPayrollOutField.EmployeeNumber}";
+
+			return Get(weekEndDate, layoffId, clist, slist);
+		}
+
+		private IEnumerable<RanchPayLine> Get(DateTime weekEndDate, int layoffId, string clist, string slist)
+		{
+			var formattedDate = weekEndDate.ToString("MM-dd-yyyy");
+
+			var query = $"{{{(int)RanchPayrollOutField.WeekEndDate}.{ComparisonOperator.IR}.'{formattedDate}'}}";
+			if (layoffId > 0)
+			{
+				query += $"AND{{{(int)RanchPayrollOutField.LayoffRunId}.{ComparisonOperator.EX}.{layoffId}}}";
+			}
+			else
+			{
+				query += $"AND{{{(int)RanchPayrollOutField.LayoffPay}.{ComparisonOperator.EX}.0}}";
+			}
+
+			return base.Get(QuickBaseTable.RanchPayrollOut, query, clist, slist, ConvertToRanchPayLines);
+		}
 
 		/// <summary>
 		/// Creates a new API_ImportFromCSV request to the Ranch Payroll Out table in Quickbase for the provided list of <c>RanchPayLine</c>s.
@@ -97,6 +129,66 @@ namespace Payroll.Data.QuickBase
 			return deleteResponse;
 		}
 
+		/// <summary>
+		/// Converts an XElement object representing an API_DoQuery response from the Ranch Payroll Out table in Quick Base into 
+		/// a collection of <c>RanchPayLine</c> objects.
+		/// </summary>
+		/// <param name="doQuery"></param>
+		/// <returns></returns>
+		private IEnumerable<RanchPayLine> ConvertToRanchPayLines(XElement doQuery)
+		{
+			var ranchPayLines = new List<RanchPayLine>();
+			var records = doQuery.Elements("record");
+
+			foreach (var record in records)
+			{
+				var recordId = ParseInt(record.Attribute("rid")?.Value) ?? 0;
+				var temp = new RanchPayLine
+				{
+					QuickBaseRecordId = recordId
+				};
+
+				var fields = record.Elements("f");
+				foreach (var field in fields)
+				{
+					var fieldId = ParseInt(field.Attribute("id")?.Value) ?? 0;
+
+					switch (fieldId)
+					{
+						case (int)RanchPayrollOutField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
+						case (int)RanchPayrollOutField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
+						case (int)RanchPayrollOutField.Crew: temp.Crew = ParseInt(field.Value) ?? 0; break;
+						case (int)RanchPayrollOutField.LastCrew: temp.LastCrew = ParseInt(field.Value) ?? 0; break;
+						case (int)RanchPayrollOutField.HoursWorked: temp.HoursWorked = ParseDecimal(field.Value) ?? 0; break;
+						case (int)RanchPayrollOutField.TotalGross: temp.TotalGross = ParseDecimal(field.Value) ?? 0; break;
+						case (int)RanchPayrollOutField.LaborCode: temp.LaborCode = ParseInt(field.Value) ?? 0; break;
+					}
+				}
+				ranchPayLines.Add(temp);
+			}
+
+			return ranchPayLines;
+		}
+
+		/// <summary>
+		/// Returns a properly formatted clist string for API_DoQuery calls to the Ranch Payroll Out table in Quick Base with
+		/// a specific emphasis on fields necessary for the creation of ranch summaries.
+		/// </summary>
+		/// <returns></returns>
+		private string GetDoQueryClistForSummaries()
+		{
+			var sb = new StringBuilder();
+
+			sb.Append($"{(int)RanchPayrollOutField.EmployeeNumber}.");
+			sb.Append($"{(int)RanchPayrollOutField.WeekEndDate}.");
+			sb.Append($"{(int)RanchPayrollOutField.Crew}.");
+			sb.Append($"{(int)RanchPayrollOutField.LastCrew}.");
+			sb.Append($"{(int)RanchPayrollOutField.HoursWorked}.");
+			sb.Append($"{(int)RanchPayrollOutField.TotalGross}.");
+			sb.Append($"{(int)RanchPayrollOutField.LaborCode}.");
+
+			return sb.ToString();
+		}
 
 		/// <summary>
 		/// Returns a properly formatted clist string for API_ImportFromCSV calls to the Ranch Payroll Out table in Quick Base.

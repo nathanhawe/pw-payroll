@@ -13,6 +13,11 @@ namespace Payroll.IntegrationTest
 			throw new NotImplementedException();
 		}
 
+		public IEnumerable<RanchPayLine> GetForSummaries(DateTime weekEndDate, int layoffId)
+		{
+			throw new NotImplementedException();
+		}
+
 		public XElement Save(IEnumerable<RanchPayLine> ranchPayLines)
 		{
 			throw new NotImplementedException();

@@ -27,5 +27,10 @@ namespace Payroll.IntegrationTest
 			Output = plantPayLines.ToList();
 			return null;
 		}
+
+		public IEnumerable<PlantPayLine> GetForSummaries(DateTime weekEndDate, int layoffId)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

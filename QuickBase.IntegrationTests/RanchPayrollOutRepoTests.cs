@@ -35,6 +35,13 @@ namespace QuickBase.IntegrationTests
 		}
 
 		[TestMethod]
+		public void DoQuery_ForSummaries()
+		{
+			var temp = _repo.GetForSummaries(new DateTime(2020, 11, 29), 0);
+			Print(temp);
+		}
+
+		[TestMethod]
 		[Ignore]
 		public void ImportFromCSV_NoLayoff()
 		{
@@ -121,6 +128,25 @@ namespace QuickBase.IntegrationTests
 
 			var response = _repo.Delete(weekEndDate, layoffId);
 			Console.WriteLine(response);
+		}
+
+		private void Print(IEnumerable<RanchPayLine> lines)
+		{
+			Console.WriteLine($"There are '{lines.Count()}' Ranch Pay Lines:");
+			foreach (var line in lines)
+			{
+				Print(line);
+			}
+		}
+
+		private void Print(RanchPayLine line)
+		{
+			Console.WriteLine($"Record #{line.QuickBaseRecordId}");
+			var properties = typeof(RanchPayLine).GetProperties();
+			foreach (var property in properties)
+			{
+				Console.Write($"     {property.Name}: '{property.GetValue(line)}'");
+			}
 		}
 
 	}

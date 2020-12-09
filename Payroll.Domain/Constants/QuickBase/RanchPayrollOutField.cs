@@ -12,6 +12,11 @@
 		EmployeeNumber = 6,
 
 		/// <summary>
+		/// [Last Crew] - Numeric (lookup)
+		/// </summary>
+		LastCrew = 14,
+
+		/// <summary>
 		/// [Related Block] - Numeric
 		/// </summary>
 		RelatedBlock = 27,
@@ -120,6 +125,11 @@
 		/// [Start Time] - Time of Day
 		/// </summary>
 		StartTime = 86,
+
+		/// <summary>
+		/// [Total Gross] - Formula Currency
+		/// </summary>
+		TotalGross = 87,
 
 		/// <summary>
 		/// [Source RID] - Numeric

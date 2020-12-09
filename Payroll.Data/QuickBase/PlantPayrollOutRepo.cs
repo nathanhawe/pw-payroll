@@ -17,6 +17,23 @@ namespace Payroll.Data.QuickBase
 		public PlantPayrollOutRepo(IQuickBaseConnection quickBaseConnection)
 			: base(quickBaseConnection)	{ }
 
+
+		/// <summary>
+		/// Queries the Plant Payroll Out table in Quick Base for all records with the provided <c>weekEndDate</c>.  If <c>layoffId</c>
+		/// is greater than 0, records are filtered to only those with a matching [LayOffRunId].  If <c>layoffId</c> is equal
+		/// to 0, only records without a [LayOffRunId] are returned.  This method uses CLIST and SLIST values specifically for
+		/// the creation of plant summaries.
+		/// </summary>
+		/// <param name="weekEndDate"></param>
+		/// <param name="layoffId"></param>
+		public IEnumerable<PlantPayLine> GetForSummaries(DateTime weekEndDate, int layoffId)
+		{
+			var clist = GetDoQueryClistForSummaries();
+			var slist = $"{(int)PlantPayrollOutField.EmployeeNumber}";
+
+			return Get(weekEndDate, layoffId, clist, slist);
+		}
+
 		/// <summary>
 		/// Creates a new API_ImportFromCSV request to the Plant Payroll Out table in Quickbase for the provided list of <c>PlantPayLine</c>s.
 		/// </summary>
@@ -60,6 +77,8 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.StartTime:MM-dd-yyyy H:mm},");
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
 				sb.Append($"{line.SickLeaveRequested},");
+				sb.Append($"{(line.PackerNumber > 0 ? line.PackerNumber.ToString() : "")},");
+				sb.Append($"\"{line.Packline}\",");
 
 				sb.Append("\n");
 			}
@@ -102,6 +121,80 @@ namespace Payroll.Data.QuickBase
 			return deleteResponse;
 		}
 
+
+		private IEnumerable<PlantPayLine> Get(DateTime weekEndDate, int layoffId, string clist, string slist)
+		{
+			var formattedDate = weekEndDate.ToString("MM-dd-yyyy");
+
+			var query = $"{{{(int)PlantPayrollOutField.WeekEndDate}.{ComparisonOperator.IR}.'{formattedDate}'}}";
+			if (layoffId > 0)
+			{
+				query += $"AND{{{(int)PlantPayrollOutField.LayoffRunId}.{ComparisonOperator.EX}.{layoffId}}}";
+			}
+			else
+			{
+				query += $"AND{{{(int)PlantPayrollOutField.LayoffPay}.{ComparisonOperator.EX}.0}}";
+			}
+
+			return base.Get(QuickBaseTable.PlantPayrollOut, query, clist, slist, ConvertToPlantPayLines);
+		}
+
+		/// <summary>
+		/// Converts an XElement object representing an API_DoQuery response from the Plant Payroll Out table in Quick Base into 
+		/// a collection of <c>PlantPayLine</c> objects.
+		/// </summary>
+		/// <param name="doQuery"></param>
+		/// <returns></returns>
+		private IEnumerable<PlantPayLine> ConvertToPlantPayLines(XElement doQuery)
+		{
+			var PlantPayLines = new List<PlantPayLine>();
+			var records = doQuery.Elements("record");
+
+			foreach (var record in records)
+			{
+				var recordId = ParseInt(record.Attribute("rid")?.Value) ?? 0;
+				var temp = new PlantPayLine
+				{
+					QuickBaseRecordId = recordId
+				};
+
+				var fields = record.Elements("f");
+				foreach (var field in fields)
+				{
+					var fieldId = ParseInt(field.Attribute("id")?.Value) ?? 0;
+
+					switch (fieldId)
+					{
+						case (int)PlantPayrollOutField.EmployeeNumber: temp.EmployeeId = field.Value.ToUpper(); break;
+						case (int)PlantPayrollOutField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
+						case (int)PlantPayrollOutField.LaborCode: temp.LaborCode = ParseInt(field.Value) ?? 0; break;
+						case (int)PlantPayrollOutField.HoursWorked: temp.HoursWorked = ParseDecimal(field.Value) ?? 0; break;
+						case (int)PlantPayrollOutField.TotalGross: temp.TotalGross = ParseDecimal(field.Value) ?? 0; break;
+					}
+				}
+				PlantPayLines.Add(temp);
+			}
+
+			return PlantPayLines;
+		}
+
+		/// <summary>
+		/// Returns a properly formatted clist string for API_DoQuery calls to the Plant Payroll Out table in Quick Base with a
+		/// specific emphasis on fields necessary for the creation of plant summaries.
+		/// </summary>
+		/// <returns></returns>
+		private string GetDoQueryClistForSummaries()
+		{
+			var sb = new StringBuilder();
+			sb.Append($"{(int)PlantPayrollOutField.EmployeeNumber}.");
+			sb.Append($"{(int)PlantPayrollOutField.WeekEndDate}.");
+			sb.Append($"{(int)PlantPayrollOutField.LaborCode}.");
+			sb.Append($"{(int)PlantPayrollOutField.HoursWorked}.");
+			sb.Append($"{(int)PlantPayrollOutField.TotalGross}.");
+
+			return sb.ToString();
+		}
+
 		/// <summary>
 		/// Returns a properly formatted clist string for API_ImportFromCSV calls to the Plant Payroll Out table in Quick Base.
 		/// A clist is required to properly map values to fields in Quick Base.
@@ -140,6 +233,8 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollOutField.StartTime}.");
 			sb.Append($"{(int)PlantPayrollOutField.SourceRid}.");
 			sb.Append($"{(int)PlantPayrollOutField.SickLeaveRequested}.");
+			sb.Append($"{(int)PlantPayrollOutField.PackerNumber}.");
+			sb.Append($"{(int)PlantPayrollOutField.Packline}.");
 
 			return sb.ToString();
 		}

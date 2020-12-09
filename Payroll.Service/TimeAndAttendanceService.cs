@@ -336,13 +336,11 @@ namespace Payroll.Service
 			// Plant Payroll Records
 			var toPlantPayroll = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toPlantPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var ppResponse = _plantPayrollRepo.Save(toPlantPayroll);
 			var ppOutResponse = _plantPayrollOutRepo.Save(toPlantPayroll);
 
 			// Plant Adjustment Records
 			var toPlantAdjustments = _context.PlantAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toPlantAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var ppaResponse = _plantPayrollAdjustmentRepo.Save(toPlantAdjustments);
 			var ppaOutResponse = _plantPayrollAdjustmentOutRepo.Save(toPlantAdjustments);
 
 			// PSL Updates
@@ -872,8 +870,6 @@ namespace Payroll.Service
 			}
 			// Write to both Ranch Payroll and Ranch Payroll Out until output tables are 
 			// fully adopted.
-			var cbrpResponse = _ranchPayrollRepo.SaveWithHoursWorked(cbLinesToRanchPayroll);
-			var rpResponse = _ranchPayrollRepo.Save(toRanchPayroll);
 			var cbrpOutResponse = _ranchPayrollOutRepo.Save(cbLinesToRanchPayroll);
 			var rpOutResponse = _ranchPayrollOutRepo.Save(toRanchPayroll);
 
@@ -882,7 +878,6 @@ namespace Payroll.Service
 			if (batch.LayoffId != null) toRanchAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			// Write to both Ranch Payroll Adjustment and Ranch Payroll Adjustment Out until output
 			// tables are fully adopted.
-			var rpaResponse = _ranchPayrollAdjustmentRepo.Save(toRanchAdjustments);
 			var rpaOutResponse = _ranchPayrollAdjustmentOutRepo.Save(toRanchAdjustments);
 
 			// PSL Updates
@@ -1593,6 +1588,8 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.H2AHoursOffered), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.StartTime), typeof(DateTime)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.SickLeaveRequested), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.PackerNumber), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.Packline), typeof(string)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1639,6 +1636,8 @@ namespace Payroll.Service
 				row[nameof(PlantPayLine.H2AHoursOffered)] = payLine.H2AHoursOffered;
 				row[nameof(PlantPayLine.StartTime)] = payLine.StartTime ?? (object)DBNull.Value;
 				row[nameof(PlantPayLine.SickLeaveRequested)] = payLine.SickLeaveRequested;
+				row[nameof(PlantPayLine.PackerNumber)] = payLine.PackerNumber;
+				row[nameof(PlantPayLine.Packline)] = payLine.Packline;
 				table.Rows.Add(row);
 			}
 
