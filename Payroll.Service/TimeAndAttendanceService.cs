@@ -868,16 +868,12 @@ namespace Payroll.Service
 				cbLinesToRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 				toRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			}
-			// Write to both Ranch Payroll and Ranch Payroll Out until output tables are 
-			// fully adopted.
 			var cbrpOutResponse = _ranchPayrollOutRepo.Save(cbLinesToRanchPayroll);
 			var rpOutResponse = _ranchPayrollOutRepo.Save(toRanchPayroll);
 
 			// Ranch Adjustment Records
 			var toRanchAdjustments = _context.RanchAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toRanchAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			// Write to both Ranch Payroll Adjustment and Ranch Payroll Adjustment Out until output
-			// tables are fully adopted.
 			var rpaOutResponse = _ranchPayrollAdjustmentOutRepo.Save(toRanchAdjustments);
 
 			// PSL Updates
