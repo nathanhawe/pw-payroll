@@ -61,6 +61,18 @@ namespace Payroll
 			services.AddScoped<IAuthorizationHandler, SubjectMustMatchUserHandler>();
 			services.AddScoped<IAuthorizationHandler, AccessLevelHandler>();
 
+			// Email and communication services
+			services.AddScoped<Payroll.Infrastructure.Email.IEmailService>(x =>
+				ActivatorUtilities.CreateInstance<Payroll.Infrastructure.Email.SmtpEmailService>(
+					x,
+					Configuration["Email:ServerAddress"],
+					Configuration["Email:FromMailboxName"],
+					Configuration["Email:FromMailboxAddress"],
+					(int.TryParse(Configuration["Email:Port"], out int port) ? port : 25))
+				);
+			services.AddSingleton<Infrastructure.ErrorReporting.IErrorReportingService, 
+				Infrastructure.ErrorReporting.EmailErrorReportingService>();
+
 			// Define authorization policies
 			services.AddAuthorization(authorizationOptions =>
 			{

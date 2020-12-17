@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Payroll.Infrastructure.ErrorReporting;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,18 @@ namespace Payroll.Infrastructure.Middleware
 		private readonly RequestDelegate _next;
 		private readonly ILogger<ApiExceptionMiddleware> _logger;
 		private readonly ApiExceptionsOptions _options;
+		private readonly IErrorReportingService _errorReportingService;
 
-		public ApiExceptionMiddleware(ApiExceptionsOptions options, RequestDelegate next, ILogger<ApiExceptionMiddleware> logger)
+		public ApiExceptionMiddleware(
+			ApiExceptionsOptions options, 
+			RequestDelegate next, 
+			ILogger<ApiExceptionMiddleware> logger,
+			Payroll.Infrastructure.ErrorReporting.IErrorReportingService errorReportingService)
 		{
 			_next = next;
 			_logger = logger;
 			_options = options;
+			_errorReportingService = errorReportingService;
 		}
 
 		public async Task Invoke(HttpContext context)
@@ -50,8 +57,13 @@ namespace Payroll.Infrastructure.Middleware
 
 			var innerMessage = GetInnermostExceptionMessage(ex);
 
+			// Log the exception
 			_logger.Log(LogLevel.Error, ex, "Exception Logged - " + innerMessage + " -- {ErrorId}.", error.Id);
 
+			// Email the exception
+			_errorReportingService.ReportError($"API {error.Id}", innerMessage);
+
+			// Return the API response
 			var result = JsonConvert.SerializeObject(error);
 			context.Response.ContentType = "application/json";
 			context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
