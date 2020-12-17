@@ -1367,6 +1367,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.EndTime), typeof(string)));
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.StartTime), typeof(string)));
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.SickLeaveRequested), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.IsLayoffTagFirstOfTwoInWeek), typeof(bool)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1404,6 +1405,7 @@ namespace Payroll.Service
 				row[nameof(RanchPayLine.EndTime)] = payLine.EndTime;
 				row[nameof(RanchPayLine.StartTime)] = payLine.StartTime;
 				row[nameof(RanchPayLine.SickLeaveRequested)] = payLine.SickLeaveRequested;
+				row[nameof(RanchPayLine.IsLayoffTagFirstOfTwoInWeek)] = payLine.IsLayoffTagFirstOfTwoInWeek;
 				table.Rows.Add(row);
 			}
 

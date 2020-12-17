@@ -140,5 +140,10 @@
 		/// [Sick Leave Requested] - Numeric
 		/// </summary>
 		SickLeaveRequested = 94,
+		
+		/// <summary>
+		/// [Layoff Tag First of Two in Week] - Checkbox
+		/// </summary>
+		LayoffTagFirstOfTwoInWeek = 96,
 	}
 }

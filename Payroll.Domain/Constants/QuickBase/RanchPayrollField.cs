@@ -61,6 +61,12 @@
 		FiveEight = 131,
 		HourlyRateOverride = 145,
 		LayoffPay = 180,
+
+		/// <summary>
+		/// [Lay Off Tag First of Two in Week] - Checkbox
+		/// </summary>
+		LayoffTagFirstOfTwoInWeek = 211,
+
 		LayoffRunId = 213,
 
 		/// <summary>

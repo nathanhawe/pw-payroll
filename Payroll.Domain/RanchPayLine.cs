@@ -61,6 +61,8 @@ namespace Payroll.Domain
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal SickLeaveRequested { get; set; }
 
+		public bool IsLayoffTagFirstOfTwoInWeek { get; set; }
+
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }
 	}
