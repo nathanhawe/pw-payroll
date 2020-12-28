@@ -22,6 +22,8 @@ namespace Payroll.Domain.Constants
 		public const string SickLeave = "7.2-Sick Leave";
 		public const string Bereavement = "7.3-Bereavement";
 		public const string Covid19 = "7.4-C19";
+		public const string Covid19WageContinuation = "7.5-C19 Wage Continuation";
+		public const string Covid19W = "7.6-C19 W";
 		public const string CBDaily = "8.1-CB Daily Rate";
 		public const string CBPerWorker = "8.2-CB Per Worker Rate";
 		public const string CBHourlyTrees = "8.3-CB Hourly Trees";

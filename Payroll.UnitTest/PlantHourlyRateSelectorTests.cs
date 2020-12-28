@@ -266,6 +266,58 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void PayTypeCovid19WageContinutation_ReturnsGreaterOfPayLineHourlyRateAndEmployeeRate()
+		{
+			// Employee Hourly Rate is greatest
+			Assert.IsTrue(14M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: 12.45M, employeeHourlyRate: 14M, minimumWage: 10M));
+
+			// Pay Line Hourly Rate is greatest
+			Assert.IsTrue(14.75M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 10M));
+
+			// Minimum Wage is Greatest
+			Assert.IsTrue(15.00M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M));
+
+			// H2A supercedes the comparison
+			Assert.IsTrue(_currentH2ARate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: (_currentH2ARate + 1), employeeHourlyRate: (_currentH2ARate + 2), minimumWage: (_currentH2ARate + 3), isH2A: true, shiftDate: DateTime.Now));
+			Assert.IsTrue(_currentH2ARate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: (_currentH2ARate + 3), employeeHourlyRate: (_currentH2ARate + 1), minimumWage: (_currentH2ARate + 2), isH2A: true, shiftDate: DateTime.Now));
+			Assert.IsTrue(_currentH2ARate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: (_currentH2ARate + 2), employeeHourlyRate: (_currentH2ARate + 3), minimumWage: (_currentH2ARate + 1), isH2A: true, shiftDate: DateTime.Now));
+
+			// Hourly rate Override supercedes
+			Assert.IsTrue(5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M, hourlyRateOverride: 5M));
+			Assert.IsTrue(5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M, hourlyRateOverride: 5M));
+			Assert.IsTrue(5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M, hourlyRateOverride: 5M));
+			Assert.IsTrue((_currentH2ARate - 2) == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: (_currentH2ARate + 1), employeeHourlyRate: (_currentH2ARate + 2), minimumWage: (_currentH2ARate + 3), isH2A: true, hourlyRateOverride: (_currentH2ARate - 2), shiftDate: DateTime.Now));
+			Assert.IsTrue((_currentH2ARate - 2) == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: (_currentH2ARate + 3), employeeHourlyRate: (_currentH2ARate + 1), minimumWage: (_currentH2ARate + 2), isH2A: true, hourlyRateOverride: (_currentH2ARate - 2), shiftDate: DateTime.Now));
+			Assert.IsTrue((_currentH2ARate - 2) == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: (_currentH2ARate + 2), employeeHourlyRate: (_currentH2ARate + 3), minimumWage: (_currentH2ARate + 1), isH2A: true, hourlyRateOverride: (_currentH2ARate - 2), shiftDate: DateTime.Now));
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19W_ReturnsGreaterOfPayLineHourlyRateAndEmployeeRate()
+		{
+			// Employee Hourly Rate is greatest
+			Assert.IsTrue(14M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: 12.45M, employeeHourlyRate: 14M, minimumWage: 10M));
+
+			// Pay Line Hourly Rate is greatest
+			Assert.IsTrue(14.75M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 10M));
+
+			// Minimum Wage is Greatest
+			Assert.IsTrue(15.00M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M));
+
+			// H2A supercedes the comparison
+			Assert.IsTrue(_currentH2ARate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: (_currentH2ARate + 1), employeeHourlyRate: (_currentH2ARate + 2), minimumWage: (_currentH2ARate + 3), isH2A: true, shiftDate: DateTime.Now));
+			Assert.IsTrue(_currentH2ARate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: (_currentH2ARate + 3), employeeHourlyRate: (_currentH2ARate + 1), minimumWage: (_currentH2ARate + 2), isH2A: true, shiftDate: DateTime.Now));
+			Assert.IsTrue(_currentH2ARate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: (_currentH2ARate + 2), employeeHourlyRate: (_currentH2ARate + 3), minimumWage: (_currentH2ARate + 1), isH2A: true, shiftDate: DateTime.Now));
+
+			// Hourly rate Override supercedes
+			Assert.IsTrue(5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M, hourlyRateOverride: 5M));
+			Assert.IsTrue(5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M, hourlyRateOverride: 5M));
+			Assert.IsTrue(5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: 14.75M, employeeHourlyRate: 14M, minimumWage: 15M, hourlyRateOverride: 5M));
+			Assert.IsTrue((_currentH2ARate - 2) == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: (_currentH2ARate + 1), employeeHourlyRate: (_currentH2ARate + 2), minimumWage: (_currentH2ARate + 3), isH2A: true, hourlyRateOverride: (_currentH2ARate - 2), shiftDate: DateTime.Now));
+			Assert.IsTrue((_currentH2ARate - 2) == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: (_currentH2ARate + 3), employeeHourlyRate: (_currentH2ARate + 1), minimumWage: (_currentH2ARate + 2), isH2A: true, hourlyRateOverride: (_currentH2ARate - 2), shiftDate: DateTime.Now));
+			Assert.IsTrue((_currentH2ARate - 2) == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: (_currentH2ARate + 2), employeeHourlyRate: (_currentH2ARate + 3), minimumWage: (_currentH2ARate + 1), isH2A: true, hourlyRateOverride: (_currentH2ARate - 2), shiftDate: DateTime.Now));
+		}
+
+		[TestMethod]
 		public void PayTypeCrewBossDaily_ReturnsZero()
 		{
 			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.CBDaily));

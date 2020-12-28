@@ -220,6 +220,46 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void PayTypeCovid19WageContinuation_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		{
+			// Pay line is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2));
+
+			// Override still applies
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M));
+
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19W_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		{
+			// Pay line is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2));
+
+			// Override still applies
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M));
+
+		}
+
+		[TestMethod]
 		public void PayTypeCrewBossDaily_ReturnsZero()
 		{
 			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.CBDaily));

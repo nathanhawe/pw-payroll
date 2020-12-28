@@ -44,7 +44,9 @@ namespace Payroll.Service
 				&& payType != PayType.Vacation
 				&& payType != PayType.SpecialAdjustment
 				&& payType != PayType.SickLeave
-				&& payType != PayType.Covid19)
+				&& payType != PayType.Covid19
+				&& payType != PayType.Covid19WageContinuation
+				&& payType != PayType.Covid19W)
 			{
 				return 0;
 			}
@@ -66,7 +68,10 @@ namespace Payroll.Service
 				}
 			}
 			
-			if(payType == PayType.Covid19)
+			if(
+				payType == PayType.Covid19 
+				|| payType == PayType.Covid19WageContinuation 
+				|| payType == PayType.Covid19W)
 			{
 				if(isH2A)
 				{

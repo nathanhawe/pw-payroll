@@ -185,7 +185,9 @@ namespace Payroll.Service
 					&&
 					(
 						x.PayType == PayType.SickLeave
-						|| x.PayType == PayType.Covid19)
+						|| x.PayType == PayType.Covid19
+						|| x.PayType == PayType.Covid19WageContinuation
+						|| x.PayType == PayType.Covid19W)
 					)
 				.ToList();
 			paidSickLeaves.ForEach(x => x.HourlyRate = _paidSickLeaveService.GetNinetyDayRate(batch.Id, Company.Plants, x.EmployeeId, x.ShiftDate));
@@ -436,7 +438,9 @@ namespace Payroll.Service
 					|| x.PayType == PayType.Holiday
 					|| x.PayType == PayType.SickLeave
 					|| x.PayType == PayType.Bereavement
-					|| x.PayType == PayType.Covid19))
+					|| x.PayType == PayType.Covid19
+					|| x.PayType == PayType.Covid19WageContinuation
+					|| x.PayType == PayType.Covid19W))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
 			_context.UpdateRange(hourlyLines);
@@ -658,6 +662,8 @@ namespace Payroll.Service
 					&& (
 						x.PayType == PayType.SickLeave
 						|| x.PayType == PayType.Covid19
+						|| x.PayType == PayType.Covid19WageContinuation
+						|| x.PayType == PayType.Covid19W
 						)
 					)
 				.ToList();
@@ -968,7 +974,10 @@ namespace Payroll.Service
 					|| x.PayType == PayType.Vacation
 					|| x.PayType == PayType.Holiday
 					|| x.PayType == PayType.SickLeave
-					|| x.PayType == PayType.Bereavement))
+					|| x.PayType == PayType.Bereavement
+					|| x.PayType == PayType.Covid19
+					|| x.PayType == PayType.Covid19WageContinuation
+					|| x.PayType == PayType.Covid19W))
 				.ToList();
 			_grossFromHoursCalculator.CalculateGrossFromHours(hourlyLines);
 			_context.RanchAdjustmentLines.UpdateRange(hourlyLines);

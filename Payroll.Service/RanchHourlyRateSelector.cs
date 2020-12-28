@@ -39,7 +39,13 @@ namespace Payroll.Service
 				
 			if (hourlyRateOverride > 0) return hourlyRateOverride;
 			if (payType == PayType.SickLeave) return payLineHourlyRate;
-			if (payType == PayType.Covid19) return Math.Max(payLineHourlyRate, CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate));
+			if (
+				payType == PayType.Covid19
+				|| payType == PayType.Covid19WageContinuation
+				|| payType == PayType.Covid19W)
+			{
+				return Math.Max(payLineHourlyRate, CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate));
+			}
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay) return AlmondHarvestEquipmentOperatorDay(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight) return AlmondHarvestEquipmentOperatorNight(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.AlmondHarvestGeneral) return AlmondHarvestGeneral(shiftDate, crew, employeeHourlyRate, minimumWageRate);
@@ -75,7 +81,9 @@ namespace Payroll.Service
 				|| payType == PayType.ReportingPay
 				|| payType == PayType.SpecialAdjustment
 				|| payType == PayType.SickLeave
-				|| payType == PayType.Covid19)
+				|| payType == PayType.Covid19
+				|| payType == PayType.Covid19WageContinuation
+				|| payType == PayType.Covid19W)
 			{
 				return true;
 			}
