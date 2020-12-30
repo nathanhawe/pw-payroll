@@ -21,7 +21,7 @@ namespace Payroll.Infrastructure.Authorization
 		{
 			var subject = context.User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 
-			var accessLevel = _applicationUserProfileService.GetApplicationUserProfile(subject)?.AccessLevel;
+			var accessLevel = _applicationUserProfileService.GetApplicationUserProfileFromSubject(subject)?.AccessLevel;
 
 			foreach(string permittedAccessLevel in requirement.PermittedAccessLevels)
 			{

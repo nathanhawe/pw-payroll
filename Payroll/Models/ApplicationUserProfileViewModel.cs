@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Payroll.Domain
+namespace Payroll.Models
 {
-	public class ApplicationUserProfile
+	public class ApplicationUserProfileViewModel
 	{
-		[Key]
-		public Guid Id { get; set; }
-
 		[Required]
-		[MaxLength(50)]
-		public string Subject { get; set; }
-
-		[Required]
-		[MaxLength(250)]
 		public string AccessLevel { get; set; }
 
+		[Required]
 		[MaxLength(250)]
 		public string Name { get; set; }
-
+		
+		[Required]
 		[MaxLength(250)]
+		[EmailAddress]
 		public string Email { get; set; }
 	}
 }
