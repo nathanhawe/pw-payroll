@@ -159,6 +159,7 @@ namespace Payroll
 			services.AddScoped<Service.Interface.ISummaryCreationService, Service.SummaryCreationService>();
 			services.AddScoped<Service.Interface.IAuditLockBatchService, Service.AuditLockBatchService>();
 			services.AddScoped<Service.Interface.IAuditLockService, Service.AuditLockService>();
+			services.AddTransient<Service.Interface.IRestartRecoveryService, Service.RestartRecoveryService>();
 
 
 			// Add application repositories
@@ -182,7 +183,7 @@ namespace Payroll
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Payroll.Service.Interface.IRestartRecoveryService restartRecoveryService)
 		{
 
 			app.UseApiExceptionHandler();
@@ -201,6 +202,10 @@ namespace Payroll
 			{
 				endpoints.MapControllers();
 			});
+
+			// Invoke the restart recovery service to handle incomplete batches
+			restartRecoveryService.HandleRestart();
+
 		}
 	}
 }
