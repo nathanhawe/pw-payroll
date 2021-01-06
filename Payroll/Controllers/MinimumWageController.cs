@@ -6,6 +6,8 @@ using Payroll.Models;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace Payroll.Controllers
 {
@@ -16,13 +18,16 @@ namespace Payroll.Controllers
 	{
 		private readonly ILogger<MinimumWageController> _logger;
 		private readonly IMinimumWageService _minimumWageService;
+		private readonly IUserActionService _userActionService;
 
 		public MinimumWageController(
 			ILogger<MinimumWageController> logger,
-			IMinimumWageService minimumWageService)
+			IMinimumWageService minimumWageService,
+			IUserActionService userActionService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_minimumWageService = minimumWageService ?? throw new ArgumentNullException(nameof(minimumWageService));
+			_userActionService = userActionService ?? throw new ArgumentNullException(nameof(userActionService));
 		}
 
 		[HttpGet]
@@ -78,6 +83,7 @@ namespace Payroll.Controllers
 				Wage = viewModel.Wage
 			};
 			_minimumWageService.AddWage(minimumWage);
+			LogUserAction("POST", minimumWage);
 
 			return Created(
 				$"api/minimumwage/{minimumWage.Id}",
@@ -104,6 +110,7 @@ namespace Payroll.Controllers
 			try
 			{
 				var updatedWage = _minimumWageService.UpdateWage(id, minimumWage);
+				LogUserAction("PUT", updatedWage);
 				return Ok(
 					new ApiResponse<Domain.MinimumWage>
 					{
@@ -131,7 +138,23 @@ namespace Payroll.Controllers
 			int id)
 		{
 			_minimumWageService.DeleteWage(id);
+			LogUserAction("DELETE", id);
 			return NoContent();
+		}
+
+		[NonAction]
+		private void LogUserAction(string action, Domain.MinimumWage minimumWage)
+		{
+			var subjectFromToken = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+			var message = JsonSerializer.Serialize(minimumWage);
+			_userActionService.AddActionForSubject(subjectFromToken, $"Minimum Wage ({action}) '{message}'");
+		}
+
+		[NonAction]
+		private void LogUserAction(string action, int id)
+		{
+			var subjectFromToken = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+			_userActionService.AddActionForSubject(subjectFromToken, $"Minimum Wage ({action}) ID:'{id}'");
 		}
 	}
 }

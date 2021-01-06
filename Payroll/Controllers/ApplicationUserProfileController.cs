@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +19,16 @@ namespace Payroll.Controllers
 	{
 		private readonly ILogger<ApplicationUserProfileController> _logger;
 		private readonly IApplicationUserProfileService _applicationUserProfileService;
+		private readonly IUserActionService _userActionService;
 
 		public ApplicationUserProfileController(
 			ILogger<ApplicationUserProfileController> logger,
-			IApplicationUserProfileService applicationUserProfileService)
+			IApplicationUserProfileService applicationUserProfileService,
+			IUserActionService userActionService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_applicationUserProfileService = applicationUserProfileService ?? throw new ArgumentNullException(nameof(applicationUserProfileService));
+			_userActionService = userActionService ?? throw new ArgumentNullException(nameof(userActionService));
 		}
 
 		[HttpGet]
@@ -89,6 +93,7 @@ namespace Payroll.Controllers
 				if(updatedUserProfile.Subject != subjectFromToken || userProfile.AccessLevel == Payroll.Domain.Constants.AccessLevel.Administrator.ToString())
 				{
 					updatedUserProfile = _applicationUserProfileService.UpdateApplicationUserProfile(id, userProfile);
+					LogUserAction("PUT", updatedUserProfile);
 					return Ok(
 						new ApiResponse<Domain.ApplicationUserProfile>
 						{
@@ -143,6 +148,14 @@ namespace Payroll.Controllers
 				{ 
 					Data = applicationUserProfileFromRepo
 				});
+		}
+
+		[NonAction]
+		private void LogUserAction(string action, Domain.ApplicationUserProfile applicationUser)
+		{
+			var subjectFromToken = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+			var message = JsonSerializer.Serialize(applicationUser);
+			_userActionService.AddActionForSubject(subjectFromToken, $"Application User Profile ({action}) '{message}'");
 		}
 	}
 }

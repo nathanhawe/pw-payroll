@@ -6,6 +6,8 @@ using Payroll.Models;
 using Payroll.Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace Payroll.Controllers
 {
@@ -16,13 +18,16 @@ namespace Payroll.Controllers
 	{
 		private readonly ILogger<CrewLaborWageController> _logger;
 		private readonly ICrewLaborWageService _crewLaborWageService;
+		private readonly IUserActionService _userActionService;
 
 		public CrewLaborWageController(
 			ILogger<CrewLaborWageController> logger,
-			ICrewLaborWageService crewLaborWageService)
+			ICrewLaborWageService crewLaborWageService,
+			IUserActionService userActionService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_crewLaborWageService = crewLaborWageService ?? throw new ArgumentNullException(nameof(crewLaborWageService));
+			_userActionService = userActionService ?? throw new ArgumentNullException(nameof(userActionService));
 		}
 
 		[HttpGet]
@@ -76,6 +81,7 @@ namespace Payroll.Controllers
 				Wage = viewModel.Wage
 			};
 			_crewLaborWageService.AddWage(crewLaborWage);
+			LogUserAction("POST", crewLaborWage);
 
 			return Created(
 				$"api/crewlaborwage/{crewLaborWage.Id}",
@@ -103,6 +109,7 @@ namespace Payroll.Controllers
 			try
 			{
 				var updatedWage = _crewLaborWageService.UpdateWage(id, crewLaborWage);
+				LogUserAction("PUT", updatedWage);
 				return Ok(
 					new ApiResponse<Domain.CrewLaborWage>
 					{
@@ -130,8 +137,23 @@ namespace Payroll.Controllers
 			int id)
 		{
 			_crewLaborWageService.DeleteWage(id);
+			LogUserAction("DELETE", id);
 			return NoContent();
 		}
 
+		[NonAction]
+		private void LogUserAction(string action, Domain.CrewLaborWage crewLaborWage)
+		{
+			var subjectFromToken = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+			var message = JsonSerializer.Serialize(crewLaborWage);
+			_userActionService.AddActionForSubject(subjectFromToken, $"Crew Labor Wage ({action}) '{message}'");
+		}
+
+		[NonAction]
+		private void LogUserAction(string action, int id)
+		{
+			var subjectFromToken = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+			_userActionService.AddActionForSubject(subjectFromToken, $"Crew Labor Wage ({action}) ID:'{id}'");
+		}
 	}
 }

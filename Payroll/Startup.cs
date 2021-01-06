@@ -159,6 +159,7 @@ namespace Payroll
 			services.AddScoped<Service.Interface.ISummaryCreationService, Service.SummaryCreationService>();
 			services.AddScoped<Service.Interface.IAuditLockBatchService, Service.AuditLockBatchService>();
 			services.AddScoped<Service.Interface.IAuditLockService, Service.AuditLockService>();
+			services.AddScoped<Service.Interface.IUserActionService, Service.UserActionService>();
 			services.AddTransient<Service.Interface.IRestartRecoveryService, Service.RestartRecoveryService>();
 
 
