@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -34,11 +35,19 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
-		/// Creates a new API_ImportFromCSV request to the Ranch Summaries table in Quickbase to create new records for the provided list of <c>RanchSummary</c>s.
+		/// Creates new API_ImportFromCSV requests to the Ranch Summaries table in Quickbase to create new records for the provided list of <c>RanchSummary</c>s.
 		/// </summary>
 		/// <param name="ranchSummaries"></param>
 		/// <returns></returns>
-		public XElement Save(IEnumerable<RanchSummary> ranchSummaries)
+		public void Save(IEnumerable<RanchSummary> ranchSummaries)
+		{
+			for (int i = 0; i <= ranchSummaries.Count(); i += PostBatchSize)
+			{
+				ImportFromCsv(ranchSummaries.Skip(i).Take(PostBatchSize));
+			}
+		}
+
+		private XElement ImportFromCsv(IEnumerable<RanchSummary> ranchSummaries)
 		{
 			var clist = GetImportFromCsvClist();
 
@@ -56,7 +65,7 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{line.CovidHours},");
 				sb.Append($"{line.BatchId},");
 				sb.Append($"{(line.LayoffId > 0 ? 1 : 0)},");
-				if(line.LayoffId > 0)
+				if (line.LayoffId > 0)
 				{
 					sb.Append($"{DateTime.Now:MM-dd-yyyy}");
 				}

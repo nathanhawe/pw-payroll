@@ -57,8 +57,8 @@ namespace QuickBase.IntegrationTests
 				new PlantSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), EmployeeId = "48,67C", TotalHours = 170M, TotalGross = 1001.06M }
 			};
 
-			var response = _repo.Save(PlantSummaries);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(PlantSummaries);
 		}
 
 		private void Print(IEnumerable<PlantSummary> lines)

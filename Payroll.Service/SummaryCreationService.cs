@@ -103,7 +103,7 @@ namespace Payroll.Service
 				x.BatchId = summaryBatch.Id; 
 			});
 
-			var psResponse = _plantSummariesRepo.Save(summaries);
+			_plantSummariesRepo.Save(summaries);
 		}
 		
 		
@@ -132,7 +132,7 @@ namespace Payroll.Service
 				x.BatchId = summaryBatch.Id;
 			});
 
-			var rsResponse = _ranchSummariesRepo.Save(summaries);
+			_ranchSummariesRepo.Save(summaries);
 		}
 
 		private void SetSummaryBatchStatus(int id, BatchProcessingStatus status)

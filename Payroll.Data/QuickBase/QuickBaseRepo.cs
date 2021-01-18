@@ -9,7 +9,8 @@ namespace Payroll.Data.QuickBase
 	public abstract class QuickBaseRepo<T>
 	{
 		protected readonly IQuickBaseConnection _quickBaseConn;
-		public int BatchSize { get; } = 10000;
+		public int GetBatchSize { get; set; } = 10000;
+		public int PostBatchSize { get; set; } = 5000;
 
 		public QuickBaseRepo(IQuickBaseConnection quickBaseConnection)
 		{
@@ -32,14 +33,14 @@ namespace Payroll.Data.QuickBase
 
 			// Download records in batches
 			XElement doQuery;
-			for (int i = 0; i < count; i += BatchSize)
+			for (int i = 0; i < count; i += GetBatchSize)
 			{
 				doQuery = _quickBaseConn.DoQuery(
 					tableId,
 					query,
 					clist,
 					slist,
-					options: $"num-{BatchSize}.skp-{(i)}.sortorder-A",
+					options: $"num-{GetBatchSize}.skp-{(i)}.sortorder-A",
 					includeRecordIds: true,
 					useFieldIds: true);
 

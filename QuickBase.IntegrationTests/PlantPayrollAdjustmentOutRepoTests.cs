@@ -39,7 +39,7 @@ namespace QuickBase.IntegrationTests
 		public void ImportFromCSV()
 		{
 			var layoffId = 0;
-
+			
 			var PlantAdjustmentLines = new List<PlantAdjustmentLine>
 			{
 				new PlantAdjustmentLine{ BoxStyle = 12, BoxStyleDescription = "Testing12", H2AHoursOffered = 8M, IsIncentiveDisqualified = false, StartTime = new DateTime(2019, 1, 1, 6, 30, 0), EndTime = new DateTime(2019, 1, 1, 15, 30, 0), QuickBaseRecordId = 0, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 1), Plant = 5, EmployeeId = "2518C", LaborCode = 207, HoursWorked = 9M, PayType = PayType.Regular, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 0M, TotalGross = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 6), IsOriginal = true, OldHourlyRate = 10.96M, UseOldHourlyRate = true, SickLeaveRequested = 0 },
@@ -59,9 +59,8 @@ namespace QuickBase.IntegrationTests
 				new PlantAdjustmentLine{ QuickBaseRecordId = 849859, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4870C", LaborCode = 123, HoursWorked = 10M, PayType = PayType.Regular, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = .97M, OtherGross = 40M, TotalGross = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 6), IsOriginal = false, OldHourlyRate = 0M, UseOldHourlyRate = false, SickLeaveRequested = 4.13M },
 				new PlantAdjustmentLine{ QuickBaseRecordId = 849860, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4867C", LaborCode = 123, HoursWorked = 10M, PayType = PayType.Regular, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = .98M, OtherGross = 41.92M, TotalGross = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 6), IsOriginal = false, OldHourlyRate = 0M, UseOldHourlyRate = false, SickLeaveRequested = 4.14M }
 			};
-
-			var response = _repo.Save(PlantAdjustmentLines);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(PlantAdjustmentLines);
 		}
 
 		[TestMethod]
@@ -90,8 +89,7 @@ namespace QuickBase.IntegrationTests
 				new PlantAdjustmentLine{ QuickBaseRecordId = 849860, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4867C", LaborCode = 123, HoursWorked = 10M, PayType = PayType.Regular, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = .98M, OtherGross = 41.92M, TotalGross = 0M, WeekEndOfAdjustmentPaid = new DateTime(2019, 1, 6), IsOriginal = false, OldHourlyRate = 0M, UseOldHourlyRate = false, SickLeaveRequested = 4.14M }
 			};
 
-			var response = _repo.Save(PlantAdjustmentLines);
-			Console.WriteLine(response);
+			_repo.Save(PlantAdjustmentLines);
 		}
 
 		[TestMethod]
@@ -105,8 +103,7 @@ namespace QuickBase.IntegrationTests
 				new PlantAdjustmentLine{ ShiftDate = new DateTime(2019, 1, 3), EmployeeId = "1,2,3,", BoxStyleDescription = "This is a test, only a test.", PayType = "42-Commas," },
 			};
 
-			var response = _repo.Save(PlantAdjustmentLines);
-			Console.WriteLine(response);
+			_repo.Save(PlantAdjustmentLines);
 		}
 
 		[TestMethod]

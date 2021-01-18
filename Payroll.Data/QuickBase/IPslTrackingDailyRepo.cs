@@ -8,6 +8,6 @@ namespace Payroll.Data.QuickBase
 	public interface IPslTrackingDailyRepo
 	{
 		public IEnumerable<PaidSickLeave> Get(DateTime startDate, DateTime endDate, string company);
-		public XElement Save(IEnumerable<PaidSickLeave> paidSickLeaves);
+		public void Save(IEnumerable<PaidSickLeave> paidSickLeaves);
 	}
 }

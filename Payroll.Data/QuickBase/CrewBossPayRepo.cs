@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -47,12 +48,20 @@ namespace Payroll.Data.QuickBase
 				
 
 		/// <summary>
-		/// Creates a new API_ImportFromCSV request to the CrewBossPay table in Quickbase for the provided list of <c>CrewBossPayLine</c>s.
+		/// Creates new API_ImportFromCSV requests to the CrewBossPay table in Quickbase for the provided list of <c>CrewBossPayLine</c>s.
 		/// Records with <c>QuickBaseRecordId</c> values greater than 0 will be updated while those with a value of 0 will be added new.
 		/// </summary>
 		/// <param name="crewBossPayLines"></param>
 		/// <returns></returns>
-		public XElement Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
+		public void Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
+		{
+			for (int i = 0; i <= crewBossPayLines.Count(); i += PostBatchSize)
+			{
+				ImportFromCsv(crewBossPayLines.Skip(i).Take(PostBatchSize));
+			}
+		}
+
+		private XElement ImportFromCsv(IEnumerable<CrewBossPayLine> crewBossPayLines)
 		{
 			var clist = GetImportFromCsvClist();
 
@@ -77,7 +86,7 @@ namespace Payroll.Data.QuickBase
 
 			return importResponse;
 		}
-		
+
 		/// <summary>
 		/// Converts an XElement object representing an API_DoQuery response from the Crew Boss Pay table in Quick Base into 
 		/// a collection of <c>CrewBossPayLine</c> objects.

@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -19,11 +20,47 @@ namespace Payroll.Data.QuickBase
 
 
 		/// <summary>
-		/// Creates a new API_ImportFromCSV request to the Plant Payroll Adjustment Out table in Quickbase for the provided list of <c>PlantAdjustmentLine</c>s.
+		/// Creates new API_ImportFromCSV requests to the Plant Payroll Adjustment Out table in Quickbase for the provided list of <c>PlantAdjustmentLine</c>s.
 		/// </summary>
 		/// <param name="plantAdjustmentLines"></param>
 		/// <returns></returns>
-		public XElement Save(IEnumerable<PlantAdjustmentLine> plantAdjustmentLines)
+		public void Save(IEnumerable<PlantAdjustmentLine> plantAdjustmentLines)
+		{
+			for(int i = 0; i <= plantAdjustmentLines.Count(); i += PostBatchSize)
+			{
+				ImportFromCsv(plantAdjustmentLines.Skip(i).Take(PostBatchSize));
+			}
+		}
+		
+
+		/// <summary>
+		/// Creates a new API_PurgeRecords request to the Plant Payroll Adjustment Out table in Quick Base based on the provided <c>weekEndDate</c> and <c>layoffId</c>.
+		/// </summary>
+		/// <param name="weekEndDate"></param>
+		/// <param name="layoffId"></param>
+		/// <returns></returns>
+		public XElement Delete(DateTime weekEndDate, int layoffId)
+		{
+			var formattedDate = weekEndDate.ToString("MM-dd-yyyy");
+
+			var query = $"{{{(int)PlantPayrollAdjustmentOutField.WeekEndOfAdjustmentPaid}.{ComparisonOperator.IR}.'{formattedDate}'}}";
+			if (layoffId > 0)
+			{
+				query += $"AND{{{(int)PlantPayrollAdjustmentOutField.LayoffRunId}.{ComparisonOperator.EX}.{layoffId}}}";
+			}
+			else
+			{
+				query += $"AND{{{(int)PlantPayrollAdjustmentOutField.LayoffPay}.{ComparisonOperator.EX}.0}}";
+			}
+
+			var deleteResponse = _quickBaseConn.PurgeRecords(
+				QuickBaseTable.PlantPayrollAdjustmentOut,
+				query);
+
+			return deleteResponse;
+		}
+
+		private XElement ImportFromCsv(IEnumerable<PlantAdjustmentLine> plantAdjustmentLines)
 		{
 			var clist = GetImportFromCsvClist();
 
@@ -73,34 +110,6 @@ namespace Payroll.Data.QuickBase
 
 			return importResponse;
 		}
-
-		/// <summary>
-		/// Creates a new API_PurgeRecords request to the Plant Payroll Adjustment Out table in Quick Base based on the provided <c>weekEndDate</c> and <c>layoffId</c>.
-		/// </summary>
-		/// <param name="weekEndDate"></param>
-		/// <param name="layoffId"></param>
-		/// <returns></returns>
-		public XElement Delete(DateTime weekEndDate, int layoffId)
-		{
-			var formattedDate = weekEndDate.ToString("MM-dd-yyyy");
-
-			var query = $"{{{(int)PlantPayrollAdjustmentOutField.WeekEndOfAdjustmentPaid}.{ComparisonOperator.IR}.'{formattedDate}'}}";
-			if (layoffId > 0)
-			{
-				query += $"AND{{{(int)PlantPayrollAdjustmentOutField.LayoffRunId}.{ComparisonOperator.EX}.{layoffId}}}";
-			}
-			else
-			{
-				query += $"AND{{{(int)PlantPayrollAdjustmentOutField.LayoffPay}.{ComparisonOperator.EX}.0}}";
-			}
-
-			var deleteResponse = _quickBaseConn.PurgeRecords(
-				QuickBaseTable.PlantPayrollAdjustmentOut,
-				query);
-
-			return deleteResponse;
-		}
-
 
 		/// <summary>
 		/// Returns a properly formatted clist string for API_ImportFromCSV calls to the Plant Payroll Adjustment Out table in Quick Base.

@@ -67,8 +67,8 @@ namespace QuickBase.IntegrationTests
 				new PlantPayLine{ QuickBaseRecordId = 7288006, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4867C", LaborCode = 503, HoursWorked = 10M, PayType = PayType.Regular, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 15.02M, TotalGross = 0M, HourlyRateOverride = 17.99M, SickLeaveRequested = 5.14M, PackerNumber = 116, Packline = "41,42,43, or 44" }
 			};
 
-			var response = _repo.Save(PlantPayLines);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(PlantPayLines);
 		}
 
 		[TestMethod]
@@ -96,8 +96,7 @@ namespace QuickBase.IntegrationTests
 				new PlantPayLine{ QuickBaseRecordId = 7288006, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4867C", LaborCode = 503, HoursWorked = 10M, PayType = PayType.Regular, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 15.02M, TotalGross = 0M, HourlyRateOverride = 17.99M, SickLeaveRequested = 5.14M }
 			};
 
-			var response = _repo.Save(PlantPayLines);
-			Console.WriteLine(response);
+			_repo.Save(PlantPayLines);
 		}
 
 
@@ -126,8 +125,7 @@ namespace QuickBase.IntegrationTests
 				new PlantPayLine{ BoxStyleDescription = "Testing,the,use,of,commas.", QuickBaseRecordId = 7288006, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Plant = 5, EmployeeId = "4867C,", LaborCode = 503, HoursWorked = 10M, PayType = "42-Comma,", HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, GrossFromIncentive = 0M, OtherGross = 15.02M, TotalGross = 0M, HourlyRateOverride = 17.99M }
 			};
 
-			var response = _repo.Save(PlantPayLines);
-			Console.WriteLine(response);
+			_repo.Save(PlantPayLines);
 		}
 
 		[TestMethod]

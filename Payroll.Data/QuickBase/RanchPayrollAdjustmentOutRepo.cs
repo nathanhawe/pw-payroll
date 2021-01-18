@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -23,7 +24,43 @@ namespace Payroll.Data.QuickBase
 		/// </summary>
 		/// <param name="ranchAdjustmentLines"></param>
 		/// <returns></returns>
-		public XElement Save(IEnumerable<RanchAdjustmentLine> ranchAdjustmentLines)
+		public void Save(IEnumerable<RanchAdjustmentLine> ranchAdjustmentLines)
+		{
+			for (int i = 0; i <= ranchAdjustmentLines.Count(); i += PostBatchSize)
+			{
+				ImportFromCsv(ranchAdjustmentLines.Skip(i).Take(PostBatchSize));
+			}
+		}
+
+		/// <summary>
+		/// Creates new API_PurgeRecords requests to the Ranch Payroll Adjustment Out table in Quick Base based on the 
+		/// provided <c>weekEndOfAdjustmentPaidDate</c> and <c>layoffId</c>.
+		/// </summary>
+		/// <param name="weekEndOfAdjustmentPaidDate"></param>
+		/// <param name="layoffId"></param>
+		/// <returns></returns>
+		public XElement Delete(DateTime weekEndOfAdjustmentPaidDate, int layoffId)
+		{
+			var formattedDate = weekEndOfAdjustmentPaidDate.ToString("MM-dd-yyyy");
+
+			var query = $"{{{(int)RanchPayrollAdjustmentOutField.WeekEndOfAdjustmentPaid}.{ComparisonOperator.IR}.'{formattedDate}'}}";
+			if (layoffId > 0)
+			{
+				query += $"AND{{{(int)RanchPayrollAdjustmentOutField.LayoffRunId}.{ComparisonOperator.EX}.{layoffId}}}";
+			}
+			else
+			{
+				query += $"AND{{{(int)RanchPayrollAdjustmentOutField.LayoffPay}.{ComparisonOperator.EX}.0}}";
+			}
+
+			var deleteResponse = _quickBaseConn.PurgeRecords(
+				QuickBaseTable.RanchPayrollAdjustmentOut,
+				query);
+
+			return deleteResponse;
+		}
+
+		private XElement ImportFromCsv(IEnumerable<RanchAdjustmentLine> ranchAdjustmentLines)
 		{
 			var clist = GetImportFromCsvClist();
 
@@ -70,34 +107,6 @@ namespace Payroll.Data.QuickBase
 				skipFirstRow: false);
 
 			return importResponse;
-		}
-
-		/// <summary>
-		/// Creates a new API_PurgeRecords request to the Ranch Payroll Adjustment Out table in Quick Base based on the 
-		/// provided <c>weekEndOfAdjustmentPaidDate</c> and <c>layoffId</c>.
-		/// </summary>
-		/// <param name="weekEndOfAdjustmentPaidDate"></param>
-		/// <param name="layoffId"></param>
-		/// <returns></returns>
-		public XElement Delete(DateTime weekEndOfAdjustmentPaidDate, int layoffId)
-		{
-			var formattedDate = weekEndOfAdjustmentPaidDate.ToString("MM-dd-yyyy");
-
-			var query = $"{{{(int)RanchPayrollAdjustmentOutField.WeekEndOfAdjustmentPaid}.{ComparisonOperator.IR}.'{formattedDate}'}}";
-			if (layoffId > 0)
-			{
-				query += $"AND{{{(int)RanchPayrollAdjustmentOutField.LayoffRunId}.{ComparisonOperator.EX}.{layoffId}}}";
-			}
-			else
-			{
-				query += $"AND{{{(int)RanchPayrollAdjustmentOutField.LayoffPay}.{ComparisonOperator.EX}.0}}";
-			}
-
-			var deleteResponse = _quickBaseConn.PurgeRecords(
-				QuickBaseTable.RanchPayrollAdjustmentOut,
-				query);
-
-			return deleteResponse;
 		}
 
 

@@ -47,19 +47,20 @@ namespace QuickBase.IntegrationTests
 			Print(temp);
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
+		[Ignore]
 		public void ImportFromCSV()
 		{
 			var crewBossPayLines = new List<CrewBossPayLine>
 			{
-				new CrewBossPayLine{ QuickBaseRecordId = 118410, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, HoursWorked = 9M, WorkerCount = 20, EmployeeId = "1006"},
-				new CrewBossPayLine{ QuickBaseRecordId = 118411, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, HoursWorked = 9M, WorkerCount = 21, EmployeeId = "1006"},
-				new CrewBossPayLine{ QuickBaseRecordId = 118412, ShiftDate = new DateTime(2019, 1, 3), Crew = 1002, HoursWorked = 9M, WorkerCount = 22, EmployeeId = "1006"},
-				new CrewBossPayLine{ QuickBaseRecordId = 118413, ShiftDate = new DateTime(2019, 1, 4), Crew = 1002, HoursWorked = 9M, WorkerCount = 23, EmployeeId = "1006"}
+				new CrewBossPayLine{ QuickBaseRecordId = 0, ShiftDate = new DateTime(2019, 1, 1), Crew = 1002, HoursWorked = 9M, WorkerCount = 20, EmployeeId = "1006"},
+				new CrewBossPayLine{ QuickBaseRecordId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, HoursWorked = 9M, WorkerCount = 21, EmployeeId = "1006"},
+				new CrewBossPayLine{ QuickBaseRecordId = 0, ShiftDate = new DateTime(2019, 1, 3), Crew = 1002, HoursWorked = 9M, WorkerCount = 22, EmployeeId = "1006"},
+				new CrewBossPayLine{ QuickBaseRecordId = 0, ShiftDate = new DateTime(2019, 1, 4), Crew = 1002, HoursWorked = 9M, WorkerCount = 23, EmployeeId = "1006"}
 			};
 
-			var response = _repo.Save(crewBossPayLines);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(crewBossPayLines);
 		}
 
 		private void Print(IEnumerable<CrewBossPayLine> lines)

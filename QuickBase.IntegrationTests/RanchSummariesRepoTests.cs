@@ -56,8 +56,8 @@ namespace QuickBase.IntegrationTests
 				new RanchSummary{ LayoffId = 920, WeekEndDate = new DateTime(2019, 1, 13), LastCrew = 1002, EmployeeId = "48,67C", TotalHours = 170M, TotalGross = 1001.06M, CulturalHours = 9.92M }
 			};
 
-			var response = _repo.Save(ranchSummaries);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(ranchSummaries);
 		}
 
 		private void Print(IEnumerable<RanchSummary> lines)

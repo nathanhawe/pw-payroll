@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -34,11 +35,19 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
-		/// Creates a new API_ImportFromCSV request to the Plant Summaries table in Quickbase to create new records for the provided list of <c>PlantSummary</c>s.
+		/// Creates new API_ImportFromCSV requests to the Plant Summaries table in Quickbase to create new records for the provided list of <c>PlantSummary</c>s.
 		/// </summary>
 		/// <param name="plantSummaries"></param>
 		/// <returns></returns>
-		public XElement Save(IEnumerable<PlantSummary> plantSummaries)
+		public void Save(IEnumerable<PlantSummary> plantSummaries)
+		{
+			for (int i = 0; i <= plantSummaries.Count(); i += PostBatchSize)
+			{
+				ImportFromCsv(plantSummaries.Skip(i).Take(PostBatchSize));
+			}
+		}
+
+		private XElement ImportFromCsv(IEnumerable<PlantSummary> plantSummaries)
 		{
 			var clist = GetImportFromCsvClist();
 

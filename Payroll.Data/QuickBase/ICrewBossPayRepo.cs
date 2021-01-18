@@ -8,6 +8,6 @@ namespace Payroll.Data.QuickBase
 	public interface ICrewBossPayRepo
 	{
 		public IEnumerable<CrewBossPayLine> Get(DateTime weekEndDate, int layoffId);
-		public XElement Save(IEnumerable<CrewBossPayLine> crewBossPayLines);
+		public void Save(IEnumerable<CrewBossPayLine> crewBossPayLines);
 	}
 }

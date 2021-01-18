@@ -338,15 +338,15 @@ namespace Payroll.Service
 			// Plant Payroll Records
 			var toPlantPayroll = _context.PlantPayLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toPlantPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var ppOutResponse = _plantPayrollOutRepo.Save(toPlantPayroll);
+			_plantPayrollOutRepo.Save(toPlantPayroll);
 
 			// Plant Adjustment Records
 			var toPlantAdjustments = _context.PlantAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toPlantAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var ppaOutResponse = _plantPayrollAdjustmentOutRepo.Save(toPlantAdjustments);
+			_plantPayrollAdjustmentOutRepo.Save(toPlantAdjustments);
 
 			// PSL Updates
-			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
+			_pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
 				x.BatchId == batch.Id
 				&& x.ShiftDate >= batch.WeekEndDate.AddDays(-6)
 				&& x.ShiftDate <= batch.WeekEndDate).ToList());
@@ -841,7 +841,7 @@ namespace Payroll.Service
 			// Crew Boss Pay Records
 			var toCrewBossPay = _context.CrewBossPayLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toCrewBossPay.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var cbReponse = _crewBossPayRepo.Save(toCrewBossPay);
+			_crewBossPayRepo.Save(toCrewBossPay);
 
 			// Ranch Payroll Records
 			// Crew boss lines need to have the hours worked included as they have been newly created.
@@ -874,16 +874,16 @@ namespace Payroll.Service
 				cbLinesToRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 				toRanchPayroll.ForEach(x => x.LayoffId = batch.LayoffId.Value);
 			}
-			var cbrpOutResponse = _ranchPayrollOutRepo.Save(cbLinesToRanchPayroll);
-			var rpOutResponse = _ranchPayrollOutRepo.Save(toRanchPayroll);
+			_ranchPayrollOutRepo.Save(cbLinesToRanchPayroll);
+			_ranchPayrollOutRepo.Save(toRanchPayroll);
 
 			// Ranch Adjustment Records
 			var toRanchAdjustments = _context.RanchAdjustmentLines.Where(x => x.BatchId == batch.Id).ToList();
 			if (batch.LayoffId != null) toRanchAdjustments.ForEach(x => x.LayoffId = batch.LayoffId.Value);
-			var rpaOutResponse = _ranchPayrollAdjustmentOutRepo.Save(toRanchAdjustments);
+			_ranchPayrollAdjustmentOutRepo.Save(toRanchAdjustments);
 
 			// PSL Updates
-			var pslResponse = _pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
+			_pslTrackingDailyRepo.Save(_context.PaidSickLeaves.Where(x =>
 				x.BatchId == batch.Id
 				&& x.ShiftDate >= batch.WeekEndDate.AddDays(-6)
 				&& x.ShiftDate <= batch.WeekEndDate).ToList());

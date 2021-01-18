@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -41,12 +42,20 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
-		/// Creates a new API_ImportFromCSV request to the PSL Tracking Daily table in Quickbase based on the provided list of <c>PaidSickLeave</c>s.
+		/// Creates new API_ImportFromCSV requests to the PSL Tracking Daily table in Quickbase based on the provided list of <c>PaidSickLeave</c>s.
 		/// If a record exists for the employee and shift date it will be updated, otherwise a new record is created.
 		/// </summary>
 		/// <param name="paidSickLeaves"></param>
 		/// <returns></returns>
-		public XElement Save(IEnumerable<PaidSickLeave> paidSickLeaves)
+		public void Save(IEnumerable<PaidSickLeave> paidSickLeaves)
+		{
+			for (int i = 0; i <= paidSickLeaves.Count(); i += PostBatchSize)
+			{
+				ImportFromCsv(paidSickLeaves.Skip(i).Take(PostBatchSize));
+			}
+		}
+
+		private XElement ImportFromCsv(IEnumerable<PaidSickLeave> paidSickLeaves)
 		{
 			var clist = GetImportFromCsvClist();
 

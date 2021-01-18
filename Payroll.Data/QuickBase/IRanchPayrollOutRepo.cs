@@ -8,7 +8,7 @@ namespace Payroll.Data.QuickBase
 	public interface IRanchPayrollOutRepo
 	{
 		public IEnumerable<RanchPayLine> GetForSummaries(DateTime weekEndDate, int layoffId);
-		public XElement Save(IEnumerable<RanchPayLine> ranchPayLines);
+		public void Save(IEnumerable<RanchPayLine> ranchPayLines);
 		public XElement Delete(DateTime weekEndDate, int layoffId);
 	}
 }

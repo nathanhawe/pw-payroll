@@ -53,8 +53,8 @@ namespace QuickBase.IntegrationTests
 				new PaidSickLeave{ EmployeeId = "48,67C", ShiftDate = new DateTime(2016, 1, 1), Company = Company.Plants, Hours = 9.5M, Gross = 1000.99M, NinetyDayHours = 1000.99M, NinetyDayGross = 11231.42M, HoursUsed = 0 }
 			};
 
-			var response = _repo.Save(paidSickLeaves);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(paidSickLeaves);
 		}
 
 		private void Print(IEnumerable<PaidSickLeave> lines)

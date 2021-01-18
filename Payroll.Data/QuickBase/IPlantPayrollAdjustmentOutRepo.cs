@@ -7,7 +7,7 @@ namespace Payroll.Data.QuickBase
 {
 	public interface IPlantPayrollAdjustmentOutRepo
 	{
-		public XElement Save(IEnumerable<PlantAdjustmentLine> plantAdjustmentLines);
+		public void Save(IEnumerable<PlantAdjustmentLine> plantAdjustmentLines);
 		public XElement Delete(DateTime weekEndDate, int layoffId);
 	}
 }

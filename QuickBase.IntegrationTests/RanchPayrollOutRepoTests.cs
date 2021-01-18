@@ -66,8 +66,8 @@ namespace QuickBase.IntegrationTests
 				new RanchPayLine{ QuickBaseRecordId = 10359036, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "4867C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = PayType.HourlyPlusPieces, Pieces = 140M, PieceRate = .0133M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = true, HourlyRateOverride = 12.57M, SickLeaveRequested = 6.40M }
 			};
 
-			var response = _repo.Save(ranchPayLines);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(ranchPayLines);
 		}
 
 		[TestMethod]
@@ -95,8 +95,7 @@ namespace QuickBase.IntegrationTests
 				new RanchPayLine{ QuickBaseRecordId = 10359036, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "4867C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = PayType.HourlyPlusPieces, Pieces = 140M, PieceRate = .0133M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = true, HourlyRateOverride = 12.57M, SickLeaveRequested = 6.40M }
 			};
 
-			var response = _repo.Save(ranchPayLines);
-			Console.WriteLine(response);
+			_repo.Save(ranchPayLines);
 		}
 
 		[TestMethod]
@@ -115,8 +114,7 @@ namespace QuickBase.IntegrationTests
 				new RanchPayLine{ QuickBaseRecordId = 0, LayoffId = 0, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "48,67C", LaborCode = 208, BlockId = 0, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 0M, PieceRate = 0M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M }
 			};
 
-			var response = _repo.Save(ranchPayLines);
-			Console.WriteLine(response);
+			_repo.Save(ranchPayLines);
 		}
 
 		[TestMethod]

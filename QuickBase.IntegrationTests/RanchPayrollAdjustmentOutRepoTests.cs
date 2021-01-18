@@ -60,9 +60,8 @@ namespace QuickBase.IntegrationTests
 				new RanchAdjustmentLine{ QuickBaseRecordId = 193544, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Crew = 0, EmployeeId = "4870C", LaborCode = 208, BlockId = 999, HoursWorked = 10M, PayType = PayType.Pieces, Pieces = 160M, PieceRate = .0125M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = adjustmentWeekEndDate, IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = true, SickLeaveRequested = 6.38M },
 				new RanchAdjustmentLine{ QuickBaseRecordId = 193545, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "4867C", LaborCode = 208, BlockId = 999, HoursWorked = 10M, PayType = PayType.Pieces, Pieces = 170M, PieceRate = .0125M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = adjustmentWeekEndDate, IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = true, SickLeaveRequested = 6.39M }
 			};
-
-			var response = _repo.Save(ranchAdjustmentLines);
-			Console.WriteLine(response);
+			_repo.PostBatchSize = 3;
+			_repo.Save(ranchAdjustmentLines);
 		}
 
 		[TestMethod]
@@ -92,8 +91,7 @@ namespace QuickBase.IntegrationTests
 				new RanchAdjustmentLine{ QuickBaseRecordId = 193545, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "4867C", LaborCode = 208, BlockId = 999, HoursWorked = 10M, PayType = PayType.Pieces, Pieces = 170M, PieceRate = .0125M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = adjustmentWeekEndDate, IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = true, SickLeaveRequested = 6.39M }
 			};
 
-			var response = _repo.Save(ranchAdjustmentLines);
-			Console.WriteLine(response);
+			_repo.Save(ranchAdjustmentLines);
 		}
 
 		[TestMethod]
@@ -123,8 +121,7 @@ namespace QuickBase.IntegrationTests
 				new RanchAdjustmentLine{ QuickBaseRecordId = 193545, LayoffId = layoffId, ShiftDate = new DateTime(2019, 1, 2), Crew = 1002, EmployeeId = "48,67C", LaborCode = 208, BlockId = 999, HoursWorked = 10M, PayType = "42,Comma,", Pieces = 170M, PieceRate = .0125M, HourlyRate = 0M, GrossFromHours = 0M, GrossFromPieces = 0M, OtherGross = 0M, TotalGross = 0M, FiveEight = false, HourlyRateOverride = 0M, WeekEndOfAdjustmentPaid = adjustmentWeekEndDate, IsOriginal = true, OldHourlyRate = 10M, UseOldHourlyRate = true }
 			};
 
-			var response = _repo.Save(ranchAdjustmentLines);
-			Console.WriteLine(response);
+			_repo.Save(ranchAdjustmentLines);
 		}
 
 		[TestMethod]

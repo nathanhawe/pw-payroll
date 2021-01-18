@@ -8,6 +8,6 @@ namespace Payroll.Data.QuickBase
 	public interface IRanchSummariesRepo
 	{
 		public IEnumerable<RanchSummary> Get(DateTime weekEndDate);
-		public XElement Save(IEnumerable<RanchSummary> ranchSummaries);
+		public void Save(IEnumerable<RanchSummary> ranchSummaries);
 	}
 }
