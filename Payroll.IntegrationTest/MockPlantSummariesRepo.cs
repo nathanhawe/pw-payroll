@@ -17,10 +17,9 @@ namespace Payroll.IntegrationTest
 			return Input;
 		}
 
-		public XElement Save(IEnumerable<PlantSummary> plantSummaries)
+		public void Save(IEnumerable<PlantSummary> plantSummaries)
 		{
 			Output = plantSummaries.ToList();
-			return null;
 		}
 	}
 }

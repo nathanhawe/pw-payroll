@@ -22,10 +22,9 @@ namespace Payroll.IntegrationTest
 			return Input;
 		}
 
-		public XElement Save(IEnumerable<PaidSickLeave> paidSickLeaves)
+		public void Save(IEnumerable<PaidSickLeave> paidSickLeaves)
 		{
 			Output = paidSickLeaves.ToList();
-			return null;
 		}
 	}
 }

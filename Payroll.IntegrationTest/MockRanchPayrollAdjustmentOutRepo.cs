@@ -13,7 +13,7 @@ namespace Payroll.IntegrationTest
 			throw new NotImplementedException();
 		}
 
-		public XElement Save(IEnumerable<RanchAdjustmentLine> ranchPayLines)
+		public void Save(IEnumerable<RanchAdjustmentLine> ranchPayLines)
 		{
 			throw new NotImplementedException();
 		}

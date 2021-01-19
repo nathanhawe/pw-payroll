@@ -13,7 +13,7 @@ namespace Payroll.IntegrationTest
 			throw new NotImplementedException();
 		}
 
-		public XElement Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
+		public void Save(IEnumerable<CrewBossPayLine> crewBossPayLines)
 		{
 			throw new NotImplementedException();
 		}

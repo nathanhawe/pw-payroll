@@ -22,10 +22,9 @@ namespace Payroll.IntegrationTest
 			return null;
 		}
 
-		public XElement Save(IEnumerable<PlantAdjustmentLine> plantAdjustmentLines)
+		public void Save(IEnumerable<PlantAdjustmentLine> plantAdjustmentLines)
 		{
 			Output = plantAdjustmentLines.ToList();
-			return null;
 		}
 	}
 }

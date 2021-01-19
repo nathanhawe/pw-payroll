@@ -22,10 +22,9 @@ namespace Payroll.IntegrationTest
 			return null;
 		}
 
-		public XElement Save(IEnumerable<PlantPayLine> plantPayLines)
+		public void Save(IEnumerable<PlantPayLine> plantPayLines)
 		{
 			Output = plantPayLines.ToList();
-			return null;
 		}
 
 		public IEnumerable<PlantPayLine> GetForSummaries(DateTime weekEndDate, int layoffId)
