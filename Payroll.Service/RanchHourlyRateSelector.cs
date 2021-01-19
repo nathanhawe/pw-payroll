@@ -53,13 +53,14 @@ namespace Payroll.Service
 			if (laborCode == (int)RanchLaborCode.CrewHelper_BonusRate) return CrewHelper_BonusRate(shiftDate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.GrapeHarvestSupport) return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.Girdling && shiftDate >= new DateTime(2020, 3, 21)) return GirdlingRate(minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.Grafting_BuddingExpertCrew) return GraftingBuddingExpertCrewRate(shiftDate, crew, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.RecoveryTime) return RecoveryTimeRate();
 			if (laborCode == (int)RanchLaborCode.NonProductiveTime) return NonProductiveTimeRate();
 			if (laborCode == (int)RanchLaborCode.QualityControl && shiftDate >= new DateTime(2020, 5, 11)) return QualityControlRate(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (crew == (int)Crew.WestTractor_Night) return WestTractor_NightRate(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (crew == (int)Crew.LightDuty_East) return CrewLaborRate(shiftDate, minimumWageRate);
 			if (crew == (int)Crew.LightDuty_West) return CrewLaborRate(shiftDate, minimumWageRate);
-			if (crew == (int)Crew.JoseLuisRodriguez && laborCode == (int)RanchLaborCode.Grafting_BuddingExpertCrew) return GraftingBuddingExpertCrewRate(shiftDate, minimumWageRate);
+			
 			if (crew > 100) return CrewLaborRate(shiftDate, minimumWageRate);
 			return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate);
 		}
@@ -171,15 +172,23 @@ namespace Payroll.Service
 			return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate) + .5M;
 		}
 
-		private decimal GraftingBuddingExpertCrewRate(DateTime shiftDate, decimal minimumWageRate)
+		private decimal GraftingBuddingExpertCrewRate(DateTime shiftDate, int crew, decimal minimumWageRate)
 		{
-			if(shiftDate < new DateTime(2018, 2, 2))
+			if(shiftDate < new DateTime(2018, 2, 2) && crew == (int)Crew.JoseLuisRodriguez)
 			{
 				return Math.Max(14M, minimumWageRate);
 			}
-			else
+			else if(shiftDate < new DateTime(2021, 1, 11) && crew == (int)Crew.JoseLuisRodriguez)
 			{
 				return Math.Max(15M, minimumWageRate);
+			}
+			else if(shiftDate >= new DateTime(2021, 1, 11))
+			{
+				return CrewLaborRate(shiftDate, minimumWageRate) + 1;
+			}
+			else
+			{
+				return CrewLaborRate(shiftDate, minimumWageRate);
 			}
 		}
 

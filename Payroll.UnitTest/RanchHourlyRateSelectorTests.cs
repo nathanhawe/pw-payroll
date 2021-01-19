@@ -508,6 +508,56 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void LaborCode_217_GraftingBuddingExpertCrew_Before20210111_Crew223_Returns15()
+		{
+			var laborCode = (int)RanchLaborCode.Grafting_BuddingExpertCrew;
+			var crew = (int)Crew.JoseLuisRodriguez;
+			var shiftDate = new DateTime(2021, 1, 10);
+
+			// Crew 223 gets the grafting rate of 15 when using labor code 217, otherwise they get the crew labor rate.
+			Assert.AreEqual(15, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: shiftDate));
+			Assert.AreEqual(15, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: shiftDate));
+			Assert.AreEqual(15, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: shiftDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate - 1, shiftDate: shiftDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate, shiftDate: shiftDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate + 1, shiftDate: shiftDate));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: shiftDate));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: shiftDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_217_GraftingBuddingExpertCrew_Before20210111_NonCrew223()
+		{
+			var laborCode = (int)RanchLaborCode.Grafting_BuddingExpertCrew;
+			var crew = 120;
+			var shiftDate = new DateTime(2021, 1, 10);
+			
+			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: shiftDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: shiftDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: shiftDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_217_GraftingBuddingExpertCrew_OnOrAfter20210111_ReturnsCrewLaborRatePlus1()
+		{
+			var laborCode = (int) RanchLaborCode.Grafting_BuddingExpertCrew;
+			var effectiveDate = new DateTime(2021, 1, 11);
+
+			// Return crew labor rate + 1
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + 3M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
+
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual((_crewLaborRate + 3M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate.AddYears(10)));
+		}
+
+
+		[TestMethod]
 		public void LaborCode_380_RecoveryTime_ReturnsZero()
 		{
 			var laborCode = (int)RanchLaborCode.RecoveryTime;
@@ -634,25 +684,6 @@ namespace Payroll.UnitTest
 
 			// Minimum Wage
 			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: (int)Crew.LightDuty_West, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
-		}
-
-		[TestMethod]
-		public void Crew_223_JoseLuisRodriguez_AndGrafting_BuddingExpertCrew()
-		{
-			var laborCode = (int)RanchLaborCode.Grafting_BuddingExpertCrew;
-			var crew = (int)Crew.JoseLuisRodriguez;
-			// Crew 223 gets the grafting rate of 15 when using labor code 217, otherwise they get the crew labor rate.
-			Assert.AreEqual(15, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(15, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(15, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
-
-			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate + 1));
-
-			// Minimum Wage
-			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: crew, laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
-			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(crew: crew, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
 		}
 
 		#endregion
