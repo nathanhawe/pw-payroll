@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -167,44 +168,38 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
-		/// Audit locks all <c>RanchPayLine</c>s through a new API_ImportFromCSV request to the Ranch Payroll table in Quickbase.
+		/// Audit locks all <c>RanchPayLine</c>s through new API_ImportFromCSV requests to the Ranch Payroll table in Quickbase.
 		/// Only records with <c>QuickBaseRecordId</c> values greater than 0 will be updated.
 		/// </summary>
 		/// <param name="ranchPayLines"></param>
 		/// <returns></returns>
-		public XElement Lock(IEnumerable<RanchPayLine> ranchPayLines)
+		public void Lock(IEnumerable<RanchPayLine> ranchPayLines)
 		{
-			var clist = GetAuditLockClist();
-
-			// Build the CDATA string. This must match the field order in clist.
-			var sb = new StringBuilder();
-			foreach (var line in ranchPayLines)
+			for (int i = 0; i <= ranchPayLines.Count(); i += PostBatchSize)
 			{
-				if (line.QuickBaseRecordId <= 0) continue;
-
-				sb.Append($"{line.QuickBaseRecordId},");
-				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Locked}");
-				sb.Append("\n");
+				ImportFromCsvAuditLock(
+					ranchPayLines.Skip(i).Take(PostBatchSize),
+					Domain.Constants.QuickBase.AuditLockValue.Locked);
 			}
-
-			// Create the request
-			var importResponse = _quickBaseConn.ImportFromCsv(
-				QuickBaseTable.RanchPayroll,
-				sb.ToString(),
-				clist,
-				percentageAsString: false,
-				skipFirstRow: false);
-
-			return importResponse;
 		}
 
 		/// <summary>
-		/// Audit unlocks all <c>RanchPayLine</c>s through a new API_ImportFromCSV request to the Ranch Payroll table in Quickbase.
+		/// Audit unlocks all <c>RanchPayLine</c>s through new API_ImportFromCSV requests to the Ranch Payroll table in Quickbase.
 		/// Only records with <c>QuickBaseRecordId</c> values greater than 0 will be updated.
 		/// </summary>
 		/// <param name="ranchPayLines"></param>
 		/// <returns></returns>
-		public XElement Unlock(IEnumerable<RanchPayLine> ranchPayLines)
+		public void Unlock(IEnumerable<RanchPayLine> ranchPayLines)
+		{
+			for (int i = 0; i <= ranchPayLines.Count(); i += PostBatchSize)
+			{
+				ImportFromCsvAuditLock(
+					ranchPayLines.Skip(i).Take(PostBatchSize),
+					Domain.Constants.QuickBase.AuditLockValue.Unlocked);
+			}
+		}
+
+		private XElement ImportFromCsvAuditLock(IEnumerable<RanchPayLine> ranchPayLines, string auditLockValue)
 		{
 			var clist = GetAuditLockClist();
 
@@ -215,7 +210,7 @@ namespace Payroll.Data.QuickBase
 				if (line.QuickBaseRecordId <= 0) continue;
 
 				sb.Append($"{line.QuickBaseRecordId},");
-				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Unlocked}");
+				sb.Append($"{auditLockValue}");
 				sb.Append("\n");
 			}
 
@@ -229,7 +224,6 @@ namespace Payroll.Data.QuickBase
 
 			return importResponse;
 		}
-
 
 		/// <summary>
 		/// Converts an XElement object representing an API_DoQuery response from the Ranch Payroll table in Quick Base into 

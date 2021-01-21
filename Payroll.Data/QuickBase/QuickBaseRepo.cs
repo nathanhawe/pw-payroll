@@ -10,7 +10,7 @@ namespace Payroll.Data.QuickBase
 	{
 		protected readonly IQuickBaseConnection _quickBaseConn;
 		public int GetBatchSize { get; set; } = 10000;
-		public int PostBatchSize { get; set; } = 5000;
+		public int PostBatchSize { get; set; } = 2000;
 
 		public QuickBaseRepo(IQuickBaseConnection quickBaseConnection)
 		{

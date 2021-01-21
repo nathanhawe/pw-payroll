@@ -18,7 +18,7 @@ namespace Payroll.IntegrationTest
 			throw new NotImplementedException();
 		}
 
-		public XElement Lock(IEnumerable<RanchPayLine> ranchPayLines)
+		public void Lock(IEnumerable<RanchPayLine> ranchPayLines)
 		{
 			throw new NotImplementedException();
 		}
@@ -33,7 +33,7 @@ namespace Payroll.IntegrationTest
 			throw new NotImplementedException();
 		}
 
-		public XElement Unlock(IEnumerable<RanchPayLine> ranchPayLines)
+		public void Unlock(IEnumerable<RanchPayLine> ranchPayLines)
 		{
 			throw new NotImplementedException();
 		}

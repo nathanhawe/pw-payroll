@@ -32,12 +32,12 @@ namespace Payroll.IntegrationTest
 			throw new NotImplementedException();
 		}
 
-		public XElement Lock(IEnumerable<PlantPayLine> plantPayLines)
+		public void Lock(IEnumerable<PlantPayLine> plantPayLines)
 		{
 			throw new NotImplementedException();
 		}
 
-		public XElement Unlock(IEnumerable<PlantPayLine> plantPayLines)
+		public void Unlock(IEnumerable<PlantPayLine> plantPayLines)
 		{
 			throw new NotImplementedException();
 		}

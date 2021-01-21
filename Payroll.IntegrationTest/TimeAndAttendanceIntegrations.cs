@@ -361,7 +361,7 @@ namespace Payroll.IntegrationTest
 		[Ignore("Only Run To Change State")]
 		public void AuditLock_Plants()
 		{
-			var weekEndingDate = new DateTime(2020, 8, 16);
+			var weekEndingDate = new DateTime(2021, 1, 10);
 			var layoffId = 0;
 			bool auditLock = true;
 
@@ -412,7 +412,7 @@ namespace Payroll.IntegrationTest
 		[Ignore("Only Run To Change State")]
 		public void AuditLock_Ranches()
 		{
-			var weekEndingDate = new DateTime(2020, 8, 9);
+			var weekEndingDate = new DateTime(2021, 1, 10);
 			var layoffId = 0;
 			bool auditLock = true;
 

@@ -4,6 +4,7 @@ using QuickBase.Api;
 using QuickBase.Api.Constants;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -112,44 +113,38 @@ namespace Payroll.Data.QuickBase
 		}
 
 		/// <summary>
-		/// Audit locks the provided <c>PlantPayLine</c> records by creating a new API_ImportFromCSV request to the Plant Payroll table in Quickbase
+		/// Audit locks the provided <c>PlantPayLine</c> records by creating new API_ImportFromCSV requests to the Plant Payroll table in Quickbase
 		/// that updates the value of the Audit Lock field to set it to "Locked".  Only records with <c>QuickBaseRecordId</c> values greater than 0 are updated.
 		/// </summary>
 		/// <param name="plantPayLines"></param>
 		/// <returns></returns>
-		public XElement Lock(IEnumerable<PlantPayLine> plantPayLines)
+		public void Lock(IEnumerable<PlantPayLine> plantPayLines)
 		{
-			var clist = GetAuditLockClist();
-
-			// Build the CDATA string
-			var sb = new StringBuilder();
-			foreach (var line in plantPayLines)
+			for(int i = 0; i <= plantPayLines.Count(); i += PostBatchSize)
 			{
-				if (line.QuickBaseRecordId == 0) continue;
-
-				sb.Append($"{line.QuickBaseRecordId},");
-				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Locked}");
-				sb.Append("\n");
+				ImportFromCsvAuditLock(
+					plantPayLines.Skip(i).Take(PostBatchSize), 
+					Domain.Constants.QuickBase.AuditLockValue.Locked);
 			}
-
-			// Create the request
-			var importResponse = _quickBaseConn.ImportFromCsv(
-				QuickBaseTable.PlantPayroll,
-				sb.ToString(),
-				clist,
-				percentageAsString: false,
-				skipFirstRow: false);
-
-			return importResponse;
 		}
 
 		/// <summary>
-		/// Audit unlocks the provided <c>PlantPayLine</c> records by creating a new API_ImportFromCSV request to the Plant Payroll table in Quickbase
+		/// Audit unlocks the provided <c>PlantPayLine</c> records by creating new API_ImportFromCSV requests to the Plant Payroll table in Quickbase
 		/// that updates the value of the Audit Lock field to set it to "".  Only records with <c>QuickBaseRecordId</c> values greater than 0 are updated.
 		/// </summary>
 		/// <param name="plantPayLines"></param>
 		/// <returns></returns>
-		public XElement Unlock(IEnumerable<PlantPayLine> plantPayLines)
+		public void Unlock(IEnumerable<PlantPayLine> plantPayLines)
+		{
+			for (int i = 0; i <= plantPayLines.Count(); i += PostBatchSize)
+			{
+				ImportFromCsvAuditLock(
+					plantPayLines.Skip(i).Take(PostBatchSize), 
+					Domain.Constants.QuickBase.AuditLockValue.Unlocked);
+			}
+		}
+
+		private XElement ImportFromCsvAuditLock(IEnumerable<PlantPayLine> plantPayLines, string auditLockValue)
 		{
 			var clist = GetAuditLockClist();
 
@@ -160,7 +155,7 @@ namespace Payroll.Data.QuickBase
 				if (line.QuickBaseRecordId == 0) continue;
 
 				sb.Append($"{line.QuickBaseRecordId},");
-				sb.Append($"{Domain.Constants.QuickBase.AuditLockValue.Unlocked}");
+				sb.Append($"{auditLockValue}");
 				sb.Append("\n");
 			}
 
