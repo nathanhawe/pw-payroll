@@ -15,17 +15,20 @@ namespace Payroll.Service
 	{
 		private readonly PayrollContext _context;
 		private readonly ICrewBossWageService _crewBossWageService;
+		private readonly ISouthCrewBossWageService _southCrewBossWageService;
 		private readonly IRoundingService _roundingService;
 
 		public decimal SouthDailyPay { get; } = 170.05M;
 
 		public CrewBossPayService(
 			PayrollContext context, 
-			ICrewBossWageService crewBossWageService, 
+			ICrewBossWageService crewBossWageService,
+			ISouthCrewBossWageService southCrewBossWageService,
 			IRoundingService roundingService)
 		{
 			_context = context ?? throw new ArgumentNullException(nameof(context));
 			_crewBossWageService = crewBossWageService ?? throw new ArgumentNullException(nameof(crewBossWageService));
+			_southCrewBossWageService = southCrewBossWageService ?? throw new ArgumentNullException(nameof(southCrewBossWageService));
 			_roundingService = roundingService ?? throw new ArgumentNullException(nameof(roundingService));
 		}
 
@@ -92,18 +95,36 @@ namespace Payroll.Service
 		/// <returns></returns>
 		private decimal GetHourlyRate(string payMethod, int countOfWorkers, DateTime shiftDate)
 		{
-			switch (payMethod)
+			if(shiftDate < new DateTime(2021, 2, 8))
 			{
-				case CrewBossPayMethod.SouthDaily: 
-					return 0;
-				case CrewBossPayMethod.SouthHourly: 
-					return 17.90M;
-				case CrewBossPayMethod.HourlyTrees: 
-				case CrewBossPayMethod.HourlyVines:
-					return _crewBossWageService.GetWage(shiftDate, countOfWorkers);
-				default:
-					return 0;
+				switch (payMethod)
+				{
+					case CrewBossPayMethod.SouthDaily:
+						return 0;
+					case CrewBossPayMethod.SouthHourly:
+						return 17.90M;
+					case CrewBossPayMethod.HourlyTrees:
+					case CrewBossPayMethod.HourlyVines:
+						return _crewBossWageService.GetWage(shiftDate, countOfWorkers);
+					default:
+						return 0;
+				}
 			}
+			else
+			{
+				switch (payMethod)
+				{
+					case CrewBossPayMethod.SouthDaily:
+					case CrewBossPayMethod.SouthHourly:
+						return _southCrewBossWageService.GetWage(shiftDate, countOfWorkers);
+					case CrewBossPayMethod.HourlyTrees:
+					case CrewBossPayMethod.HourlyVines:
+						return _crewBossWageService.GetWage(shiftDate, countOfWorkers);
+					default:
+						return 0;
+				}
+			}
+			
 		}
 
 		/// <summary>
@@ -135,16 +156,23 @@ namespace Payroll.Service
 		/// <returns></returns>
 		private decimal CalculateGross(CrewBossPayLine crewBossPayLine)
 		{
-			switch(crewBossPayLine.PayMethod)
+			if(crewBossPayLine.ShiftDate < new DateTime(2021, 2, 8))
 			{
-				case CrewBossPayMethod.HourlyTrees:
-				case CrewBossPayMethod.HourlyVines:
-				case CrewBossPayMethod.SouthHourly:
-					return crewBossPayLine.HoursWorked * crewBossPayLine.HourlyRate;
-				case CrewBossPayMethod.SouthDaily:
-					return SouthDailyPay;
-				default: return 0;
-			};
+				switch (crewBossPayLine.PayMethod)
+				{
+					case CrewBossPayMethod.HourlyTrees:
+					case CrewBossPayMethod.HourlyVines:
+					case CrewBossPayMethod.SouthHourly:
+						return crewBossPayLine.HoursWorked * crewBossPayLine.HourlyRate;
+					case CrewBossPayMethod.SouthDaily:
+						return SouthDailyPay;
+					default: return 0;
+				};
+			}
+			else
+			{
+				return crewBossPayLine.HoursWorked * crewBossPayLine.HourlyRate;
+			}
 		}
 
 		/// <summary>

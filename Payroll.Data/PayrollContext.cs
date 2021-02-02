@@ -13,6 +13,7 @@ namespace Payroll.Data
 		public DbSet<Batch> Batches { get; set; }
 		public DbSet<MinimumWage> MinimumWages { get; set; }
 		public DbSet<CrewBossWage> CrewBossWages { get; set; }
+		public DbSet<SouthCrewBossWage> SouthCrewBossWages { get; set; }
 		public DbSet<CrewBossPayLine> CrewBossPayLines { get; set; }
 		public DbSet<RanchPayLine> RanchPayLines { get; set; }
 		public DbSet<PaidSickLeave> PaidSickLeaves { get; set; }
@@ -78,6 +79,7 @@ namespace Payroll.Data
 		{
 			SeedMinimumWage(modelBuilder);
 			SeedCrewBossWage(modelBuilder);
+			SeedSouthCrewBossWage(modelBuilder);
 			SeedCrewLaborWage(modelBuilder);
 		}
 
@@ -124,6 +126,17 @@ namespace Payroll.Data
 				CreateCrewBossWage(23, new DateTime(2019, 12, 2), 0, 16));
 		}
 
+		protected void SeedSouthCrewBossWage(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<SouthCrewBossWage>().HasData(
+				CreateSouthCrewBossWage(1, new DateTime(2021, 2, 8), 19, 24.75M),
+				CreateSouthCrewBossWage(2, new DateTime(2021, 2, 8), 18, 24.25M),
+				CreateSouthCrewBossWage(3, new DateTime(2021, 2, 8), 17, 23.75M),
+				CreateSouthCrewBossWage(4, new DateTime(2021, 2, 8), 16, 23.25M),
+				CreateSouthCrewBossWage(5, new DateTime(2021, 2, 8), 15, 22.75M),
+				CreateSouthCrewBossWage(6, new DateTime(2021, 2, 8), 0, 17.90M));
+		}
+
 		private void SeedCrewLaborWage(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<CrewLaborWage>().HasData(
@@ -146,6 +159,19 @@ namespace Payroll.Data
 		protected CrewBossWage CreateCrewBossWage(int id, DateTime effectiveDate, int workerCountThreshold, decimal wage)
 		{
 			return new CrewBossWage
+			{
+				DateCreated = DefaultDate,
+				DateModified = DefaultDate,
+				EffectiveDate = effectiveDate,
+				Id = id,
+				WorkerCountThreshold = workerCountThreshold,
+				Wage = wage
+			};
+		}
+
+		protected SouthCrewBossWage CreateSouthCrewBossWage(int id, DateTime effectiveDate, int workerCountThreshold, decimal wage)
+		{
+			return new SouthCrewBossWage
 			{
 				DateCreated = DefaultDate,
 				DateModified = DefaultDate,

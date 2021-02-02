@@ -133,6 +133,7 @@ namespace Payroll
 			services.AddScoped<Service.Interface.IRanchHourlyRateSelector, Service.RanchHourlyRateSelector>();
 			services.AddScoped<Service.Interface.IPlantHourlyRateSelector, Service.PlantHourlyRateSelector>();
 			services.AddScoped<Service.Interface.ICrewBossWageService, Service.CrewBossWageService>();
+			services.AddScoped<Service.Interface.ISouthCrewBossWageService, Service.SouthCrewBossWageService>();
 			services.AddScoped<Service.Interface.ICrewLaborWageService, Service.CrewLaborWageService>();
 			services.AddScoped<Service.Interface.IMinimumWageService, Service.MinimumWageService>();
 			services.AddScoped<Service.Interface.IGrossFromHoursCalculator, Service.GrossFromHoursCalculator>();

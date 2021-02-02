@@ -66,7 +66,7 @@ namespace Payroll.IntegrationTest
 			
 
 			var paidSickLeaveService = new PaidSickLeaveService(context, roundingService);
-			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageService(context), roundingService);
+			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageService(context), new SouthCrewBossWageService(context), roundingService);
 			var ranchDailyOTDTHoursCalculator = new RanchDailyOTDTHoursCalculator();
 			var ranchWeeklySummaryCalculator = new RanchWeeklySummaryCalculator(roundingService);
 			var ranchWeeklyOverTimeHoursCalculator = new RanchWeeklyOTHoursCalculator(roundingService);
@@ -177,7 +177,7 @@ namespace Payroll.IntegrationTest
 
 
 			var paidSickLeaveService = new PaidSickLeaveService(context, roundingService);
-			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageService(context), roundingService);
+			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageService(context), new SouthCrewBossWageService(context), roundingService);
 			var ranchDailyOTDTHoursCalculator = new RanchDailyOTDTHoursCalculator();
 			var ranchWeeklySummaryCalculator = new RanchWeeklySummaryCalculator(roundingService);
 			var ranchWeeklyOverTimeHoursCalculator = new RanchWeeklyOTHoursCalculator(roundingService);
