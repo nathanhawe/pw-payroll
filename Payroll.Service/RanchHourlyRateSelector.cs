@@ -52,7 +52,7 @@ namespace Payroll.Service
 			if (laborCode == (int)RanchLaborCode.CrewHelper) return CrewHelper(shiftDate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.CrewHelper_BonusRate) return CrewHelper_BonusRate(shiftDate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.GrapeHarvestSupport) return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate);
-			if (laborCode == (int)RanchLaborCode.Girdling && shiftDate >= new DateTime(2020, 3, 21)) return GirdlingRate(minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.Girdling && shiftDate >= new DateTime(2020, 3, 21)) return GirdlingRate(shiftDate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.Grafting_BuddingExpertCrew) return GraftingBuddingExpertCrewRate(shiftDate, crew, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.RecoveryTime) return RecoveryTimeRate();
 			if (laborCode == (int)RanchLaborCode.NonProductiveTime) return NonProductiveTimeRate();
@@ -156,7 +156,17 @@ namespace Payroll.Service
 			return CrewLaborRate(shiftDate, minimumWageRate);
 		}
 
-		private decimal GirdlingRate(decimal minimumWageRate) => Math.Max(15.50M, minimumWageRate);
+		private decimal GirdlingRate(DateTime shiftDate, decimal minimumWageRate) 
+		{
+			if(shiftDate < new DateTime(2021, 2, 8))
+			{
+				return Math.Max(15.50M, minimumWageRate);
+			}
+			else
+			{
+				return CrewLaborRate(shiftDate, minimumWageRate) + 1;
+			}
+		}
 
 		private decimal RecoveryTimeRate() => 0M;
 

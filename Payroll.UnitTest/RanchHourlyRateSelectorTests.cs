@@ -496,15 +496,31 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_215_Girdling_OnOrAfter20200321_Returns15_50()
+		public void LaborCode_215_Girdling_OnOrAfter20200321_Before20210208_Returns15_50()
 		{
 			var laborCode = (int)RanchLaborCode.Girdling;
 			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2020, 3, 21)));
-			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2030, 12, 31)));
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2021, 2, 7)));
 
 			// Minimum Wage
 			Assert.AreEqual(_crewLaborRate + 1M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2020, 3, 21), minimumWage: _crewLaborRate + 1M));
-			Assert.AreEqual(_crewLaborRate + 1M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2030, 12, 31), minimumWage: _crewLaborRate + 1M));
+			Assert.AreEqual(_crewLaborRate + 1M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: new DateTime(2021, 2, 7), minimumWage: _crewLaborRate + 1M));
+		}
+
+		[TestMethod]
+		public void LaborCode_215_Girdling_OnOrAfter20210208_ReturnsCrewLaborRatePlus1()
+		{
+			var laborCode = (int)RanchLaborCode.Girdling;
+			var effectiveDate = new DateTime(2021, 2, 8);
+
+			// Return crew labor rate + 1
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + 3M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
+
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual((_crewLaborRate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual((_crewLaborRate + 3M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate.AddYears(10)));
 		}
 
 		[TestMethod]
