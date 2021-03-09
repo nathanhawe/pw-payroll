@@ -103,6 +103,8 @@ namespace Payroll.Service
 			 Select only pay types:
 				1-Regular
 				4-Pieces
+				4.1-Hourly plus Pieces
+				4.2-Production Incentive Bonus
 				8.1-CB Daily Rate
 				8.2-CB Per Worker Rate
 				8.3-CB Hourly Trees
@@ -118,6 +120,8 @@ namespace Payroll.Service
 					&& (
 						x.PayType == PayType.Regular
 						|| x.PayType == PayType.Pieces
+						|| x.PayType == PayType.HourlyPlusPieces
+						|| x.PayType == PayType.ProductionIncentiveBonus
 						|| x.PayType == PayType.CBDaily
 						|| x.PayType == PayType.CBPerWorker
 						|| x.PayType == PayType.CBHourlyTrees
@@ -157,6 +161,8 @@ namespace Payroll.Service
 			 Select only pay types:
 				1-Regular
 				4-Pieces
+				4.1-Hourly plus Pieces
+				4.2-Production Incentive Bonus
 				8.1-CB Daily Rate
 				8.2-CB Per Worker Rate
 				8.3-CB Hourly Trees
@@ -172,6 +178,8 @@ namespace Payroll.Service
 					&& (
 						x.PayType == PayType.Regular
 						|| x.PayType == PayType.Pieces
+						|| x.PayType == PayType.HourlyPlusPieces
+						|| x.PayType == PayType.ProductionIncentiveBonus
 						|| x.PayType == PayType.CBDaily
 						|| x.PayType == PayType.CBPerWorker
 						|| x.PayType == PayType.CBHourlyTrees

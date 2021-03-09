@@ -11,7 +11,7 @@ namespace Payroll.Domain.Constants
 		public const string DoubleTime = "3-DT";
 		public const string Pieces = "4-Pieces";
 		public const string HourlyPlusPieces = "4.1-Hourly plus Pieces";
-		public const string ProductivityOnlyPieces = "4.2-Pieces-Productivity Only - No Piece Rate";
+		public const string ProductionIncentiveBonus = "4.2-Production Incentive Bonus";
 		public const string MinimumAssurance = "5-Minimum Assurance";
 		public const string MinimumAssurance_Regular = "5.1-Minimum Assurance Reg";
 		public const string MinimumAssurance_OverTime = "5.2-Minimum Assurance OT";

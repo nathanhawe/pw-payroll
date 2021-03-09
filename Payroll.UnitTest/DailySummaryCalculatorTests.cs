@@ -440,6 +440,48 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void RanchPayLine_ProductionIncentiveBonus()
+		{
+			var dbName = "RanchPayLine_ProductionIncentiveBonus";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+			var payType = PayType.ProductionIncentiveBonus;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, totalGross: (0 + 352 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, totalGross: (100.05M + 0 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, totalGross: (100.05M + 140 + 0), payType: payType));
+
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, totalGross: (0 + 352 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, totalGross: (100.05M + 0 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, totalGross: (100.05M + 140 + 0), payType: payType));
+
+			context.SaveChanges();
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
+
+			Assert.AreEqual(6, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 35.2M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 27.01M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 410.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 41.01M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 9 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 39.11M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 9 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 30.01M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 9 && x.TotalGross == 410.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 45.56M).Count());
+
+		}
+
+		[TestMethod]
 		public void RanchPayLine_RegularNonProductiveTime()
 		{
 			var dbName = "RanchPayLine_RegularNonProductiveTime";
@@ -957,6 +999,48 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, totalGross: (100.05M+0+0), payType: PayType.Regular));
 			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0+170+0), payType: PayType.Pieces));
 			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, totalGross: (100.05M+140+0), payType: PayType.Pieces));
+
+			context.SaveChanges();
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
+
+			Assert.AreEqual(6, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 35.2M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 10 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 27.01M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 410.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 41.01M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 9 && x.TotalGross == 352 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 39.11M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 9 && x.TotalGross == 270.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 30.01M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 9 && x.TotalGross == 410.05M && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 45.56M).Count());
+
+		}
+
+		[TestMethod]
+		public void RanchAdjustmentLine_ProductionIncentiveBonus()
+		{
+			var dbName = "RanchAdjustmentLine_ProductionIncentiveBonus";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+			var payType = PayType.ProductionIncentiveBonus;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 10, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, totalGross: (0 + 352 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, totalGross: (100.05M + 0 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 6.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, totalGross: (100.05M + 140 + 0), payType: payType));
+
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 9, grossFromHours: 0, grossFromPieces: 352, otherGross: 0, totalGross: (0 + 352 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 0, otherGross: 0, totalGross: (100.05M + 0 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 3.33M, grossFromHours: 0, grossFromPieces: 170, otherGross: 0, totalGross: (0 + 170 + 0), payType: payType));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 5.67M, grossFromHours: 100.05M, grossFromPieces: 140, otherGross: 0, totalGross: (100.05M + 140 + 0), payType: payType));
 
 			context.SaveChanges();
 

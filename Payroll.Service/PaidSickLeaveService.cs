@@ -195,7 +195,7 @@ namespace Payroll.Service
 		/// <param name="batchId"></param>
 		private void UpdateRanchTracking(int batchId)
 		{
-			// Retrieve ranch paylines with Regular, Pieces, Hourly Plus Pieces, and Crew Boss pay types
+			// Retrieve ranch paylines with Regular, Pieces, Hourly Plus Pieces, Production Incentive Bonus, and Crew Boss pay types
 			// Group all pay lines by employee and date, sum hours, sum gross.
 			var paidSickLeaves = (
 				from payLine in _context.RanchPayLines
@@ -207,6 +207,7 @@ namespace Payroll.Service
 						payLine.PayType == PayType.Regular
 						|| payLine.PayType == PayType.Pieces
 						|| payLine.PayType == PayType.HourlyPlusPieces
+						|| payLine.PayType == PayType.ProductionIncentiveBonus
 						|| payLine.PayType == PayType.CBCommission
 						|| payLine.PayType == PayType.CBDaily
 						|| payLine.PayType == PayType.CBHourlyTrees

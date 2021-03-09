@@ -33,7 +33,8 @@ namespace Payroll.UnitTest
 
 			// Mock ranch pay lines
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 50, payType: PayType.Regular));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 100, payType: PayType.Pieces));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 2.5M, totalGross: 50, payType: PayType.Pieces));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 2.5M, totalGross: 50, payType: PayType.ProductionIncentiveBonus));
 
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 80, payType: PayType.Regular));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 80, payType: PayType.Regular));
@@ -102,7 +103,8 @@ namespace Payroll.UnitTest
 
 			// Mock ranch pay lines
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 50, payType: PayType.Regular));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 100, payType: PayType.Pieces));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 2.5M, totalGross: 50, payType: PayType.Pieces));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 2.5M, totalGross: 50, payType: PayType.ProductionIncentiveBonus));
 
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 80, payType: PayType.Regular));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 80, payType: PayType.Regular));
@@ -156,7 +158,8 @@ namespace Payroll.UnitTest
 
 			// Mock ranch pay lines
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: (50 + 0 + 0), payType: PayType.Regular));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: (0 + 100 + 0), payType: PayType.Pieces));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 2.5M, totalGross: (0 + 50 + 0), payType: PayType.Pieces));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 2.5M, totalGross: (0 + 50 + 0), payType: PayType.ProductionIncentiveBonus));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: (80 + 0 + 0), payType: PayType.Regular));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee2", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: (80 + 0 + 0), payType: PayType.HourlyPlusPieces));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee3", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 8, totalGross: (0 + 0 + 179), payType: PayType.CBDaily));

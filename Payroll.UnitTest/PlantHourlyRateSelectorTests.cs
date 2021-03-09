@@ -172,9 +172,9 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void PayTypeProductivityOnlyPieces_ReturnsZero()
+		public void PayTypeProductionIncentiveBonus_ReturnsZero()
 		{
-			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.ProductivityOnlyPieces));
+			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.ProductionIncentiveBonus));
 		}
 
 		[TestMethod]

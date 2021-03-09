@@ -940,7 +940,8 @@ namespace Payroll.Service
 			_grossFromPiecesCalculator.CalculateGrossFromPieces(ranchPayLines.Where(x => 
 				(
 					x.PayType == PayType.Pieces
-					|| x.PayType == PayType.HourlyPlusPieces))
+					|| x.PayType == PayType.HourlyPlusPieces
+					|| x.PayType == PayType.ProductionIncentiveBonus))
 				.ToList());
 			
 			// Total
@@ -987,7 +988,8 @@ namespace Payroll.Service
 			var pieceLines = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId &&
 				(
 					x.PayType == PayType.Pieces
-					|| x.PayType == PayType.HourlyPlusPieces))
+					|| x.PayType == PayType.HourlyPlusPieces
+					|| x.PayType == PayType.ProductionIncentiveBonus))
 				.ToList();
 			_grossFromPiecesCalculator.CalculateGrossFromPieces(pieceLines);
 			_context.RanchAdjustmentLines.UpdateRange(pieceLines);
