@@ -237,7 +237,7 @@ namespace Payroll.UnitTest
 			Assert.IsTrue(14.75M == DefaultTest(payType: Payroll.Domain.Constants.PayType.SickLeave, payLineHourlyRate: 12.45M, hourlyRateOverride: 14.75M));
 			Assert.IsTrue(5M == DefaultTest(payType: Payroll.Domain.Constants.PayType.SickLeave, payLineHourlyRate: 12.45M, hourlyRateOverride: 5M));
 			Assert.IsTrue((_currentH2ARate + 2) == DefaultTest(payType: Payroll.Domain.Constants.PayType.SickLeave, payLineHourlyRate: (_currentH2ARate + 1M), hourlyRateOverride: (_currentH2ARate + 2), isH2A: true, shiftDate: DateTime.Now));
-		}		
+		}
 
 		[TestMethod]
 		public void PayTypeCovid19_ReturnsGreaterOfPayLineHourlyRateAndEmployeeRate()
@@ -552,156 +552,14 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A()
+		public void LaborCode_535_NightSanitation()
 		{
-			/*
-				[535 Rate] = 
-					[Shift Date] < #3-2-2020# =>
-						[Plant]=11 => [EmployeeHourlyRateCalc]
-						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
-						ELSE [EmployeeHourlyRateCalc]
-					ELSE
-						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
-						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
-			var plant = Plant.Cutler;
-			var startDate = new DateTime(2000, 1, 1);
-			var endDate = new DateTime(2020, 3, 1);
-
-			// Override
-			Assert.AreEqual(15M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: startDate));
-			Assert.AreEqual(15M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: endDate));
-
-			// Employee Hourly Rate
-			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
-
-			// Minimum Wage
-			Assert.AreEqual(15.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(15.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+			LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A();
+			LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate();
+			LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne();
+			LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77();
+			LaborCode_535_NightSanitation_OnOrAfter20210322();
 		}
-
-		[TestMethod]
-		public void LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate()
-		{
-			/*
-				[535 Rate] = 
-					[Shift Date] < #3-2-2020# =>
-						[Plant]=11 => [EmployeeHourlyRateCalc]
-						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
-						ELSE [EmployeeHourlyRateCalc]
-					ELSE
-						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
-						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
-			var startDate = new DateTime(2000, 1, 1);
-			var endDate = new DateTime(2020, 3, 1);
-			var historicalH2ARate = 13.92M;
-
-			// Override above H2A return Override
-			Assert.AreEqual((historicalH2ARate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate + .5M), shiftDate: startDate));
-			Assert.AreEqual((historicalH2ARate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate + .5M), shiftDate: endDate));
-
-			// Override below H2A returns Override
-			Assert.AreEqual((historicalH2ARate - 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate - 1M), shiftDate: startDate));
-			Assert.AreEqual((historicalH2ARate - 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate - 1M), shiftDate: endDate));
-
-			// No override and Employee Hourly Rate is max
-			Assert.AreEqual((historicalH2ARate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: 0, hourlyRateOverride: 0, shiftDate: startDate));
-			Assert.AreEqual((historicalH2ARate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: 0, hourlyRateOverride: 0, shiftDate: endDate));
-
-			// No override and Minimum Wage is max
-			Assert.AreEqual((historicalH2ARate + 1.5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: 0, shiftDate: startDate));
-			Assert.AreEqual((historicalH2ARate + 1.5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: 0, shiftDate: endDate));
-
-			// No override and H2A Rate is max
-			Assert.AreEqual((historicalH2ARate), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate - 1), minimumWage: (historicalH2ARate - .5M), hourlyRateOverride: 0, shiftDate: startDate));
-			Assert.AreEqual((historicalH2ARate), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate - 1), minimumWage: (historicalH2ARate - .5M), hourlyRateOverride: 0, shiftDate: endDate));
-		}
-
-		[TestMethod]
-		public void LaborCode_535_NightSanitation_OnOrAfter20200302_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne()
-		{
-			/*
-				[535 Rate] = 
-					[Shift Date] < #3-2-2020# =>
-						[Plant]=11 => [EmployeeHourlyRateCalc]
-						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
-						ELSE [EmployeeHourlyRateCalc]
-					ELSE
-						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
-						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
-			var plant = Plant.Cutler;
-			var startDate = new DateTime(2020, 3, 2);
-			var endDate = startDate.AddYears(5);
-
-			// Override greater than minimum + 1
-			Assert.AreEqual(17M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: startDate));
-			Assert.AreEqual(17M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: endDate));
-
-			// Override less than minimum + 1
-			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 16M, shiftDate: startDate));
-			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 16M, shiftDate: endDate));
-
-			// Employee Hourly Rate greater than minimum +1
-			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
-
-			// Employee Hourly Rate less than minimum + 1
-			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15M, hourlyRateOverride: 0M, shiftDate: endDate));
-
-			// Minimum Wage greatest
-			Assert.AreEqual(16.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(16.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
-		}
-
-		[TestMethod]
-		public void LaborCode_535_NightSanitation_OnOrAfter20200302_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77()
-		{
-			/*
-				[535 Rate] = 
-					[Shift Date] < #3-2-2020# =>
-						[Plant]=11 => [EmployeeHourlyRateCalc]
-						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
-						ELSE [EmployeeHourlyRateCalc]
-					ELSE
-						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
-						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
-			var startDate = new DateTime(2020, 3, 2);
-			var endDate = startDate.AddYears(5);
-
-			// Override greater than 14.77
-			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: startDate));
-			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: endDate));
-
-			// Override less than 14.77
-			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: startDate));
-			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: endDate));
-
-			// Employee Hourly Rate greater than 14.77
-			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
-
-			// Employee Hourly Rate less than 14.77
-			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
-
-			// Minimum Wage greater than 14.77
-			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
-
-			// Minimum Wage less than 14.77
-			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: startDate));
-			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: endDate));
-		}
-
 
 		[TestMethod]
 		public void LaborCode_536_NightShiftSupervision_Before20201019()
@@ -726,12 +584,12 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_536_NightShiftSupervision_OnOrAfter20201019()
+		public void LaborCode_536_NightShiftSupervision_OnOrAfter20201019_Before20210322()
 		{
 			// Always returns the employee hourly rate
 			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
 			var startDate = new DateTime(2020, 10, 19);
-			var endDate = startDate.AddYears(5);
+			var endDate = new DateTime(2021, 3, 21);
 
 			// Override
 			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: startDate));
@@ -744,6 +602,211 @@ namespace Payroll.UnitTest
 			// Minimum Wage
 			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
 			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_536_NightShiftSupervision_OnOrAfter20210322()
+		{
+			/*
+				Always returns 3 + [EmployeeHourlyRateCalc] when at plants 3, 4, and 11 from May 1 through October 15 
+				otherwise returns [EmployeeHourlyRateClac].  The formula for [EmployeeHourlyRateCalc] is:
+						
+						[Hourly Rate Override] > 0 => [Hourly Rate Override]
+						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
+			*/
+			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
+			var startYear = 2021;
+
+			/* Before May 1 or after October 15 is [EmployeeHourlyRateCalc] */
+			// Override
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+
+			// Employee Hourly Rate
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			// Minimum Wage
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 16)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 4, 30)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 16)));
+
+
+			/* Between May 1 and October 15 inclusive the rate for plants 3, 4, and 11 is the calculated employee hourly rate + 3. All other location return the calculated employee rate */
+			// Override
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			// Employee Hourly Rate
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(18.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			// Minimum Wage
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(18.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Reedley, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Office, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 5, 1)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear, 10, 15)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 5, 1)));
+			Assert.AreEqual(15.75M, DefaultTest(plant: Plant.Unknown, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: new DateTime(startYear + 5, 10, 15)));
+
 		}
 
 
@@ -869,7 +932,8 @@ namespace Payroll.UnitTest
 			Palletizer_Before20190527(laborCode);
 			Palletizer_OnOrAfter20190527_Before20200302(laborCode);
 			Palletizer_OnOrAfter20200302_Before20200518(laborCode);
-			Palletizer_OnOrAfter20200518(laborCode);
+			Palletizer_OnOrAfter20200518_Before20210322(laborCode);
+			Palletizer_OnOrAfter20210322(laborCode);
 		}
 
 		private void Palletizer_Before20190527(int laborCode)
@@ -1059,14 +1123,14 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 15M, shiftDate: endDate, plant: Plant.Cutler));
 		}
 
-		private void Palletizer_OnOrAfter20200518(int laborCode)
+		private void Palletizer_OnOrAfter20200518_Before20210322(int laborCode)
 		{
 			/* 
 				Plants 3 and 4 return the greater of [Employee Hourly Rate] and 14.77
 				Plant 11 returns the greater of [Employee Hourly Rate] and 14.5
 			*/
 			var startDate = new DateTime(2020, 5, 18);
-			var endDate = startDate.AddYears(5);
+			var endDate = new DateTime(2021, 3, 21);
 
 			/* All plants other than Cutler always return the greater of [Employee Hourly Rate] and 14.77 */
 			// No override, employee and minimum below 14.77
@@ -1111,12 +1175,73 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 15M, shiftDate: endDate, plant: Plant.Cutler));
 		}
 
+		private void Palletizer_OnOrAfter20210322(int laborCode)
+		{
+			/* 
+				Plants 3, 4, and 11 return the greater of [Employee Hourly Rate] and 16.05
+			*/
+			var startDate = new DateTime(2021, 3, 22);
+			var endDate = startDate.AddYears(5);
+
+			/* Plants 3, 4, and 11 always return the greater of [Employee Hourly Rate] and 16.05 */
+			// No override, employee and minimum below 16.05
+			Assert.AreEqual(16.05M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(16.05M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(16.05M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(16.05M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Sanger, shiftDate: endDate));
+			Assert.AreEqual(16.05M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(16.05M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Cutler, shiftDate: endDate));
+
+			// Minimum Wage is above 16.05
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 17M, hourlyRateOverride: 0, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 17M, hourlyRateOverride: 0, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 17M, hourlyRateOverride: 0, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 17M, hourlyRateOverride: 0, plant: Plant.Sanger, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 17M, hourlyRateOverride: 0, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 17M, hourlyRateOverride: 0, plant: Plant.Cutler, shiftDate: endDate));
+
+			// Employee Hourly Rate is above 16.05
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0, plant: Plant.Sanger, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0, plant: Plant.Cutler, shiftDate: endDate));
+
+			// Override, Minimum Wage, and Employee Hourly Rate are below 16.05
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, plant: Plant.Sanger, shiftDate: endDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, plant: Plant.Cutler, shiftDate: endDate));
+
+			// Override is above 16.05
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 17M, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 17M, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 17M, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 17M, plant: Plant.Sanger, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 17M, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 17M, plant: Plant.Cutler, shiftDate: endDate));
+
+
+			/* Locations other than 3, 4, and 11 return [Employee Hourly Rate] */
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Office, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Reedley, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Unknown, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Office, shiftDate: endDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Reedley, shiftDate: endDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Unknown, shiftDate: endDate));
+
+		}
+
 
 		private void Rate503Tests(int laborCode)
 		{
 			BucketLoader_Before20190527(laborCode);
 			BucketLoader_OnOrAfter20190527_Before20200302(laborCode);
-			BucketLoader_OnOrAfter20200302(laborCode);
+			BucketLoader_OnOrAfter20200302_Before20210322(laborCode);
+			BucketLoader_OnOrAfter20210322(laborCode);
 		}
 
 		private void BucketLoader_Before20190527(int laborCode)
@@ -1211,7 +1336,7 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(13.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15M, minimumWage: 14M, hourlyRateOverride: 13.5M, shiftDate: endDate));
 		}
 
-		private void BucketLoader_OnOrAfter20200302(int laborCode)
+		private void BucketLoader_OnOrAfter20200302_Before20210322(int laborCode)
 		{
 			/* 
 				[503 Rate] = 
@@ -1226,7 +1351,7 @@ namespace Payroll.UnitTest
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
 			var startDate = new DateTime(2020, 3, 2);
-			var endDate = startDate.AddYears(5);
+			var endDate = new DateTime(2021, 3, 21);
 
 			/* All plants other than Cutler always return Max of [EmployeeHourlyRateCalc] and minimum + 1 */
 			// No override, employee and minimum equal
@@ -1281,6 +1406,286 @@ namespace Payroll.UnitTest
 			// Override is least
 			Assert.AreEqual(8M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 8M, shiftDate: startDate, plant: Plant.Cutler));
 			Assert.AreEqual(8M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 8M, shiftDate: endDate, plant: Plant.Cutler));
+		}
+
+		private void BucketLoader_OnOrAfter20210322(int laborCode)
+		{
+			var startDate = new DateTime(2021, 3, 22);
+			var endDate = startDate.AddYears(5);
+
+			/* All plants other than Cutler always return Max of minimum wage, [EmployeeHourlyRateCalc],  15 */
+			// No override, employee and minimum less than 15
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, shiftDate: startDate));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, shiftDate: endDate));
+
+			// Minimum Wage is greater and 15
+			Assert.AreEqual(16M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 16M, hourlyRateOverride: 0, shiftDate: startDate));
+			Assert.AreEqual(16M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 16M, hourlyRateOverride: 0, shiftDate: endDate));
+
+			// Employee Hourly Rate is greater than 15
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 16.5M, minimumWage: 16M, hourlyRateOverride: 0, shiftDate: startDate));
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 16.5M, minimumWage: 16M, hourlyRateOverride: 0, shiftDate: endDate));
+
+			// Override, Minimum Wage, and Employee Hourly Rate are equal
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, shiftDate: endDate));
+
+			// Override is greatest
+			Assert.AreEqual(16M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 16M, shiftDate: startDate));
+			Assert.AreEqual(16M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 16M, shiftDate: endDate));
+
+			// Override is less than employee hourly rate, minimum, and 15
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 16.5M, minimumWage: 14.75M, hourlyRateOverride: 10M, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 16.5M, minimumWage: 14.75M, hourlyRateOverride: 10M, shiftDate: endDate));
+
+			/* Cutler always returns [EmployeeHourlyRateCalc] */
+			// No override, employee and minimum equal
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, shiftDate: startDate, plant: Plant.Cutler));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, shiftDate: endDate, plant: Plant.Cutler));
+
+			// Minimum Wage is above greater
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 15M, hourlyRateOverride: 0, shiftDate: startDate, plant: Plant.Cutler));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 15M, hourlyRateOverride: 0, shiftDate: endDate, plant: Plant.Cutler));
+
+			// Employee Hourly Rate greater
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15M, minimumWage: 10M, hourlyRateOverride: 0, shiftDate: startDate, plant: Plant.Cutler));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15M, minimumWage: 10M, hourlyRateOverride: 0, shiftDate: endDate, plant: Plant.Cutler));
+
+			// Override, Minimum Wage, and Employee Hourly Rate are equal
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, shiftDate: startDate, plant: Plant.Cutler));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 10, shiftDate: endDate, plant: Plant.Cutler));
+
+			// Override is greater
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 15M, shiftDate: startDate, plant: Plant.Cutler));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 15M, shiftDate: endDate, plant: Plant.Cutler));
+
+			// Override is least
+			Assert.AreEqual(8M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 8M, shiftDate: startDate, plant: Plant.Cutler));
+			Assert.AreEqual(8M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 8M, shiftDate: endDate, plant: Plant.Cutler));
+		}
+
+		private void LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A()
+		{
+			/*
+				[535 Rate] = 
+					[Shift Date] < #3-2-2020# =>
+						[Plant]=11 => [EmployeeHourlyRateCalc]
+						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
+						ELSE [EmployeeHourlyRateCalc]
+					ELSE
+						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
+						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
+			*/
+			var laborCode = (int)PlantLaborCode.NightSanitation;
+			var plant = Plant.Cutler;
+			var startDate = new DateTime(2000, 1, 1);
+			var endDate = new DateTime(2020, 3, 1);
+
+			// Override
+			Assert.AreEqual(15M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: startDate));
+			Assert.AreEqual(15M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, shiftDate: endDate));
+
+			// Employee Hourly Rate
+			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(15.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+		}
+
+		private void LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate()
+		{
+			/*
+				[535 Rate] = 
+					[Shift Date] < #3-2-2020# =>
+						[Plant]=11 => [EmployeeHourlyRateCalc]
+						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
+						ELSE [EmployeeHourlyRateCalc]
+					ELSE
+						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
+						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
+			*/
+			var laborCode = (int)PlantLaborCode.NightSanitation;
+			var startDate = new DateTime(2000, 1, 1);
+			var endDate = new DateTime(2020, 3, 1);
+			var historicalH2ARate = 13.92M;
+
+			// Override above H2A return Override
+			Assert.AreEqual((historicalH2ARate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate + .5M), shiftDate: startDate));
+			Assert.AreEqual((historicalH2ARate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate + .5M), shiftDate: endDate));
+
+			// Override below H2A returns Override
+			Assert.AreEqual((historicalH2ARate - 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate - 1M), shiftDate: startDate));
+			Assert.AreEqual((historicalH2ARate - 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: (historicalH2ARate - 1M), shiftDate: endDate));
+
+			// No override and Employee Hourly Rate is max
+			Assert.AreEqual((historicalH2ARate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: 0, hourlyRateOverride: 0, shiftDate: startDate));
+			Assert.AreEqual((historicalH2ARate + 1M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: 0, hourlyRateOverride: 0, shiftDate: endDate));
+
+			// No override and Minimum Wage is max
+			Assert.AreEqual((historicalH2ARate + 1.5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: 0, shiftDate: startDate));
+			Assert.AreEqual((historicalH2ARate + 1.5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate + 1), minimumWage: (historicalH2ARate + 1.5M), hourlyRateOverride: 0, shiftDate: endDate));
+
+			// No override and H2A Rate is max
+			Assert.AreEqual((historicalH2ARate), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate - 1), minimumWage: (historicalH2ARate - .5M), hourlyRateOverride: 0, shiftDate: startDate));
+			Assert.AreEqual((historicalH2ARate), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate - 1), minimumWage: (historicalH2ARate - .5M), hourlyRateOverride: 0, shiftDate: endDate));
+		}
+
+		private void LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne()
+		{
+			/*
+				[535 Rate] = 
+					[Shift Date] < #3-2-2020# =>
+						[Plant]=11 => [EmployeeHourlyRateCalc]
+						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
+						ELSE [EmployeeHourlyRateCalc]
+					ELSE
+						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
+						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
+			*/
+			var laborCode = (int)PlantLaborCode.NightSanitation;
+			var plant = Plant.Cutler;
+			var startDate = new DateTime(2020, 3, 2);
+			var endDate = new DateTime(2021, 3, 21);
+
+			// Override greater than minimum + 1
+			Assert.AreEqual(17M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: endDate));
+
+			// Override less than minimum + 1
+			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 16M, shiftDate: startDate));
+			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 16M, shiftDate: endDate));
+
+			// Employee Hourly Rate greater than minimum +1
+			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.5M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Employee Hourly Rate less than minimum + 1
+			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage greatest
+			Assert.AreEqual(16.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+		}
+
+		private void LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77()
+		{
+			/*
+				[535 Rate] = 
+					[Shift Date] < #3-2-2020# =>
+						[Plant]=11 => [EmployeeHourlyRateCalc]
+						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
+						ELSE [EmployeeHourlyRateCalc]
+					ELSE
+						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
+						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
+			*/
+			var laborCode = (int)PlantLaborCode.NightSanitation;
+			var startDate = new DateTime(2020, 3, 2);
+			var endDate = new DateTime(2021, 3, 21);
+
+			// Override greater than 14.77
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: endDate));
+
+			// Override less than 14.77
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: endDate));
+
+			// Employee Hourly Rate greater than 14.77
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Employee Hourly Rate less than 14.77
+			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage greater than 14.77
+			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage less than 14.77
+			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(14.77M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+		}
+
+
+		private void LaborCode_535_NightSanitation_OnOrAfter20210322()
+		{
+
+			var laborCode = (int)PlantLaborCode.NightSanitation;
+			var startDate = new DateTime(2021, 3, 22);
+			var endDate = startDate.AddYears(5);
+
+			/* CUTLER is unchanged*/
+			// Override greater than minimum + 1
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: endDate));
+
+			// Override less than minimum + 1
+			Assert.AreEqual(16M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 16M, shiftDate: startDate));
+			Assert.AreEqual(16M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 16M, shiftDate: endDate));
+
+			// Employee Hourly Rate greater than minimum +1
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(15.5M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Employee Hourly Rate less than minimum + 1
+			Assert.AreEqual(16M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage greatest
+			Assert.AreEqual(16.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16.75M, DefaultTest(plant: Plant.Cutler, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+
+			/* Plants 3 and 4 return greater of the calculated employee hourly rate and 16.05*/
+
+			// Override greater than 16.05
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 17M, shiftDate: endDate));
+
+			// Override less than 16.05
+			Assert.AreEqual(10M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: endDate));
+			Assert.AreEqual(10M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 10M, shiftDate: endDate));
+
+			// Employee Hourly Rate greater than 16.05
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 17M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Employee Hourly Rate less than 16.05
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 12.5M, minimumWage: 10M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage greater than 16.05
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 17M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 17M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 17M, hourlyRateOverride: 0M, shiftDate: endDate));
+			Assert.AreEqual(17M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 17M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			// Minimum Wage less than 16.05
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: startDate));
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Sanger, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+			Assert.AreEqual(16.05M, DefaultTest(plant: Plant.Kerman, laborCode: laborCode, employeeHourlyRate: 10.0M, minimumWage: 12.75M, hourlyRateOverride: 0M, shiftDate: endDate));
+
+			/* Locations other than 3, 4, and 11 return [Employee Hourly Rate] */
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Office, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Reedley, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Unknown, shiftDate: startDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Office, shiftDate: endDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Reedley, shiftDate: endDate));
+			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Unknown, shiftDate: endDate));
 		}
 
 		#endregion
