@@ -150,8 +150,15 @@ namespace Payroll.Service
 		/// <returns></returns>
 		private decimal H2ARate(DateTime shiftDate)
 		{
-			if (shiftDate < new DateTime(2020, 5, 18)) return 13.92M;
-			return 14.77M;
+			if (shiftDate < new DateTime(2020, 5, 18))
+			{
+				return 13.92M;
+			}
+			else if (shiftDate < new DateTime(2021, 4, 26))
+			{
+				return 14.77M;
+			}
+			else return 16.05M;
 		}
 
 

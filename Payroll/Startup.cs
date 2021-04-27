@@ -120,7 +120,12 @@ namespace Payroll
 
 			// Inject the database context for application data
 			services.AddDbContext<PayrollContext>(opt =>
-				opt.UseSqlServer(Configuration.GetConnectionString("PayrollConnection"))
+				opt.UseSqlServer(
+					Configuration.GetConnectionString("PayrollConnection")
+					, sqlServerOptionsAction: sqlOptions =>
+					{
+						sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), null);
+					})
 			);
 			
 			// Inject the Quick Base connection
