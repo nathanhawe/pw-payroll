@@ -141,8 +141,8 @@ namespace Payroll.Service
 				ShiftDate = crewBossPayLine.ShiftDate,
 				Crew = crewBossPayLine.Crew,
 				EmployeeId = crewBossPayLine.EmployeeId,
-				HoursWorked = crewBossPayLine.HoursWorked,
-				PayType = GetPayType(crewBossPayLine.PayMethod),
+				HoursWorked = (crewBossPayLine.HighHeatSupplement ? 0 : crewBossPayLine.HoursWorked),
+				PayType = GetPayType(crewBossPayLine.PayMethod, crewBossPayLine.HighHeatSupplement),
 				OtherGross = crewBossPayLine.Gross,
 				TotalGross = crewBossPayLine.Gross,
 				FiveEight = crewBossPayLine.FiveEight,
@@ -180,8 +180,10 @@ namespace Payroll.Service
 		/// </summary>
 		/// <param name="payMethod"></param>
 		/// <returns></returns>
-		private string GetPayType(string payMethod)
+		private string GetPayType(string payMethod, bool isHighHeatSupplement)
 		{
+			if (isHighHeatSupplement) return PayType.CBHeatRelatedSupplement;
+
 			return payMethod switch
 			{
 				CrewBossPayMethod.HourlyTrees => PayType.CBHourlyTrees,

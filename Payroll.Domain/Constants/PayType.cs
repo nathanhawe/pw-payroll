@@ -30,6 +30,7 @@ namespace Payroll.Domain.Constants
 		public const string CBHourlyVines = "8.4-CB Hourly Vines";
 		public const string CBSouthDaily = "8.5-CB South Daily";
 		public const string CBSouthHourly = "8.6-CB South Hourly";
+		public const string CBHeatRelatedSupplement = "8.7-CB Heat-Related Supplement";
 		public const string CBCommission = "9-Commission";
 		public const string WeeklyOverTime = "40-Weekly OT";
 		public const string Adjustment = "41-Adjustment";

@@ -122,6 +122,7 @@ namespace Payroll.Data.QuickBase
 						case (int)CrewBossPayField.ShiftDate: temp.ShiftDate = ParseDate(field.Value); break;
 						case (int)CrewBossPayField.WeekEndDate: temp.WeekEndDate = ParseDate(field.Value); break;
 						case (int)CrewBossPayField.FiveEight: temp.FiveEight = ParseBooleanFromCheckbox(field.Value); break;
+						case (int)CrewBossPayField.HighHeatSupplement: temp.HighHeatSupplement = ParseBooleanFromCheckbox(field.Value); break;
 					}
 				}
 				crewBossPayLines.Add(temp);
@@ -145,6 +146,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)CrewBossPayField.ShiftDate}.");
 			sb.Append($"{(int)CrewBossPayField.WeekEndDate}.");
 			sb.Append($"{(int)CrewBossPayField.FiveEight}.");
+			sb.Append($"{(int)CrewBossPayField.HighHeatSupplement}.");
 
 			return sb.ToString();
 		}

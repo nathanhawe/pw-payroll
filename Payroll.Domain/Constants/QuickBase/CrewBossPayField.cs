@@ -38,5 +38,10 @@
 		/// [Calculated Gross] - Currency indicates the final gross value for the crew boss pay line.
 		/// </summary>
 		CalculatedGross = 66,
+
+		/// <summary>
+		/// [High Heat Supplement] - Checkbox indicates that the record is for supplemental hours due to heat-related work stoppage.
+		/// </summary>
+		HighHeatSupplement = 75,
 	}
 }

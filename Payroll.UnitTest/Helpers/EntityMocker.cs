@@ -92,7 +92,8 @@ namespace Payroll.UnitTest.Helpers
 			decimal hoursWorked = 0,
 			decimal hourlyRate = 0,
 			decimal gross = 0,
-			bool fiveEight = false)
+			bool fiveEight = false,
+			bool heatRelatedSupplement = false)
 		{
 			dateCreated ??= DateTime.Now;
 			dateModified ??= DateTime.Now;
@@ -117,7 +118,8 @@ namespace Payroll.UnitTest.Helpers
 				HoursWorked = hoursWorked,
 				HourlyRate = hourlyRate,
 				Gross = gross,
-				FiveEight = fiveEight
+				FiveEight = fiveEight,
+				HighHeatSupplement = heatRelatedSupplement,
 			};
 		}
 
