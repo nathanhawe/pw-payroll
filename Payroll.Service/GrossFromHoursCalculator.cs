@@ -96,7 +96,7 @@ namespace Payroll.Service
 						adjustmentLine.Crew, 
 						adjustmentLine.LaborCode, 
 						adjustmentLine.EmployeeHourlyRate, 
-						0,
+						adjustmentLine.HourlyRateOverride,
 						adjustmentLine.ShiftDate,
 						adjustmentLine.HourlyRate);
 				}
@@ -129,7 +129,7 @@ namespace Payroll.Service
 						adjustmentLine.PayType, 
 						adjustmentLine.LaborCode, 
 						adjustmentLine.EmployeeHourlyRate, 
-						0, 
+						adjustmentLine.HourlyRateOverride, 
 						adjustmentLine.IsH2A, 
 						plant, 
 						adjustmentLine.ShiftDate,
