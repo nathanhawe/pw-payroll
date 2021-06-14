@@ -15,24 +15,28 @@ namespace Payroll.UnitTest
 	[TestClass]
 	public class RanchHourlyRateSelectorTests
 	{
-		private readonly decimal _crewLaborRate = 15M;
+		private readonly decimal _crewLaborRate = 15.15M;
+		private readonly decimal _culturalLaborRate = 14.5M;
 		private readonly decimal _minimumWageRate = 14M;
 		private ICrewLaborWageService _mockCrewLaborWageService;
+		private ICulturalLaborWageService _mockCulturalLaborWageService;
 		private RanchHourlyRateSelector _ranchHourlyRateSelector;
 		private MockMinimumWageService _mockMinimumWageService;
 
 		[TestInitialize]
 		public void Setup()
 		{
-			// Create a mock of the crew labor wage selector that always returns the crew labor rate
+			// Create mocks of the wage selector services that return the same value across all dates.
 			_mockCrewLaborWageService = new MockCrewLaborWageService(_crewLaborRate);
+			_mockCulturalLaborWageService = new MockCulturalLaborWageService(_culturalLaborRate);
+
 
 			// Create a mock of the minimum wage selector that always returns less than the crew labor rate
 			_mockMinimumWageService = new MockMinimumWageService();
 			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2000, 1, 1), _minimumWageRate);
 
 			// Setup common instance of rate selector to test
-			_ranchHourlyRateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService, _mockMinimumWageService);
+			_ranchHourlyRateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService, _mockMinimumWageService, _mockCulturalLaborWageService);
 		}
 
 		private decimal DefaultTest(
@@ -50,7 +54,7 @@ namespace Payroll.UnitTest
 			// Setup new services to mock the passed in minimum wage
 			var minimumWageService = new MockMinimumWageService();
 			minimumWageService.Test_AddMinimumWage(shiftDate.Value, minimumWage);
-			var rateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService, minimumWageService);
+			var rateSelector = new RanchHourlyRateSelector(_mockCrewLaborWageService, minimumWageService, _mockCulturalLaborWageService);
 
 			return rateSelector.GetHourlyRate(payType, crew, laborCode, employeeHourlyRate, hourlyRateOverride, shiftDate.Value, payLineHourlyRate);
 		}
@@ -200,63 +204,228 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void PayTypeCovid19_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		public void PayTypeCovid19_Before20210607_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
 		{
+			var endDate = new DateTime(2021, 6, 6);
 			// Pay line is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
 
 			// Employee hourly rate is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: endDate));
 
 			// Crew labor rate is greater
-			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M));
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: endDate));
 
 			// Minimum wage is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
 
 			// Override still applies
-			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M));
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: endDate));
 
 		}
 
 		[TestMethod]
-		public void PayTypeCovid19WageContinuation_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		public void PayTypeCovid19_Crew_OnOrAfter20210607_ReturnsGreaterOfPayLineHourlyRateAndEmployeeRateAndCrewRate()
 		{
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
 			// Pay line is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
 
 			// Employee hourly rate is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: endDate));
 
 			// Crew labor rate is greater
-			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M));
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: endDate));
 
 			// Minimum wage is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
 
 			// Override still applies
-			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M));
-
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: endDate));
 		}
 
 		[TestMethod]
-		public void PayTypeCovid19W_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		public void PayTypeCovid19_Cultural_OnOrAfter20210607_ReturnsGreaterOfPayLineHourlyRateAndEmployeeRateAndCulturalRate()
 		{
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
 			// Pay line is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate + 2M, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate + 2M, employeeHourlyRate: _culturalLaborRate, shiftDate: endDate));
 
 			// Employee hourly rate is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate + 2M, shiftDate: endDate));
 
 			// Crew labor rate is greater
-			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M));
+			Assert.IsTrue(_culturalLaborRate == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, shiftDate: endDate));
 
 			// Minimum wage is greater
-			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, minimumWage: _culturalLaborRate + 2, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, minimumWage: _culturalLaborRate + 2, shiftDate: endDate));
 
 			// Override still applies
-			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M));
+			Assert.IsTrue(_culturalLaborRate - 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate, hourlyRateOverride: _culturalLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate - 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate, hourlyRateOverride: _culturalLaborRate - 2M, shiftDate: endDate));
+		}
 
+		[TestMethod]
+		public void PayTypeCovid19WageContinuation_Before20210607_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		{
+			var endDate = new DateTime(2021, 6, 6);
+
+			// Pay line is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: endDate));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: endDate));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
+
+			// Override still applies
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19WageContinuation_Crew_OnOrAfter20210607_ReturnsGreaterOfPayLineHourlyRateAndEmployeeRateAndCrewRate()
+		{
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// Pay line is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: endDate));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: endDate));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
+
+			// Override still applies
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19WageContinuation_Cultural_OnOrAfter20210607_ReturnsGreaterOfPayLineHourlyRateAndEmployeeRateAndCulturalRate()
+		{
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// Pay line is greater
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate + 2M, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate + 2M, employeeHourlyRate: _culturalLaborRate, shiftDate: endDate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate + 2M, shiftDate: endDate));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_culturalLaborRate == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, shiftDate: endDate));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, minimumWage: _culturalLaborRate + 2, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, minimumWage: _culturalLaborRate + 2, shiftDate: endDate));
+
+			// Override still applies
+			Assert.IsTrue(_culturalLaborRate - 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate, hourlyRateOverride: _culturalLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate - 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19WageContinuation, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate, hourlyRateOverride: _culturalLaborRate - 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19W_Before20210607_ReturnsGreaterOfPayLineHourlyRateAndCulturalRate()
+		{
+			var endDate = new DateTime(2021, 6, 6);
+
+			// Pay line is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: endDate));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: endDate));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
+
+			// Override still applies
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19W_Crew_OnOrAfter20210607_ReturnsGreaterOfPayLineHourlyRateEmployeeRateAndCrewRate()
+		{
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// Pay line is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate + 2M, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate + 2M, shiftDate: endDate));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, shiftDate: endDate));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate + 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate - 2M, employeeHourlyRate: _crewLaborRate - 2M, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
+
+			// Override still applies
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_crewLaborRate - 2M == DefaultTest(payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _crewLaborRate, employeeHourlyRate: _crewLaborRate, hourlyRateOverride: _crewLaborRate - 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void PayTypeCovid19W_Cultural_OnOrAfter20210607_ReturnsGreaterOfPayLineHourlyRateEmployeeRateAndCulturalRate()
+		{
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// Pay line is greater
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate + 2M, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate + 2M, employeeHourlyRate: _culturalLaborRate, shiftDate: endDate));
+
+			// Employee hourly rate is greater
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate + 2M, shiftDate: endDate));
+
+			// Crew labor rate is greater
+			Assert.IsTrue(_culturalLaborRate == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, shiftDate: endDate));
+
+			// Minimum wage is greater
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, minimumWage: _culturalLaborRate + 2, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate + 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate - 2M, employeeHourlyRate: _culturalLaborRate - 2M, minimumWage: _culturalLaborRate + 2, shiftDate: endDate));
+
+			// Override still applies
+			Assert.IsTrue(_culturalLaborRate - 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate, hourlyRateOverride: _culturalLaborRate - 2M, shiftDate: effectiveDate));
+			Assert.IsTrue(_culturalLaborRate - 2M == DefaultTest(crew: 99, payType: Payroll.Domain.Constants.PayType.Covid19W, payLineHourlyRate: _culturalLaborRate, employeeHourlyRate: _culturalLaborRate, hourlyRateOverride: _culturalLaborRate - 2M, shiftDate: endDate));
 		}
 
 		[TestMethod]
@@ -299,6 +468,12 @@ namespace Payroll.UnitTest
 		public void PayTypeCommission_ReturnsZero()
 		{
 			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.CBCommission));
+		}
+
+		[TestMethod]
+		public void CBHeatRelatedSupplement_ReturnsZero()
+		{
+			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.CBHeatRelatedSupplement));
 		}
 
 		[TestMethod]
@@ -347,51 +522,157 @@ namespace Payroll.UnitTest
 		#region Labor Code Tests
 
 		[TestMethod]
-		public void LaborCode_103_AlmostHarvestEquipmentOperatorDay()
+		public void LaborCode_103_AlmondHarvestEquipmentOperatorDay_Before20210607()
 		{
 			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay;
 			// [Labor Code]=103 => If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14.25)
-			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: new DateTime(2021, 6, 6)));
+			Assert.AreEqual(14.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: new DateTime(2021, 6, 6)));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: new DateTime(2021, 6, 6)));
 
 			// Minimum Wage
-			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: 15M));
-			Assert.AreEqual(_crewLaborRate + 2M , DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: 15M, shiftDate: new DateTime(2021, 6, 6)));
+			Assert.AreEqual(_crewLaborRate + 2M , DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2, shiftDate: new DateTime(2021, 6, 6)));
 		}
 
 		[TestMethod]
-		public void LaborCode_104_AlmondHarvestEquipmentOperatorNight()
+		public void LaborCode_103_AlmondHarvestEquipmentOperatorDay_Cultural_OnOrAfter20210607()
+		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: endDate));
+
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: endDate));
+
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, minimumWage: _culturalLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, minimumWage: _culturalLaborRate + 1, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_103_AlmondHarvestEquipmentOperatorDay_Crew_OnOrAfter20210607()
+		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorDay;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: _crewLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: _crewLaborRate + 1, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_104_AlmondHarvestEquipmentOperatorNight_Before20210607()
 		{
 			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight;
+			var endDate = new DateTime(2021, 6, 6);
+
 			// [LC104Rate] = If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate]+1,15.25)
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
 
 			// Minimum Wage
-			Assert.AreEqual(16M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: 16M));
-			Assert.AreEqual(_crewLaborRate + 4, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 4));
+			Assert.AreEqual(16M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: 16M, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 4, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 4, shiftDate: endDate));
 		}
 
 		[TestMethod]
-		public void LaborCode_105_AlmondHarvestGeneral()
+		public void LaborCode_104_AlmondHarvestEquipmentOperatorNight_Cultural_OnOrAfter20210607()
+		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: endDate));
+
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: endDate));
+
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, minimumWage: _culturalLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, minimumWage: _culturalLaborRate + 1, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_104_AlmondHarvestEquipmentOperatorNight_Crew_OnOrAfter20210607()
+		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: _crewLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: _crewLaborRate + 1, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_105_AlmondHarvestGeneral_Before20210607()
 		{
 			var laborCode = (int)RanchLaborCode.AlmondHarvestGeneral;
-			// [LC105Rate] = If([Crew]=65,If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14),If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],[Crew Labor Rate]))
-			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate + 1));
+			var endDate = new DateTime(2021, 6, 6);
 
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+			// [LC105Rate] = If([Crew]=65,If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],14),If([Employee Hourly Rate]>[Crew Labor Rate],[Employee Hourly Rate],[Crew Labor Rate]))
+			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(14M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
 
 			// Minimum Wage
-			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate, minimumWage: 15M));
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 1));
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate, minimumWage: 15M, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, crew: (int)Crew.AlmondHarvest_Nights, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_105_AlmondHarvestGeneral_Cultural_OnOrAfter20210607()
+		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestGeneral;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: endDate));
+
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: endDate));
+
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, minimumWage: _culturalLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, minimumWage: _culturalLaborRate + 1, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_105_AlmondHarvestGeneral_Crew_OnOrAfter20210607()
+		{
+			var laborCode = (int)RanchLaborCode.AlmondHarvestGeneral;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: _crewLaborRate + 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, minimumWage: _crewLaborRate + 1, shiftDate: endDate));
 		}
 
 		[TestMethod]
@@ -415,23 +696,66 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_116_CrewHelper_OnOrAfter20201207_IsCrewLaborRate()
+		public void LaborCode_116_CrewHelper_OnOrAfter20201207_Before20210607_IsCrewLaborRate()
 		{
 			var laborCode = (int)RanchLaborCode.CrewHelper;
 			var effectiveDate = new DateTime(2020, 12, 7);
+			var endDate = new DateTime(2021, 6, 6);
 
 			// [LC116Rate] = 12
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
 
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate.AddYears(10)));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate.AddYears(10)));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
 
 			// Minimum Wage
 			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
-			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_116_CrewHelper_OnOrAfter20210607_Cultural_IsCulturalLaborRate()
+		{
+			var laborCode = (int)RanchLaborCode.CrewHelper;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// [LC116Rate] = 12
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(_culturalLaborRate + 2M, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 2M, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_116_CrewHelper_OnOrAfter20210607_Crew_IsCrewLaborRate()
+		{
+			var laborCode = (int)RanchLaborCode.CrewHelper;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// [LC116Rate] = 12
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: endDate));
 		}
 
 		[TestMethod]
@@ -451,48 +775,138 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_117_CrewHelper_BonusRate_OnOrAfter20201207_IsCrewLaborRate()
+		public void LaborCode_117_CrewHelper_BonusRate_OnOrAfter20201207_Before20210607_IsCrewLaborRate()
 		{
 			var laborCode = (int)RanchLaborCode.CrewHelper_BonusRate;
 			var effectiveDate = new DateTime(2020, 12, 7);
+			var endDate = new DateTime(2021, 6, 6);
 
-			// [LC117Rate] = NULL
+			// [LC116Rate] = 12
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
 			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
 
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate.AddYears(10)));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate.AddYears(10)));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
 
 			// Minimum Wage
-			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
-			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: endDate));
 		}
 
 		[TestMethod]
-		public void LaborCode_120_GrapeHarvestSupport()
+		public void LaborCode_117_CrewHelper_BonusRate_OnOrAfter20210607_Crew_IsCrewLaborRate()
 		{
-			var laborCode = (int)RanchLaborCode.GrapeHarvestSupport;
-			// [Labor Code] = 120 => [CulturalRate]
-			// [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1));
+			var laborCode = (int)RanchLaborCode.CrewHelper_BonusRate;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// [LC116Rate] = 12
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
 
 			// Minimum Wage
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 2M));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 2M, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_117_CrewHelper_BonusRate_OnOrAfter20210607_Cultural_IsCulturalLaborRate()
+		{
+			var laborCode = (int)RanchLaborCode.CrewHelper_BonusRate;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// [LC116Rate] = 12
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(_culturalLaborRate + 2M, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 2M, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_120_GrapeHarvestSupport_Before20210607()
+		{
+			var laborCode = (int)RanchLaborCode.GrapeHarvestSupport;
+			var endDate = new DateTime(2021, 6, 6);
+
+			// [Labor Code] = 120 => [CulturalRate]
+			// [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_120_GrapeHarvestSupport_OnOrAfter20210607_Crew_IsCrewLaborRate()
+		{
+			var laborCode = (int)RanchLaborCode.GrapeHarvestSupport;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// [Labor Code] = 120 => [CulturalRate]
+			// [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
+
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, employeeHourlyRate: _crewLaborRate - 1, minimumWage: _crewLaborRate + 2M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_120_GrapeHarvestSupport_OnOrAfter20210607_Cultural_IsCulturalLaborRate()
+		{
+			var laborCode = (int)RanchLaborCode.GrapeHarvestSupport;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// [Labor Code] = 120 => [CulturalRate]
+			// [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: endDate));
+
+			// Minimum Wage
+			Assert.AreEqual(_culturalLaborRate + 2, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 2, DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: _culturalLaborRate - 1, minimumWage: _culturalLaborRate + 2M, shiftDate: endDate));
 		}
 
 		[TestMethod]
 		public void LaborCode_215_Girdling_Before20200321_IsIgnored()
 		{
 			var laborCode = (int)RanchLaborCode.Girdling;
+			var endDate = new DateTime(2020, 3, 20);
 			// Crew 27 returns _crewLaborRate + .50 (15.50) in the first two instances and _crewLaborRate + 2 (17) in the last
 			// since labor code 215 does not take precedence before 3/21/2020
-			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1.5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate, shiftDate: endDate));
+			Assert.AreEqual(_crewLaborRate + 1.5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1, shiftDate: endDate));
 		}
 
 		[TestMethod]
@@ -595,6 +1009,7 @@ namespace Payroll.UnitTest
 		public void LaborCode_551_QualityControl_Before20200511_IsIgnored()
 		{
 			var laborCode = (int)RanchLaborCode.QualityControl;
+			
 			// Crew 27 returns _crewLaborRate + .50 (15.50) in the first two instances and _crewLaborRate + 2 (17) in the last
 			// since labor code 551 does not take precedence before 5/11/2020
 			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1, shiftDate: new DateTime(2020, 5, 10)));
@@ -603,33 +1018,76 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_551_QualityControl_OnOrAfter20200511_ReturnsGreaterOfEmployeeRateAndCrewLaborPlusQuarterDollar()
+		public void LaborCode_551_QualityControl_OnOrAfter20200511_Before20210607_ReturnsGreaterOfEmployeeRateAndCrewLaborPlusQuarterDollar()
 		{
 			var laborCode = (int)RanchLaborCode.QualityControl;
 			var effectiveDate = new DateTime(2020, 5, 11);
+			var endDate = new DateTime(2021, 6, 6);
 
 			// Return crew labor rate + .25 when it is greater than employee hourly rate
 			Assert.AreEqual((_crewLaborRate + .25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
-			Assert.AreEqual((_crewLaborRate + .25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual((_crewLaborRate + .25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: endDate));
 
 			// Return the employee hourly rate when it is greater than crew labor rate + .25
 			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate));
-			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: endDate));
 
 			// Returns minimum wage + .25 when minimum wage is greater than employee and crew labor rates
 			Assert.AreEqual((_crewLaborRate + 1.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate, minimumWage: _crewLaborRate + 1M));
-			Assert.AreEqual((_crewLaborRate + 1.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate.AddYears(10), minimumWage: _crewLaborRate + 1M));
+			Assert.AreEqual((_crewLaborRate + 1.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: endDate, minimumWage: _crewLaborRate + 1M));
+		}
+
+		[TestMethod]
+		public void LaborCode_551_QualityControl_OnOrAfter20210607_Crew_ReturnsGreaterOfEmployeeRateAndCrewLaborPlusQuarterDollar()
+		{
+			var laborCode = (int)RanchLaborCode.QualityControl;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// Return crew labor rate + .25 when it is greater than employee hourly rate
+			Assert.AreEqual((_crewLaborRate + .25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + .25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: endDate));
+
+			// Return the employee hourly rate when it is greater than crew labor rate + .25
+			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate));
+			Assert.AreEqual((_crewLaborRate + .5M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: endDate));
+
+			// Returns minimum wage + .25 when minimum wage is greater than employee and crew labor rates
+			Assert.AreEqual((_crewLaborRate + 1.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: effectiveDate, minimumWage: _crewLaborRate + 1M));
+			Assert.AreEqual((_crewLaborRate + 1.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: (_crewLaborRate + .5M), shiftDate: endDate, minimumWage: _crewLaborRate + 1M));
+		}
+
+		[TestMethod]
+		public void LaborCode_551_QualityControl_OnOrAfter20210607_Cultural_ReturnsGreaterOfEmployeeRateAndCulturalLaborPlusQuarterDollar()
+		{
+			var laborCode = (int)RanchLaborCode.QualityControl;
+			var effectiveDate = new DateTime(2021, 6, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// Return cultural labor rate + .25 when it is greater than employee hourly rate
+			Assert.AreEqual((_culturalLaborRate + .25M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
+			Assert.AreEqual((_culturalLaborRate + .25M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: endDate));
+
+			// Return the employee hourly rate when it is greater than cultural labor rate + .25
+			Assert.AreEqual((_culturalLaborRate + .5M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .5M), shiftDate: effectiveDate));
+			Assert.AreEqual((_culturalLaborRate + .5M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .5M), shiftDate: endDate));
+
+			// Returns minimum wage + .25 when minimum wage is greater than employee and cultural labor rates
+			Assert.AreEqual((_culturalLaborRate + 1.25M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .5M), shiftDate: effectiveDate, minimumWage: _culturalLaborRate + 1M));
+			Assert.AreEqual((_culturalLaborRate + 1.25M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .5M), shiftDate: endDate, minimumWage: _culturalLaborRate + 1M));
 		}
 
 		[TestMethod]
 		public void LaborCode_SupercedesCrew()
 		{
 			var laborCode = (int)RanchLaborCode.AlmondHarvestEquipmentOperatorNight;
-			// Crew 27 would return _crewLaborRate + .50 (15.50) in the first two instances and _crewLaborRate + 2 (17.50) in the last
+			var shiftDate = new DateTime(2021, 6, 7);
+
+			// Crew 27 would return _culturalLaborRate + .50 in the first two instances and _crewLaborRate + 1.5 (17.50) in the last
 			// but labor code 104 takes precedence
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(15.25M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: shiftDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate, shiftDate: shiftDate));
+			Assert.AreEqual(_culturalLaborRate + 1M, DefaultTest(laborCode: laborCode, crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: shiftDate));
 		}
 
 		#endregion
@@ -650,32 +1108,67 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void CulturalLabor()
+		public void CulturalLabor_Before20210607()
 		{
 			// Crews that are less than 100 and don't otherwise have exceptions (27, 75, and 76) receive
 			// the cultural rate.
 			// [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
+			var effectiveDate = new DateTime(2021, 6, 6);
 			List<int> exceptionCrews = new List<int> { (int)Crew.WestTractor_Night, (int)Crew.LightDuty_East, (int)Crew.LightDuty_West };
 			for (int i = 1; i < 100; i++)
 			{
 				if (exceptionCrews.Contains(i)) continue;
-				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate - 1));
-				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate));
-				Assert.AreEqual(_crewLaborRate + 1, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1));
-				Assert.AreEqual(_crewLaborRate + 2, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
+				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+				Assert.AreEqual(_crewLaborRate, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+				Assert.AreEqual(_crewLaborRate + 1, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
+				Assert.AreEqual(_crewLaborRate + 2, DefaultTest(crew: i, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
 			}
 		}
 
 		[TestMethod]
-		public void Crew_27_WestTractor_Night()
+		public void CulturalLabor_OnOrAfter20210607()
 		{
+			// Crews that are less than 100 and don't otherwise have exceptions (27, 75, and 76) receive
+			// the cultural rate.
+			// [CulturalRate] = If([Employee Hourly Rate]<[Cultural Labor Rate],[Cultural Labor Rate],[Employee Hourly Rate])
+			var effectiveDate = new DateTime(2021, 6, 7);
+			List<int> exceptionCrews = new List<int> { (int)Crew.WestTractor_Night, (int)Crew.LightDuty_East, (int)Crew.LightDuty_West };
+			for (int i = 1; i < 100; i++)
+			{
+				if (exceptionCrews.Contains(i)) continue;
+				Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: i, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+				Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: i, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+				Assert.AreEqual(_culturalLaborRate + 1, DefaultTest(crew: i, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+				Assert.AreEqual(_culturalLaborRate + 2, DefaultTest(crew: i, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+			}
+		}
+
+		[TestMethod]
+		public void Crew_27_WestTractor_Night_Before20210607()
+		{
+			var effectiveDate = new DateTime(2021, 6, 6);
+
 			// [CulturalRate] + .5
-			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1));
-			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate));
-			Assert.AreEqual(_crewLaborRate + 1.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1));
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 1.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1, shiftDate: effectiveDate));
 
 			// Minimum Wage + .5
-			Assert.AreEqual(_crewLaborRate + 2.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M));
+			Assert.AreEqual(_crewLaborRate + 2.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _crewLaborRate + 1, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate));
+		}
+
+		[TestMethod]
+		public void Crew_27_WestTractor_Night_OnOrAfter20210607()
+		{
+			var effectiveDate = new DateTime(2021, 6, 7);
+
+			// [CulturalRate] + .5
+			Assert.AreEqual(_culturalLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + .5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+
+			// Minimum Wage + .5
+			Assert.AreEqual(_culturalLaborRate + 2.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
 		}
 
 		[TestMethod]
