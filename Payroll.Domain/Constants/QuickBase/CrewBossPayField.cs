@@ -43,5 +43,10 @@
 		/// [High Heat Supplement] - Checkbox indicates that the record is for supplemental hours due to heat-related work stoppage.
 		/// </summary>
 		HighHeatSupplement = 75,
+
+		/// <summary>
+		/// [High Heat Supplement Total Hours Cap] - Numeric indicating the total number of hours guaranteed to be paid out when a high-heat supplement is required.
+		/// </summary>
+		HighHeatSupplementTotalHoursCap = 76,
 	}
 }

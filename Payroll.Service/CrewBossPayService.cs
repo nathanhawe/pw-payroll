@@ -61,6 +61,10 @@ namespace Payroll.Service
 
 				// Create new RanchPayLine record
 				ranchPayLines.Add(CreateRanchPayLine(cbLine));
+
+				// Calculate any necessary high heat supplement
+				var heatSupplement = CreateHeatSupplementLine(cbLine);
+				if (heatSupplement != null) ranchPayLines.Add(heatSupplement);
 			}
 
 			// Save chages to crew boss pay lines and return new ranch pay lines.
@@ -141,10 +145,40 @@ namespace Payroll.Service
 				ShiftDate = crewBossPayLine.ShiftDate,
 				Crew = crewBossPayLine.Crew,
 				EmployeeId = crewBossPayLine.EmployeeId,
-				HoursWorked = (crewBossPayLine.HighHeatSupplement ? 0 : crewBossPayLine.HoursWorked),
-				PayType = GetPayType(crewBossPayLine.PayMethod, crewBossPayLine.HighHeatSupplement),
+				HoursWorked = crewBossPayLine.HoursWorked,
+				PayType = GetPayType(crewBossPayLine.PayMethod),
 				OtherGross = crewBossPayLine.Gross,
 				TotalGross = crewBossPayLine.Gross,
+				FiveEight = crewBossPayLine.FiveEight,
+			};
+		}
+
+		/// <summary>
+		/// Creates a new <c>RanchPayLine</c> for high-heat supplement based on the provided <c>CrewBossPayLine</c>.  This
+		/// method returns null if a high heat supplement is not requested or the payline's HoursWorked is greater than or
+		/// equal to HighHeatSupplementTotalHoursCap.  This method expects a <c>CrewBossPayLine</c> with the hourly rate
+		/// already calculated.
+		/// </summary>
+		/// <param name="crewBossPayLine"></param>
+		/// <returns></returns>
+		private RanchPayLine CreateHeatSupplementLine(CrewBossPayLine crewBossPayLine)
+		{
+			if (!crewBossPayLine.HighHeatSupplement || crewBossPayLine.HoursWorked >= crewBossPayLine.HighHeatSupplementTotalHoursCap)
+				return null;
+			
+			var gross = _roundingService.Round((crewBossPayLine.HighHeatSupplementTotalHoursCap - crewBossPayLine.HoursWorked) * crewBossPayLine.HourlyRate, 2);
+
+			return new RanchPayLine
+			{
+				BatchId = crewBossPayLine.BatchId,
+				WeekEndDate = crewBossPayLine.WeekEndDate,
+				ShiftDate = crewBossPayLine.ShiftDate,
+				Crew = crewBossPayLine.Crew,
+				EmployeeId = crewBossPayLine.EmployeeId,
+				HoursWorked = 0,
+				PayType = PayType.CBHeatRelatedSupplement,
+				OtherGross = gross,
+				TotalGross = gross,
 				FiveEight = crewBossPayLine.FiveEight,
 			};
 		}
@@ -180,10 +214,8 @@ namespace Payroll.Service
 		/// </summary>
 		/// <param name="payMethod"></param>
 		/// <returns></returns>
-		private string GetPayType(string payMethod, bool isHighHeatSupplement)
+		private string GetPayType(string payMethod)
 		{
-			if (isHighHeatSupplement) return PayType.CBHeatRelatedSupplement;
-
 			return payMethod switch
 			{
 				CrewBossPayMethod.HourlyTrees => PayType.CBHourlyTrees,

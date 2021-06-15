@@ -171,52 +171,31 @@ namespace Payroll.UnitTest
 
 			cbService.CalculateCrewBossPay(1);
 
-			var hourlyTreeCB = context.CrewBossPayLines.Where(x => x.Crew == 1 && !x.HighHeatSupplement).FirstOrDefault();
-			var hourlyVineCB = context.CrewBossPayLines.Where(x => x.Crew == 2 && !x.HighHeatSupplement).FirstOrDefault();
-			var hourlySouthCB = context.CrewBossPayLines.Where(x => x.Crew == 3 && !x.HighHeatSupplement).FirstOrDefault();
-			var dailySouthCB = context.CrewBossPayLines.Where(x => x.Crew == 4 && !x.HighHeatSupplement).FirstOrDefault();
-			var hourlyTreeCBHeatSupplement = context.CrewBossPayLines.Where(x => x.Crew == 1 && x.HighHeatSupplement).FirstOrDefault();
-			var hourlyVineCBHeatSupplement = context.CrewBossPayLines.Where(x => x.Crew == 2 && x.HighHeatSupplement).FirstOrDefault();
-			var hourlySouthCBHeatSupplement = context.CrewBossPayLines.Where(x => x.Crew == 3 && x.HighHeatSupplement).FirstOrDefault();
-			var dailySouthCBHeatSupplement = context.CrewBossPayLines.Where(x => x.Crew == 4 && x.HighHeatSupplement).FirstOrDefault();
+			var hourlyTreeCB = context.CrewBossPayLines.Where(x => x.Crew == 1).FirstOrDefault();
+			var hourlyVineCB = context.CrewBossPayLines.Where(x => x.Crew == 2).FirstOrDefault();
+			var hourlySouthCB = context.CrewBossPayLines.Where(x => x.Crew == 3).FirstOrDefault();
+			var dailySouthCB = context.CrewBossPayLines.Where(x => x.Crew == 4).FirstOrDefault();
 
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 1 && !x.HighHeatSupplement).Count());
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 2 && !x.HighHeatSupplement).Count());
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 3 && !x.HighHeatSupplement).Count());
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 4 && !x.HighHeatSupplement).Count());
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 1 && x.HighHeatSupplement).Count());
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 2 && x.HighHeatSupplement).Count());
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 3 && x.HighHeatSupplement).Count());
-			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 4 && x.HighHeatSupplement).Count());
+			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 1).Count());
+			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 2).Count());
+			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 3).Count());
+			Assert.AreEqual(1, context.CrewBossPayLines.Where(x => x.Crew == 4).Count());
 
 			Assert.AreEqual(30, hourlyTreeCB.WorkerCount);
 			Assert.AreEqual(30, hourlyVineCB.WorkerCount);
 			Assert.AreEqual(30, hourlySouthCB.WorkerCount);
 			Assert.AreEqual(30, dailySouthCB.WorkerCount);
-			Assert.AreEqual(30, hourlyTreeCBHeatSupplement.WorkerCount);
-			Assert.AreEqual(30, hourlyVineCBHeatSupplement.WorkerCount);
-			Assert.AreEqual(30, hourlySouthCBHeatSupplement.WorkerCount);
-			Assert.AreEqual(30, dailySouthCBHeatSupplement.WorkerCount);
 
 			// South Daily and Hourly now both become hourly and paid based on worker count
 			Assert.AreEqual(21.5M, hourlyTreeCB.HourlyRate);
 			Assert.AreEqual(21.5M, hourlyVineCB.HourlyRate);
 			Assert.AreEqual(24.75M, hourlySouthCB.HourlyRate);
 			Assert.AreEqual(24.75M, dailySouthCB.HourlyRate);
-			Assert.AreEqual(21.5M, hourlyTreeCBHeatSupplement.HourlyRate);
-			Assert.AreEqual(21.5M, hourlyVineCBHeatSupplement.HourlyRate);
-			Assert.AreEqual(24.75M, hourlySouthCBHeatSupplement.HourlyRate);
-			Assert.AreEqual(24.75M, dailySouthCBHeatSupplement.HourlyRate);
 
 			Assert.AreEqual(118.25M, hourlyTreeCB.Gross);
 			Assert.AreEqual(118.25M, hourlyVineCB.Gross);
 			Assert.AreEqual(136.13M, hourlySouthCB.Gross);
 			Assert.AreEqual(136.13M, dailySouthCB.Gross);
-			Assert.AreEqual(96.75M, hourlyTreeCBHeatSupplement.Gross);
-			Assert.AreEqual(96.75M, hourlyVineCBHeatSupplement.Gross);
-			Assert.AreEqual(111.38M, hourlySouthCBHeatSupplement.Gross);
-			Assert.AreEqual(111.38M, dailySouthCBHeatSupplement.Gross);
-
 		}
 
 		[TestMethod]
@@ -328,15 +307,12 @@ namespace Payroll.UnitTest
 			context.Add(batch);
 
 			// Mock crew boss pay lines
-			var hourlyTreeCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 1, hoursWorked: 5.5M, employeeId: "TestHourlyTrees", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyTrees);
-			var hourlyTreeCBHeatSupplement = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 1, hoursWorked: 4.5M, employeeId: "TestHourlyTrees", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyTrees, heatRelatedSupplement: true);
-			var hourlyVineCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 2, hoursWorked: 5.5M, employeeId: "TestHourlyVines", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyVines);
-			var hourlyVineCBHeatSupplement = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 2, hoursWorked: 4.5M, employeeId: "TestHourlyVines", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyVines, heatRelatedSupplement: true);
-			var hourlySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 3, hoursWorked: 5.5M, employeeId: "TestSouthHourly", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthHourly, fiveEight: true);
-			var hourlySouthCBHeatSupplement = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 3, hoursWorked: 4.5M, employeeId: "TestSouthHourly", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthHourly, fiveEight: true, heatRelatedSupplement: true);
-			var dailySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 4, hoursWorked: 5.5M, employeeId: "TestSouthDaily", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthDaily);
-			var dailySouthCBHeatSupplement = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 4, hoursWorked: 4.5M, employeeId: "TestSouthDaily", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthDaily, heatRelatedSupplement: true);
-			context.AddRange(hourlyTreeCB, hourlyVineCB, hourlySouthCB, dailySouthCB, hourlyTreeCBHeatSupplement, hourlyVineCBHeatSupplement, hourlySouthCBHeatSupplement, dailySouthCBHeatSupplement);
+			var heatThreshold = 10M;
+			var hourlyTreeCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 1, hoursWorked: 5.5M, employeeId: "TestHourlyTrees", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyTrees, heatRelatedSupplement: true, heatRelatedSupplementTotalHoursCap: heatThreshold);
+			var hourlyVineCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 2, hoursWorked: 5.5M, employeeId: "TestHourlyVines", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.HourlyVines, heatRelatedSupplement: true, heatRelatedSupplementTotalHoursCap: heatThreshold);
+			var hourlySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 3, hoursWorked: 5.5M, employeeId: "TestSouthHourly", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthHourly, fiveEight: true, heatRelatedSupplement: true, heatRelatedSupplementTotalHoursCap: heatThreshold);
+			var dailySouthCB = EntityMocker.MockCrewBossPayLine(batchId: batch.Id, weekEndDate: new DateTime(2021, 6, 6), shiftDate: new DateTime(2021, 5, 31), crew: 4, hoursWorked: 5.5M, employeeId: "TestSouthDaily", payMethod: Payroll.Domain.Constants.CrewBossPayMethod.SouthDaily, heatRelatedSupplement: true, heatRelatedSupplementTotalHoursCap: heatThreshold);
+			context.AddRange(hourlyTreeCB, hourlyVineCB, hourlySouthCB, dailySouthCB);
 
 			// Mock ranch pay lines
 			for (int i = 0; i < 30; i++)

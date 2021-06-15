@@ -26,5 +26,8 @@ namespace Payroll.Domain
 		public bool FiveEight { get; set; }
 
 		public bool HighHeatSupplement { get; set; }
+
+		[Column(TypeName = "decimal(18,2)")]
+		public decimal HighHeatSupplementTotalHoursCap { get; set; }
 	}
 }
