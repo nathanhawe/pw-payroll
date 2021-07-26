@@ -397,6 +397,7 @@ namespace Payroll.Service
 			// Incentives!!!
 			var incentiveLines = plantPayLines.Where(x => x.BatchId == batch.Id && (
 				x.LaborCode == (int)PlantLaborCode.TallyTagWriter
+				|| x.LaborCode == (int)PlantLaborCode.TagWriterLead
 				|| (x.PayType == PayType.Pieces && !x.IsIncentiveDisqualified)
 				|| x.NonDiscretionaryBonusRate > 0)).ToList();
 			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(incentiveLines);

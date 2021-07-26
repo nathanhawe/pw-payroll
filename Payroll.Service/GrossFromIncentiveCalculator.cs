@@ -25,13 +25,15 @@ namespace Payroll.Service
 		/// <param name="plantPayLines"></param>
 		public void CalculateGrossFromIncentive(List<PlantPayLine> plantPayLines)
 		{
-			// Plant pay lines can receive hourly incentives for labor code 555, non-discretionary bonus, or piece incentives.
-			// 555 incentive cannot be applied at the same time as non-discretionary bonus and piece incentives.  But non-discretionary
+			// Plant pay lines can receive hourly incentives for labor code 555/558, non-discretionary bonus, or piece incentives.
+			// 555/558 incentive cannot be applied at the same time as non-discretionary bonus and piece incentives.  But non-discretionary
 			// bonus and piece incentives can technically be applied together.
 			foreach (var payLine in plantPayLines)
 			{
 				var nonDiscretionaryBonus = 0M;
-				if (payLine.LaborCode == (int)PlantLaborCode.TallyTagWriter)
+				if (
+					payLine.LaborCode == (int)PlantLaborCode.TallyTagWriter 
+					|| payLine.LaborCode == (int)PlantLaborCode.TagWriterLead)
 				{
 					HourlyIncentive(payLine);
 				}
@@ -53,12 +55,20 @@ namespace Payroll.Service
 		{
 			/* 
 			 [555 Rate] = If([Incentive Disqualified]=true,0,2)
+			 [558 Rate] = If([Incentive Disqualified]=true,0,1)
 			*/
 			var grossIncentive = 0M;
 
 			if (!payLine.IsIncentiveDisqualified)
 			{
-				grossIncentive = payLine.HoursWorked * 2M;
+				if(payLine.LaborCode == (int)PlantLaborCode.TagWriterLead)
+				{
+					grossIncentive = payLine.HoursWorked;
+				}
+				else
+				{
+					grossIncentive = payLine.HoursWorked * 2M;
+				}
 			}
 
 			payLine.GrossFromIncentive = grossIncentive;

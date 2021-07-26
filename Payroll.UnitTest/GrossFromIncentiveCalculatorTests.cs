@@ -116,6 +116,100 @@ namespace Payroll.UnitTest
 			}
 		}
 
+		[TestMethod]
+		public void LaborCode_558_TagWriterLead_Incentive_ReturnsIncentive()
+		{
+			var laborCode = (int)PlantLaborCode.TagWriterLead;
+
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 8M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = .25M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 20M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: false,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		[TestMethod]
+		public void LaborCode_558_TagWriterLead_IncentiveDisqualified_ReturnsZero()
+		{
+			var laborCode = (int)PlantLaborCode.TagWriterLead;
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: true,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		[TestMethod]
+		public void LaborCode_558_TagWriterLead_Incentive_IgnoresNonPrima()
+		{
+			var laborCode = (int)PlantLaborCode.TagWriterLead;
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 8M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = .25M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 20M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: false,
+				hasNonPrimaViolation: true,
+				laborCode: x.LaborCode)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
 
 		[TestMethod]
 		public void UseIncreasedRate_ReturnsIncreasedRateIncentive()
@@ -451,6 +545,38 @@ namespace Payroll.UnitTest
 				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, NonDiscretionaryBonusRate = 2, ExpectedGross = 0M},
 				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = 10.25M, NonDiscretionaryBonusRate = 2.25M, ExpectedGross = 20.5M},
 				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 8M, NonDiscretionaryBonusRate = 0, ExpectedGross = 16M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: false,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode,
+				nonDiscretionaryBonusRate: x.NonDiscretionaryBonusRate)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		[TestMethod]
+		public void NonDiscretionaryBonusRate_IsNotAddedToTagWriterLead()
+		{
+			var laborCode = (int)PlantLaborCode.TagWriterLead;
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, NonDiscretionaryBonusRate = 2, ExpectedGross = 8M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, NonDiscretionaryBonusRate = 2, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = 10.25M, NonDiscretionaryBonusRate = 2.25M, ExpectedGross = 10.25M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 8M, NonDiscretionaryBonusRate = 0, ExpectedGross = 8M},
 			};
 
 			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(

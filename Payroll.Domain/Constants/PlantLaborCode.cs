@@ -18,6 +18,7 @@ namespace Payroll.Domain.Constants
 		NightShiftSupervision = 536,
 		NightShiftAuditor = 537,
 		TallyTagWriter = 555,
+		TagWriterLead = 558,
 		Covid19 = 600,
 		Covid19PreScreening = 602,
 		Covid19Sanitation = 603,
