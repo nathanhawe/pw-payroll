@@ -35,6 +35,7 @@ namespace Payroll.Domain.Constants
 		public const string WeeklyOverTime = "40-Weekly OT";
 		public const string Adjustment = "41-Adjustment";
 		public const string SpecialAdjustment = "41.1-Adjustment";
+		public const string PremiumPay = "47-Premium Pay";
 		public const string CompTime = "48-Comp Time";
 		public const string ReportingPay = "49-Reporting Pay";
 		public const string ReportingPayAdjustment = "49.1-Reporting Pay Adjustment";

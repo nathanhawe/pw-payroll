@@ -46,7 +46,8 @@ namespace Payroll.Service
 				&& payType != PayType.SickLeave
 				&& payType != PayType.Covid19
 				&& payType != PayType.Covid19WageContinuation
-				&& payType != PayType.Covid19W)
+				&& payType != PayType.Covid19W
+				&& payType != PayType.PremiumPay)
 			{
 				return 0;
 			}
@@ -82,7 +83,9 @@ namespace Payroll.Service
 					return Math.Max(payLineHourlyRate, calculatedEmployeeRate);
 				}
 			}
-			
+
+			if (payType == PayType.PremiumPay) return 0M;
+
 			if (isH2A)
 			{
 				return H2ARate(shiftDate);

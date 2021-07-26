@@ -299,7 +299,6 @@ namespace Payroll.Service
 
 			_logger.Log(LogLevel.Information, "Updating Reporting/Comp/NPT hourly rates for batch {batchId}", batch.Id);
 			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
-			//var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
 			var reportingPayRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && x.PayType == PayType.ReportingPay).ToList();
 			reportingPayRecords.ForEach(x =>
 			{
@@ -310,8 +309,16 @@ namespace Payroll.Service
 			_grossFromHoursCalculator.CalculateGrossFromHours(reportingPayRecords);
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
-			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.PlantPayLines.Where(x => x.BatchId == batch.Id && (x.LaborCode == (int)PlantLaborCode.RecoveryTime || x.LaborCode == (int)PlantLaborCode.NonProductiveTime)).ToList();
+			/* Update Non-Productive Time and Premium Pay hourly rates (Requires effective weekly rate) */
+			var nonProductiveRecords = _context.PlantPayLines
+				.Where(x => 
+					x.BatchId == batch.Id 
+					&& (
+						x.LaborCode == (int)PlantLaborCode.RecoveryTime 
+						|| x.LaborCode == (int)PlantLaborCode.NonProductiveTime
+						|| x.PayType == PayType.PremiumPay
+					)
+				).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
@@ -569,8 +576,7 @@ namespace Payroll.Service
 			_context.AddRange(weeklyOverTimeRecords);
 
 
-			/* Update Reporting Pay / Comp Time hourly rates (Requires effective weekly rate) */
-			//var reportingPayRecords = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && (x.PayType == PayType.CompTime || x.PayType == PayType.ReportingPay)).ToList();
+			/* Update Reporting Pay */
 			var reportingPayRecords = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && x.PayType == PayType.ReportingPay).ToList();
 			reportingPayRecords.ForEach(x =>
 			{
@@ -581,8 +587,16 @@ namespace Payroll.Service
 			_grossFromHoursCalculator.CalculateGrossFromHours(reportingPayRecords);
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
-			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.PlantAdjustmentLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)PlantLaborCode.RecoveryTime || x.LaborCode == (int)PlantLaborCode.NonProductiveTime)).ToList();
+			/* Update Non-Productive Time and Premium Pay hourly rates (Requires effective weekly rate) */
+			var nonProductiveRecords = _context.PlantAdjustmentLines
+				.Where(x => 
+					x.BatchId == batchId 
+					&& (
+						x.LaborCode == (int)PlantLaborCode.RecoveryTime 
+						|| x.LaborCode == (int)PlantLaborCode.NonProductiveTime
+						|| x.PayType == PayType.PremiumPay
+					)
+				).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries.Where(w => w.WeekEndDate == x.WeekEndDate && w.EmployeeId == x.EmployeeId).FirstOrDefault();
@@ -805,8 +819,16 @@ namespace Payroll.Service
 			_grossFromHoursCalculator.CalculateGrossFromHours(reportingPayRecords);
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
-			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.RanchPayLines.Where(x => x.BatchId == batch.Id && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
+			/* Update Non-Productive Time and Premium Pay hourly rates (Requires effective weekly rate) */
+			var nonProductiveRecords = _context.RanchPayLines
+				.Where(x => 
+					x.BatchId == batch.Id 
+					&& (
+						x.LaborCode == (int)RanchLaborCode.RecoveryTime 
+						|| x.LaborCode == (int)RanchLaborCode.NonProductiveTime
+						|| x.PayType == PayType.PremiumPay
+					)
+				).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries
@@ -1136,8 +1158,16 @@ namespace Payroll.Service
 			_grossFromHoursCalculator.CalculateGrossFromHours(reportingPayRecords);
 			_totalGrossCalculator.CalculateTotalGross(reportingPayRecords);
 
-			/* Update Non-Productive Time hourly rates (Requires effective weekly rate) */
-			var nonProductiveRecords = _context.RanchAdjustmentLines.Where(x => x.BatchId == batchId && (x.LaborCode == (int)RanchLaborCode.RecoveryTime || x.LaborCode == (int)RanchLaborCode.NonProductiveTime)).ToList();
+			/* Update Non-Productive Time and Premium Pay hourly rates (Requires effective weekly rate) */
+			var nonProductiveRecords = _context.RanchAdjustmentLines
+				.Where(x => 
+					x.BatchId == batchId 
+					&& (
+						x.LaborCode == (int)RanchLaborCode.RecoveryTime 
+						|| x.LaborCode == (int)RanchLaborCode.NonProductiveTime
+						|| x.PayType == PayType.PremiumPay
+					)
+				).ToList();
 			nonProductiveRecords.ForEach(x =>
 			{
 				var weeklySummary = weeklySummaries

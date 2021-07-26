@@ -43,6 +43,7 @@ namespace Payroll.Service
 			var minimumWageRate = _minimumWageService.GetMinimumWageOnDate(shiftDate);
 				
 			if (hourlyRateOverride > 0) return hourlyRateOverride;
+			if (payType == PayType.PremiumPay) return 0M;
 			if (payType == PayType.SickLeave) return payLineHourlyRate;
 			if (
 				payType == PayType.Covid19
@@ -95,7 +96,8 @@ namespace Payroll.Service
 				|| payType == PayType.SickLeave
 				|| payType == PayType.Covid19
 				|| payType == PayType.Covid19WageContinuation
-				|| payType == PayType.Covid19W)
+				|| payType == PayType.Covid19W
+				|| payType == PayType.PremiumPay)
 			{
 				return true;
 			}

@@ -416,6 +416,12 @@ namespace Payroll.UnitTest
 		{
 			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.Bonus));
 		}
+
+		[TestMethod]
+		public void PayTypePremiumPay_ReturnsZero()
+		{
+			Assert.IsTrue(0 == DefaultTest(payType: Payroll.Domain.Constants.PayType.PremiumPay));
+		}
 		#endregion
 
 		#region Labor Code Tests
