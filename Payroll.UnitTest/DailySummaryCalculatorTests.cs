@@ -16,16 +16,22 @@ namespace Payroll.UnitTest
 	[TestClass]
 	public class DailySummaryCalculatorTests
 	{
+		private Decimal _mockCrewLaborWage = 14M;
 		private MockMinimumWageService _mockMinimumWageService = new MockMinimumWageService();
 		private RoundingService _roundingService = new RoundingService();
-		private MockCrewLaborWageService _mockCrewLaborWageService = new MockCrewLaborWageService(14M);
+		private MockCrewLaborWageService _mockCrewLaborWageService;
 
+		[TestInitialize]
+		public void Init()
+		{
+			_mockCrewLaborWageService = new MockCrewLaborWageService(_mockCrewLaborWage);
+		}
 		#region Ranch Pay Line Tests
 
 		[TestMethod]
-		public void RanchPayLine_SelectsMinimumWageForShiftDate()
+		public void RanchPayLine_Cultural_SelectsMinimumWageForShiftDate()
 		{
-			var dbName = "RanchPayLine_SelectsMinimumWageForShiftDate";
+			var dbName = "RanchPayLine_Cultural_SelectsMinimumWageForShiftDate";
 			var options = new DbContextOptionsBuilder<PayrollContext>()
 				.UseInMemoryDatabase(databaseName: dbName)
 				.Options;
@@ -71,6 +77,57 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.MinimumWage == 8.75M).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.MinimumWage == 9M).Count());
 		}
+
+		[TestMethod]
+		public void RanchPayLine_Crew_SelectsGreaterOfCrewAndMinimumWageForShiftDate()
+		{
+			var dbName = "RanchPayLine_Crew_SelectsGreaterOfCrewAndMinimumWageForShiftDate";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Setup mock minimum wages
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 17), 8.5M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 18), 8.75M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), _mockCrewLaborWage + 1M);
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+
+			// Mock ranch pay lines
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 100));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 100));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 200));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3000));
+			context.SaveChanges();
+
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Ranches);
+
+			Assert.AreEqual(3, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.MinimumWage == _mockCrewLaborWage).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.MinimumWage == _mockCrewLaborWage).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.MinimumWage == (_mockCrewLaborWage + 1M)).Count());
+		}
+
 
 		[TestMethod]
 		public void RanchPayLine_UsesLastOfCrewSortedByRecordId()
@@ -649,9 +706,9 @@ namespace Payroll.UnitTest
 		#region Ranch Adjustment Line Tests
 
 		[TestMethod]
-		public void RanchAdjustmentLine_SelectsMinimumWageForShiftDate()
+		public void RanchAdjustmentLine_Cultural_SelectsMinimumWageForShiftDate()
 		{
-			var dbName = "RanchAdjustmentLine_SelectsMinimumWageForShiftDate";
+			var dbName = "RanchAdjustmentLine_Cultural_SelectsMinimumWageForShiftDate";
 			var options = new DbContextOptionsBuilder<PayrollContext>()
 				.UseInMemoryDatabase(databaseName: dbName)
 				.Options;
@@ -696,6 +753,56 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.MinimumWage == 8.5M).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.MinimumWage == 8.75M).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.MinimumWage == 9M).Count());
+		}
+
+		[TestMethod]
+		public void RanchAdjustmentLine_Crew_SelectsGreaterOfCrewAndMinimumWageForShiftDate()
+		{
+			var dbName = "RanchAdjustmentLine_Crew_SelectsGreaterOfCrewAndMinimumWageForShiftDate";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Setup mock minimum wages
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 17), 8.5M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 18), 8.75M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 2, 19), _mockCrewLaborWage + 1M);
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+
+			// Mock ranch pay lines
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 1, crew: 100));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), payType: PayType.Regular, quickBaseRecordId: 2, crew: 100));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), payType: PayType.Regular, quickBaseRecordId: 3, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 4, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 5, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 6, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 7, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 8, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 9, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 10, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 11, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 12, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 13, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 14, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 15, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 16, crew: 200));
+			context.Add(EntityMocker.MockRanchAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), payType: PayType.Regular, quickBaseRecordId: 17, crew: 3000));
+			context.SaveChanges();
+
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Ranches);
+
+			Assert.AreEqual(3, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.MinimumWage == _mockCrewLaborWage).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.MinimumWage == _mockCrewLaborWage).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.MinimumWage == (_mockCrewLaborWage + 1M)).Count());
 		}
 
 		[TestMethod]

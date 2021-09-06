@@ -145,7 +145,7 @@ namespace Payroll.Service
 				.ToList();
 
 			var summaries = RanchGrouping(commonLineProperties);
-			SetRates(summaries);
+			SetRates(summaries, true);
 
 			return summaries;
 		}
@@ -204,7 +204,7 @@ namespace Payroll.Service
 				.ToList();
 
 			var summaries = RanchGrouping(commonLineProperties);
-			SetRates(summaries);
+			SetRates(summaries, true);
 
 			return summaries;
 		}
@@ -244,7 +244,7 @@ namespace Payroll.Service
 				.ToList();
 
 			var summaries = PlantGrouping(commonLineProperties);
-			SetRates(summaries);
+			SetRates(summaries, false);
 
 			return summaries;
 		}
@@ -285,7 +285,7 @@ namespace Payroll.Service
 				.ToList();
 
 			var summaries = PlantGrouping(commonLineProperties);
-			SetRates(summaries);
+			SetRates(summaries, false);
 
 			return summaries;
 		}
@@ -367,7 +367,7 @@ namespace Payroll.Service
 		/// Sets the value of <c>EffectiveHourlyRate</c> and <c>MinimumWage</c> on provided <c>DailySummary</c> objects.
 		/// </summary>
 		/// <param name="summaries"></param>
-		private void SetRates(List<DailySummary> summaries)
+		private void SetRates(List<DailySummary> summaries, bool isRanches)
 		{
 			// Calculate effective hourly rate and select minimum wage
 			decimal divisor;
@@ -387,7 +387,7 @@ namespace Payroll.Service
 
 				// If crew labor rate should be used for minimum assurance use the larger of the current minimum wage
 				// and the current crew labor rate
-				if (x.UseCrewLaborRateForPlantMinimumAssurance)
+				if ((isRanches && x.Crew >= 100) || x.UseCrewLaborRateForPlantMinimumAssurance)
 				{
 					x.MinimumWage = Math.Max(x.MinimumWage, _crewLaborWageService.GetWage(x.ShiftDate));
 				}
