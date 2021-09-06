@@ -177,5 +177,25 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, weeklyOverTimeHours.Where(x => x.EmployeeId == "Employee2" && x.Crew == 100 && x.WeekEndDate == new DateTime(2022, 1, 1) && x.OverTimeHours == 20).Count());
 			Assert.AreEqual(1, weeklyOverTimeHours.Where(x => x.EmployeeId == "Employee3" && x.Crew == 100 && x.WeekEndDate == new DateTime(2099, 12, 31) && x.OverTimeHours == 20).Count());
 		}
+
+		[TestMethod]
+		public void EmitLastBlockIdAndLaborCodeOrderedByMinimumWage()
+		{
+			var weeklySummaries = new List<WeeklySummary>
+			{
+				new WeeklySummary{ EmployeeId = "Employee1", Crew = 100, FiveEight = false, WeekEndDate = new DateTime(2022, 1, 1), MinimumWage = 8, TotalHours = 72, TotalOverTimeHours = 12, TotalDoubleTimeHours = 0, LastBlockId = 42, LastLaborCode = 109},
+				new WeeklySummary{ EmployeeId = "Employee2", Crew = 100, FiveEight = false, WeekEndDate = new DateTime(2022, 1, 1), MinimumWage = 8, TotalHours = 36, TotalOverTimeHours = 6, TotalDoubleTimeHours = 0, LastBlockId = 43, LastLaborCode = 212},
+				new WeeklySummary{ EmployeeId = "Employee2", Crew = 100, FiveEight = false, WeekEndDate = new DateTime(2022, 1, 1), MinimumWage = 8.5M, TotalHours = 36, TotalOverTimeHours = 6, TotalDoubleTimeHours = 0, LastBlockId = 44, LastLaborCode = 260},
+				new WeeklySummary{ EmployeeId = "Employee3", Crew = 100, FiveEight = false, WeekEndDate = new DateTime(2099, 12, 31), MinimumWage = 8, TotalHours = 42, TotalOverTimeHours = 12, TotalDoubleTimeHours = 0, LastBlockId = 45, LastLaborCode = 330},
+				new WeeklySummary{ EmployeeId = "Employee3", Crew = 100, FiveEight = false, WeekEndDate = new DateTime(2099, 12, 31), MinimumWage = 8.5M, TotalHours = 42, TotalOverTimeHours = 12, TotalDoubleTimeHours = 0, LastBlockId = 46, LastLaborCode = 108}
+			};
+
+			var weeklyOverTimeHours = _ranchWeeklyOTHoursCalculator.GetWeeklyOTHours(weeklySummaries);
+
+			Assert.AreEqual(3, weeklyOverTimeHours.Count());
+			Assert.AreEqual(1, weeklyOverTimeHours.Where(x => x.EmployeeId == "Employee1" && x.Crew == 100 && x.WeekEndDate == new DateTime(2022, 1, 1) && x.OverTimeHours == 20 && x.BlockId == 42 && x.LaborCode == 109).Count());
+			Assert.AreEqual(1, weeklyOverTimeHours.Where(x => x.EmployeeId == "Employee2" && x.Crew == 100 && x.WeekEndDate == new DateTime(2022, 1, 1) && x.OverTimeHours == 20 && x.BlockId == 44 && x.LaborCode == 260).Count());
+			Assert.AreEqual(1, weeklyOverTimeHours.Where(x => x.EmployeeId == "Employee3" && x.Crew == 100 && x.WeekEndDate == new DateTime(2099, 12, 31) && x.OverTimeHours == 20 && x.BlockId == 46 && x.LaborCode == 108).Count());
+		}
 	}
 }

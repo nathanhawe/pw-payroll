@@ -31,8 +31,9 @@ namespace Payroll.Service
 			public bool FiveEight { get; set; }
 			public decimal TotalGross { get; set; }
 			public decimal HoursWorked { get; set; }
-			public decimal LaborCode { get; set; }
+			public int LaborCode { get; set; }
 			public bool UseCrewLaborRateForPlantMinimumAssurance { get; set; }
+			public int BlockId { get; set; }
 
 		}
 
@@ -140,7 +141,8 @@ namespace Payroll.Service
 					TotalGross = x.TotalGross,
 					HoursWorked = x.HoursWorked,
 					LaborCode = x.LaborCode,
-					QuickBaseRecordId = x.QuickBaseRecordId
+					QuickBaseRecordId = x.QuickBaseRecordId,
+					BlockId = x.BlockId,
 				})
 				.ToList();
 
@@ -199,7 +201,8 @@ namespace Payroll.Service
 					TotalGross = x.TotalGross,
 					HoursWorked = x.HoursWorked,
 					LaborCode = x.LaborCode,
-					QuickBaseRecordId = x.QuickBaseRecordId
+					QuickBaseRecordId = x.QuickBaseRecordId,
+					BlockId = x.BlockId,
 				})
 				.ToList();
 
@@ -300,6 +303,8 @@ namespace Payroll.Service
 			/* 
 			 Use last of crew when records are sorted by Quick Base record ID
 			 Use last of FiveEights when sorted by record ID
+			 Use last of BlockId when sorted by record ID
+			 Use last of LaborCode when sorted by record ID
 			 Grouped by EmployeeID
 			 Grouped by Week Ending Date
 			 Grouped by ShiftDate
@@ -321,6 +326,8 @@ namespace Payroll.Service
 					TotalHours = x.Sum(s => s.HoursWorked),
 					NonProductiveTime = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.HoursWorked),
 					NonProductiveGross = x.Where(w => w.LaborCode == 380 || w.LaborCode == 381).Sum(s => s.TotalGross),
+					LastBlockId = x.OrderByDescending(o => o.QuickBaseRecordId).First().BlockId,
+					LastLaborCode = x.OrderByDescending(o => o.QuickBaseRecordId).First().LaborCode,
 				})
 				.ToList();
 

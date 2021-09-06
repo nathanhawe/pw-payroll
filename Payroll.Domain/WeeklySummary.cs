@@ -18,5 +18,7 @@ namespace Payroll.Domain
 		public decimal TotalOverTimeHours { get; set; }
 		public decimal TotalDoubleTimeHours { get; set; }
 		public decimal NonProductiveGross { get; set; }
+		public int LastBlockId { get; set; }
+		public int LastLaborCode { get; set; }
 	}
 }

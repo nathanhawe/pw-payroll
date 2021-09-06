@@ -10,5 +10,7 @@ namespace Payroll.Domain
 		public int Crew { get; set; }
 		public DateTime WeekEndDate { get; set; }
 		public decimal OverTimeHours { get; set; }
+		public int BlockId { get; set; }
+		public int LaborCode { get; set; }
 	}
 }

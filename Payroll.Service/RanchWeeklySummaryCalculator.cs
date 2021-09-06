@@ -40,7 +40,9 @@ namespace Payroll.Service
 					TotalGross = group.Sum(x => x.TotalGross),
 					EffectiveHourlyRate = 0,
 					TotalOverTimeHours = group.Sum(x => x.OverTimeHours),
-					TotalDoubleTimeHours = group.Sum(x => x.DoubleTimeHours)
+					TotalDoubleTimeHours = group.Sum(x => x.DoubleTimeHours),
+					LastBlockId = group.OrderByDescending(o => o.ShiftDate).First().LastBlockId,
+					LastLaborCode = group.OrderByDescending(o => o.ShiftDate).First().LastLaborCode,
 				})
 				.ToList();
 

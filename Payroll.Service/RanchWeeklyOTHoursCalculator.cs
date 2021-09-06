@@ -42,7 +42,9 @@ namespace Payroll.Service
 					FiveEight = group.OrderByDescending(o => o.MinimumWage).First().FiveEight,
 					TotalHours = group.Sum(x => x.TotalHours),
 					TotalOverTimeHours = group.Sum(x => x.TotalOverTimeHours),
-					TotalDoubleTimeHours = group.Sum(x => x.TotalDoubleTimeHours)
+					TotalDoubleTimeHours = group.Sum(x => x.TotalDoubleTimeHours),
+					LastBlockId = group.OrderByDescending(o => o.MinimumWage).First().LastBlockId,
+					LastLaborCode = group.OrderByDescending(o => o.MinimumWage).First().LastLaborCode,
 				})
 				.ToList();
 
@@ -58,7 +60,9 @@ namespace Payroll.Service
 						EmployeeId = summary.EmployeeId,
 						Crew = summary.Crew,
 						WeekEndDate = summary.WeekEndDate,
-						OverTimeHours = total
+						OverTimeHours = total,
+						BlockId = summary.LastBlockId,
+						LaborCode = summary.LastLaborCode,
 					});
 				}
 			}

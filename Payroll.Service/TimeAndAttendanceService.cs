@@ -734,7 +734,9 @@ namespace Payroll.Service
 				Crew = x.Crew,
 				PayType = PayType.OverTime,
 				OtDtWotHours = x.OverTimeHours,
-				BatchId = batch.Id
+				BatchId = batch.Id,
+				BlockId = x.LastBlockId,
+				LaborCode = x.LastLaborCode,
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -759,7 +761,9 @@ namespace Payroll.Service
 				Crew = x.Crew,
 				PayType = PayType.DoubleTime,
 				OtDtWotHours = x.DoubleTimeHours,
-				BatchId = batch.Id
+				BatchId = batch.Id,
+				BlockId = x.LastBlockId,
+				LaborCode = x.LastLaborCode,
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
@@ -785,7 +789,9 @@ namespace Payroll.Service
 				Crew = x.Crew,
 				PayType = PayType.WeeklyOverTime,
 				OtDtWotHours = x.OverTimeHours,
-				BatchId = batch.Id
+				BatchId = batch.Id,
+				BlockId = x.BlockId,
+				LaborCode = x.LaborCode,
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{
@@ -1071,7 +1077,9 @@ namespace Payroll.Service
 				PayType = PayType.OverTime,
 				OtDtWotHours = x.OverTimeHours,
 				BatchId = batchId,
-				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid,
+				BlockId = x.LastBlockId,
+				LaborCode = x.LastLaborCode,
 			}).ToList();
 			overTimeRecords.ForEach(x =>
 			{
@@ -1097,7 +1105,9 @@ namespace Payroll.Service
 				PayType = PayType.DoubleTime,
 				OtDtWotHours = x.DoubleTimeHours,
 				BatchId = batchId,
-				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid,
+				BlockId = x.LastBlockId,
+				LaborCode = x.LastLaborCode,
 			}).ToList();
 			doubleTimeRecords.ForEach(x =>
 			{
@@ -1124,7 +1134,9 @@ namespace Payroll.Service
 				PayType = PayType.WeeklyOverTime,
 				OtDtWotHours = x.OverTimeHours,
 				BatchId = batchId,
-				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid
+				WeekEndOfAdjustmentPaid = weekendOfAdjustmentPaid,
+				BlockId = x.BlockId,
+				LaborCode = x.LaborCode,
 			}).ToList();
 			weeklyOverTimeRecords.ForEach(x =>
 			{

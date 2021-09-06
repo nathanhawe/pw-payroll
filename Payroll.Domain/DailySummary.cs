@@ -22,5 +22,7 @@ namespace Payroll.Domain
 		public decimal MinimumWage { get; set; }
 		public decimal NonProductiveGross { get; set; }
 		public bool UseCrewLaborRateForPlantMinimumAssurance { get; set; }
+		public int LastBlockId { get; set; }
+		public int LastLaborCode { get; set; }
 	}
 }
