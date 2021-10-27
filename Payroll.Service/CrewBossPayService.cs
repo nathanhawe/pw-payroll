@@ -146,6 +146,7 @@ namespace Payroll.Service
 				Crew = crewBossPayLine.Crew,
 				EmployeeId = crewBossPayLine.EmployeeId,
 				HoursWorked = crewBossPayLine.HoursWorked,
+				HourlyRate = crewBossPayLine.HourlyRate,
 				PayType = GetPayType(crewBossPayLine.PayMethod),
 				OtherGross = crewBossPayLine.Gross,
 				TotalGross = crewBossPayLine.Gross,
