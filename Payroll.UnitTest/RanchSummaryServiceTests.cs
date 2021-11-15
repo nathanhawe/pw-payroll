@@ -107,7 +107,13 @@ namespace Payroll.UnitTest
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150));
 				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee1", crew: 60, lastCrew: 100, hoursWorked: 10, totalGross: 150));
-				
+
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 30), employeeId: "Employee2", crew: (int)Crew.Nursery, lastCrew: 100, hoursWorked: 10, totalGross: 150, laborCode: (int)RanchLaborCode.Covid19));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2019, 12, 31), employeeId: "Employee2", crew: (int)Crew.Nursery, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 1), employeeId: "Employee2", crew: (int)Crew.Nursery, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 2), employeeId: "Employee2", crew: (int)Crew.Nursery, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+				_context.Add(EntityMocker.MockRanchPayLine(batchId: 3, weekEndDate: new DateTime(2020, 1, 5), shiftDate: new DateTime(2020, 1, 3), employeeId: "Employee2", crew: (int)Crew.Nursery, lastCrew: 100, hoursWorked: 10, totalGross: 150));
+
 				_context.SaveChanges();
 			}
 
@@ -139,7 +145,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void FromBatch_SumOfCulturalHours_AreHoursForCrewsBelow61()
+		public void FromBatch_SumOfCulturalHours_AreHoursForCrew90AndCrewsBelow61()
 		{
 			var ranchSummaries = _ranchSummaryService.CreateSummariesForBatch(1);
 
@@ -151,7 +157,8 @@ namespace Payroll.UnitTest
 
 			ranchSummaries = _ranchSummaryService.CreateSummariesForBatch(3);
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee1" && x.CulturalHours == 50).Count());
-			Assert.AreEqual(1, ranchSummaries.Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee2" && x.CulturalHours == 50).Count());
+			Assert.AreEqual(2, ranchSummaries.Count());
 
 		}
 
@@ -244,7 +251,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void FromList_SumOfCulturalHours_AreHoursForCrewsBelow61()
+		public void FromList_SumOfCulturalHours_AreHoursForCrew90AndCrewsBelow61()
 		{
 			var ranchPayLines = _context.RanchPayLines.Where(x => x.BatchId == 1).ToList();
 			var ranchSummaries = _ranchSummaryService.CreateSummariesFromList(ranchPayLines);
@@ -258,7 +265,8 @@ namespace Payroll.UnitTest
 			ranchPayLines = _context.RanchPayLines.Where(x => x.BatchId == 3).ToList();
 			ranchSummaries = _ranchSummaryService.CreateSummariesFromList(ranchPayLines);
 			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee1" && x.CulturalHours == 50).Count());
-			Assert.AreEqual(1, ranchSummaries.Count());
+			Assert.AreEqual(1, ranchSummaries.Where(x => x.EmployeeId == "Employee2" && x.CulturalHours == 50).Count());
+			Assert.AreEqual(2, ranchSummaries.Count());
 
 		}
 

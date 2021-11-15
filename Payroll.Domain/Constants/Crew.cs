@@ -21,6 +21,7 @@ namespace Payroll.Domain.Constants
 		LightDuty_East = 75,
 		LightDuty_West = 76,
 		LightDuty_South = 77,
+		Nursery = 90,
 		JoseLuisRodriguez = 223
 	}
 }
