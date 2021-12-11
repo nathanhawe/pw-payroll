@@ -54,7 +54,7 @@ namespace Payroll.Service
 					LastCrew = group.Max(x => x.LastCrew),
 					TotalHours = group.Sum(x => x.TotalHours),
 					TotalGross = group.Sum(x => x.TotalGross),
-					CulturalHours = group.Where(x => x.Crew == (int)Crew.Nursery || x.Crew <= 60).Sum(x => x.TotalHours),
+					CulturalHours = group.Where(x => x.Crew <= 99 && x.Crew != (int)Crew.LightDuty_East && x.Crew != (int)Crew.LightDuty_South && x.Crew != (int)Crew.LightDuty_West).Sum(x => x.TotalHours),
 					CovidHours = group.Where(x => x.LaborCode == (int)RanchLaborCode.Covid19).Sum(x => x.TotalHours)
 				})
 				.ToList();
@@ -78,7 +78,7 @@ namespace Payroll.Service
 					LastCrew = group.Max(x => x.LastCrew),
 					TotalHours = group.Sum(x => x.HoursWorked),
 					TotalGross = group.Sum(x => x.TotalGross),
-					CulturalHours = group.Where(x => x.Crew == (int)Crew.Nursery || x.Crew <= 60).Sum(x => x.HoursWorked),
+					CulturalHours = group.Where(x => x.Crew <= 99 && x.Crew != (int)Crew.LightDuty_East && x.Crew != (int)Crew.LightDuty_South && x.Crew != (int)Crew.LightDuty_West).Sum(x => x.HoursWorked),
 					CovidHours = group.Where(x => x.LaborCode == (int)RanchLaborCode.Covid19).Sum(x => x.HoursWorked)
 				})
 				.ToList();
