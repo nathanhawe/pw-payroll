@@ -63,6 +63,7 @@ namespace Payroll.Service
 			if (laborCode == (int)RanchLaborCode.RecoveryTime) return RecoveryTimeRate();
 			if (laborCode == (int)RanchLaborCode.NonProductiveTime) return NonProductiveTimeRate();
 			if (laborCode == (int)RanchLaborCode.QualityControl && shiftDate >= new DateTime(2020, 5, 11)) return QualityControlRate(shiftDate, crew, employeeHourlyRate, minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.SeasonalEquipmentOperator && shiftDate >= new DateTime(2022, 3, 7)) return SeasonalEquipmentOperator(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (crew == (int)Crew.WestTractor_Night) return WestTractor_NightRate(shiftDate, employeeHourlyRate, minimumWageRate);
 			//if (crew == (int)Crew.LightDuty_East) return CrewLaborRate(shiftDate, minimumWageRate);
 			//if (crew == (int)Crew.LightDuty_West) return CrewLaborRate(shiftDate, minimumWageRate);
@@ -279,6 +280,11 @@ namespace Payroll.Service
 				else return Math.Max(employeeHourlyRate, CrewLaborRate(shiftDate, minimumWageRate) + .25M);
 			}
 			
+		}
+
+		private decimal SeasonalEquipmentOperator(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
+		{
+			return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate) + .5M;
 		}
 
 		private decimal WestTractor_NightRate(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)

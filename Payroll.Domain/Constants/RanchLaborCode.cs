@@ -15,6 +15,7 @@ namespace Payroll.Domain.Constants
 		GrapeHarvestSupport = 120,
 		Girdling = 215,
 		Grafting_BuddingExpertCrew = 217,
+		SeasonalEquipmentOperator = 234,
 		RecoveryTime = 380,
 		NonProductiveTime = 381,
 		QualityControl = 551,

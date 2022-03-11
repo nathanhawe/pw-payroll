@@ -992,6 +992,25 @@ namespace Payroll.UnitTest
 			Assert.AreEqual((_crewLaborRate + 3M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: _crewLaborRate + 2M, shiftDate: effectiveDate.AddYears(10)));
 		}
 
+		[TestMethod]
+		public void LaborCode_234_SeasonalEquipmentOperator_OnOrAfter20220307_ReturnsGreaterOfEmployeeRateAndCulturalLaborPlusHalfDollar()
+		{
+			var laborCode = (int)RanchLaborCode.SeasonalEquipmentOperator;
+			var effectiveDate = new DateTime(2022, 3, 7);
+			var endDate = effectiveDate.AddYears(5);
+
+			// Return cultural labor rate + .50 when it is greater than employee hourly rate
+			Assert.AreEqual((_culturalLaborRate + .5M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
+			Assert.AreEqual((_culturalLaborRate + .5M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: endDate));
+
+			// Return the employee hourly rate when it is greater than cultural labor rate + .50
+			Assert.AreEqual((_culturalLaborRate + .75M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .25M), shiftDate: effectiveDate));
+			Assert.AreEqual((_culturalLaborRate + .75M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .25M), shiftDate: endDate));
+
+			// Returns minimum wage + .50 when minimum wage is greater than employee and cultural labor rates
+			Assert.AreEqual((_culturalLaborRate + 1.5M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .5M), shiftDate: effectiveDate, minimumWage: _culturalLaborRate + 1M));
+			Assert.AreEqual((_culturalLaborRate + 1.5M), DefaultTest(crew: 99, laborCode: laborCode, employeeHourlyRate: (_culturalLaborRate + .5M), shiftDate: endDate, minimumWage: _culturalLaborRate + 1M));
+		}
 
 		[TestMethod]
 		public void LaborCode_380_RecoveryTime_ReturnsZero()
