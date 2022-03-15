@@ -301,21 +301,23 @@ namespace Payroll.Service
 
 		private decimal GraftingBuddingExpertCrewRate(DateTime shiftDate, int crew, decimal minimumWageRate)
 		{
-			if(shiftDate < new DateTime(2018, 2, 2) && crew == (int)Crew.JoseLuisRodriguez)
+			if(shiftDate < new DateTime(2018, 2, 2))
 			{
-				return Math.Max(14M, minimumWageRate);
+				if(crew == (int)Crew.JoseLuisRodriguez) return Math.Max(14M, minimumWageRate);
+				return CrewLaborRate(shiftDate, minimumWageRate);
 			}
-			else if(shiftDate < new DateTime(2021, 1, 11) && crew == (int)Crew.JoseLuisRodriguez)
+			else if(shiftDate < new DateTime(2021, 1, 11))
 			{
-				return Math.Max(15M, minimumWageRate);
+				if (crew == (int)Crew.JoseLuisRodriguez) return Math.Max(15M, minimumWageRate);
+				return CrewLaborRate(shiftDate, minimumWageRate);
 			}
-			else if(shiftDate >= new DateTime(2021, 1, 11))
+			else if(shiftDate < new DateTime(2022, 3, 14))
 			{
 				return CrewLaborRate(shiftDate, minimumWageRate) + 1;
 			}
 			else
 			{
-				return CrewLaborRate(shiftDate, minimumWageRate);
+				return Math.Max(16.25M, CrewLaborRate(shiftDate, minimumWageRate));
 			}
 		}
 
