@@ -139,6 +139,7 @@ namespace Payroll
 			services.AddScoped<Service.Interface.IPlantHourlyRateSelector, Service.PlantHourlyRateSelector>();
 			services.AddScoped<Service.Interface.ICrewBossWageService, Service.CrewBossWageService>();
 			services.AddScoped<Service.Interface.ISouthCrewBossWageService, Service.SouthCrewBossWageService>();
+			services.AddScoped<Service.Interface.IRanchBonusPayService, Service.RanchBonusPayService>();
 			services.AddScoped<Service.Interface.ICrewLaborWageService, Service.CrewLaborWageService>();
 			services.AddScoped<Service.Interface.ICulturalLaborWageService, Service.CulturalLaborWageService>();
 			services.AddScoped<Service.Interface.IMinimumWageService, Service.MinimumWageService>();
@@ -183,6 +184,7 @@ namespace Payroll
 			services.AddScoped<Data.QuickBase.IRanchPayrollAdjustmentOutRepo, Data.QuickBase.RanchPayrollAdjustmentOutRepo>();
 			services.AddScoped<Data.QuickBase.IPlantPayrollOutRepo, Data.QuickBase.PlantPayrollOutRepo>();
 			services.AddScoped<Data.QuickBase.IPlantPayrollAdjustmentOutRepo, Data.QuickBase.PlantPayrollAdjustmentOutRepo>();
+			services.AddScoped<Data.QuickBase.IRanchBonusPieceRatesRepo, Data.QuickBase.RanchBonusPieceRatesRepo>();
 
 
 			// Add hosted services

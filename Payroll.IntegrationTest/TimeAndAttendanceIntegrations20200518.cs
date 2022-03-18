@@ -47,6 +47,7 @@ namespace Payroll.IntegrationTest
 			var ranchPayrollAdjustmentOutRepo = new MockRanchPayrollAdjustmentOutRepo();
 			var plantPayrollOutRepo = new MockPlantPayrollOutRepo(new List<PlantPayLine>());
 			var plantPayrollAdjustmentOutRepo = new MockPlantPayrollAdjustmentOutRepo(new List<PlantAdjustmentLine>());
+			var ranchBonusPieceRatesRepo = new MockRanchBonusPieceRatesRepo(new List<RanchBonusPieceRate>());
 
 			// Services
 			var minimumWageService = new MinimumWageService(context);
@@ -66,6 +67,7 @@ namespace Payroll.IntegrationTest
 			var ranchWeeklyOverTimeHoursCalculator = new RanchWeeklyOTHoursCalculator(roundingService);
 			var ranchMinimumMakeUpCalculator = new RanchMinimumMakeUpCalculator(roundingService);
 			var ranchSummaryService = new RanchSummaryService(context);
+			var ranchBonusPayService = new RanchBonusPayService(context, roundingService);
 
 			var plantDailyOTDTHoursCalculator = new PlantDailyOTDTHoursCalculator();
 			var plantWeeklySummaryCalculator = new PlantWeeklySummaryCalculator(roundingService);
@@ -105,7 +107,9 @@ namespace Payroll.IntegrationTest
 				ranchPayrollOutRepo,
 				ranchPayrollAdjustmentOutRepo,
 				plantPayrollOutRepo,
-				plantPayrollAdjustmentOutRepo);
+				plantPayrollAdjustmentOutRepo,
+				ranchBonusPieceRatesRepo,
+				ranchBonusPayService);
 
 			// Create a new batch
 			var batch = new Batch

@@ -36,6 +36,7 @@ namespace Payroll.Service
 		private readonly IRanchPayrollAdjustmentOutRepo _ranchPayrollAdjustmentOutRepo;
 		private readonly IPlantPayrollOutRepo _plantPayrollOutRepo;
 		private readonly IPlantPayrollAdjustmentOutRepo _plantPayrollAdjustmentOutRepo;
+		private readonly IRanchBonusPieceRatesRepo _ranchBonusPieceRatesRepo;
 
 		// Services
 		private readonly IGrossFromHoursCalculator _grossFromHoursCalculator;
@@ -52,6 +53,7 @@ namespace Payroll.Service
 		private readonly IRanchWeeklyOTHoursCalculator _ranchWeeklyOverTimeHoursCalculator;
 		private readonly IRanchMinimumMakeUpCalculator _ranchMinimumMakeUpCalculator;
 		private readonly IRanchSummaryService _ranchSummaryService;
+		private readonly IRanchBonusPayService _ranchBonusPayService;
 
 		private readonly IPlantDailyOTDTHoursCalculator _plantDailyOTDTHoursCalculator;
 		private readonly IPlantWeeklySummaryCalculator _plantWeeklySummaryCalculator;
@@ -91,7 +93,9 @@ namespace Payroll.Service
 			IRanchPayrollOutRepo ranchPayrollOutRepo,
 			IRanchPayrollAdjustmentOutRepo ranchPayrollAdjustmentOutRepo,
 			IPlantPayrollOutRepo plantPayrollOutRepo,
-			IPlantPayrollAdjustmentOutRepo plantPayrollAdjustmentOutRepo)
+			IPlantPayrollAdjustmentOutRepo plantPayrollAdjustmentOutRepo,
+			IRanchBonusPieceRatesRepo ranchBonusPieceRatesRepo,
+			IRanchBonusPayService ranchBonusPayService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_context = payrollContext ?? throw new ArgumentNullException(nameof(payrollContext));
@@ -125,6 +129,8 @@ namespace Payroll.Service
 			_ranchPayrollAdjustmentOutRepo = ranchPayrollAdjustmentOutRepo ?? throw new ArgumentNullException(nameof(ranchPayrollAdjustmentOutRepo));
 			_plantPayrollOutRepo = plantPayrollOutRepo ?? throw new ArgumentNullException(nameof(plantPayrollOutRepo));
 			_plantPayrollAdjustmentOutRepo = plantPayrollAdjustmentOutRepo ?? throw new ArgumentNullException(nameof(plantPayrollAdjustmentOutRepo));
+			_ranchBonusPieceRatesRepo = ranchBonusPieceRatesRepo ?? throw new ArgumentNullException(nameof(ranchBonusPieceRatesRepo));
+			_ranchBonusPayService = ranchBonusPayService ?? throw new ArgumentNullException(nameof(ranchBonusPayService));
 		}
 
 		public void PerformCalculations(int batchId)
@@ -652,6 +658,12 @@ namespace Payroll.Service
 			_context.AddRange(crewBossPayLines);
 			_context.SaveChanges();
 
+			/* Productivity Bonus Calculations */
+			_logger.Log(LogLevel.Information, "Calculating productivity bonuses for batch {batchId}", batch.Id);
+			SetBatchStatus(batch.Id, BatchProcessingStatus.ProductivityBonus);
+			var productivityBonusLines = _ranchBonusPayService.CalculateRanchBonusPayLines(batch.Id);
+			BulkInsert(productivityBonusLines);
+
 			/* PSL Requires hours and gross for regular, piece, and CB pay types; also requires hours on Sick Leave pay types*/
 			SetBatchStatus(batch.Id, BatchProcessingStatus.PaidSickLeaveCalculations);
 			_logger.Log(LogLevel.Information, "Calculating PSL for batch {batchId}", batch.Id);
@@ -948,6 +960,11 @@ namespace Payroll.Service
 			var paidSickLeaves = GetPaidSickLeaveTracking(batch.WeekEndDate, batch.Company);
 			paidSickLeaves.ForEach(x => x.BatchId = batch.Id);
 
+			// Ranch Bonus Piece Rates
+			_logger.Log(LogLevel.Information, "Downloading ranch bonus piece rate data from Quick Base for {batchId}", batch.Id);
+			var ranchBonusPieceRates = _ranchBonusPieceRatesRepo.Get().ToList();
+			ranchBonusPieceRates.ForEach(x => x.BatchId = batch.Id);
+
 			/* Gross Calculations */
 			_logger.Log(LogLevel.Information, "Calculating initial gross for batch {batchId}", batch.Id);
 			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
@@ -981,6 +998,7 @@ namespace Payroll.Service
 			BulkInsert(ranchPayLines);
 			BulkInsert(ranchAdjustmentLines);
 			BulkInsert(paidSickLeaves);
+			BulkInsert(ranchBonusPieceRates);
 			
 			_logger.Log(LogLevel.Information, "Completed saving ranch payroll data from Quick Base for {batchId}", batch.Id);
 		}
@@ -1571,6 +1589,66 @@ namespace Payroll.Service
 				row[nameof(RanchAdjustmentLine.StartTime)] = adjustmentLine.StartTime;
 				row[nameof(RanchAdjustmentLine.EndTime)] = adjustmentLine.EndTime;
 				row[nameof(RanchAdjustmentLine.SickLeaveRequested)] = adjustmentLine.SickLeaveRequested;
+				table.Rows.Add(row);
+			}
+
+			var connectionString = _context.Database.GetDbConnection().ConnectionString;
+			using var connection = new SqlConnection(connectionString);
+			connection.Open();
+			var transaction = connection.BeginTransaction();
+			try
+			{
+				using var sqlBulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.TableLock, transaction);
+				sqlBulkCopy.BulkCopyTimeout = 0;
+				sqlBulkCopy.BatchSize = 10000;
+				sqlBulkCopy.DestinationTableName = tableName;
+				sqlBulkCopy.WriteToServer(table);
+				transaction.Commit();
+			}
+			catch (Exception ex)
+			{
+				transaction.Rollback();
+				throw ex;
+			}
+			finally
+			{
+				transaction.Dispose();
+				connection.Close();
+			}
+		}
+
+		private void BulkInsert(List<RanchBonusPieceRate> ranchBonusPieceRates)
+		{
+			var tableName = "RanchBonusPieceRates";
+			var table = new DataTable(tableName);
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.Id), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.DateCreated), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.DateModified), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.IsDeleted), typeof(bool)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.BatchId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.QuickBaseRecordId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.BlockId), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.LaborCode), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.EffectiveDate), typeof(System.DateTime)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.PerHourThreshold), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.PerTreeBonus), typeof(decimal)));
+
+			var utcNow = DateTime.UtcNow;
+			foreach (var adjustmentLine in ranchBonusPieceRates)
+			{
+				var row = table.NewRow();
+				row[nameof(RanchBonusPieceRate.Id)] = 0;
+				row[nameof(RanchBonusPieceRate.DateCreated)] = utcNow;
+				row[nameof(RanchBonusPieceRate.DateModified)] = utcNow;
+				row[nameof(RanchBonusPieceRate.IsDeleted)] = adjustmentLine.IsDeleted;
+				row[nameof(RanchBonusPieceRate.BatchId)] = adjustmentLine.BatchId;
+				row[nameof(RanchBonusPieceRate.QuickBaseRecordId)] = adjustmentLine.QuickBaseRecordId;
+				row[nameof(RanchBonusPieceRate.BlockId)] = adjustmentLine.BlockId;
+				row[nameof(RanchBonusPieceRate.LaborCode)] = adjustmentLine.LaborCode;
+				row[nameof(RanchBonusPieceRate.EffectiveDate)] = adjustmentLine.EffectiveDate;
+				row[nameof(RanchBonusPieceRate.PerHourThreshold)] = adjustmentLine.PerHourThreshold;
+				row[nameof(RanchBonusPieceRate.PerTreeBonus)] = adjustmentLine.PerTreeBonus;
+				
 				table.Rows.Add(row);
 			}
 

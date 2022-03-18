@@ -17,6 +17,7 @@ namespace Payroll.Domain.Constants
 		Summaries,
 		Uploading,
 		Success,
-		Failed
+		Failed,
+		ProductivityBonus
 	}
 }

@@ -52,6 +52,7 @@ namespace Payroll.IntegrationTest
 			var ranchPayrollAdjustmentOutRepo = new RanchPayrollAdjustmentOutRepo(quickBaseConnection);
 			var plantPayrollOutRepo = new PlantPayrollOutRepo(quickBaseConnection);
 			var plantPayrollAdjustmentOutRepo = new PlantPayrollAdjustmentOutRepo(quickBaseConnection);
+			var ranchBonusPieceRatesRepo = new RanchBonusPieceRatesRepo(quickBaseConnection);
 
 
 			// Services
@@ -72,6 +73,7 @@ namespace Payroll.IntegrationTest
 			var ranchWeeklyOverTimeHoursCalculator = new RanchWeeklyOTHoursCalculator(roundingService);
 			var ranchMinimumMakeUpCalculator = new RanchMinimumMakeUpCalculator(roundingService);
 			var ranchSummaryService = new RanchSummaryService(context);
+			var ranchBonusPayService = new RanchBonusPayService(context, roundingService);
 
 			var plantDailyOTDTHoursCalculator = new PlantDailyOTDTHoursCalculator();
 			var plantWeeklySummaryCalculator = new PlantWeeklySummaryCalculator(roundingService);
@@ -111,7 +113,9 @@ namespace Payroll.IntegrationTest
 				ranchPayrollOutRepo,
 				ranchPayrollAdjustmentOutRepo,
 				plantPayrollOutRepo,
-				plantPayrollAdjustmentOutRepo);
+				plantPayrollAdjustmentOutRepo,
+				ranchBonusPieceRatesRepo,
+				ranchBonusPayService);
 
 			// Create a new batch
 			var batch = new Batch
@@ -164,6 +168,7 @@ namespace Payroll.IntegrationTest
 			var ranchPayrollAdjustmentOutRepo = new RanchPayrollAdjustmentOutRepo(quickBaseConnection);
 			var plantPayrollOutRepo = new PlantPayrollOutRepo(quickBaseConnection);
 			var plantPayrollAdjustmentOutRepo = new PlantPayrollAdjustmentOutRepo(quickBaseConnection);
+			var ranchBonusPieceRatesRepo = new RanchBonusPieceRatesRepo(quickBaseConnection);
 
 			// Services
 			var minimumWageService = new MinimumWageService(context);
@@ -183,6 +188,7 @@ namespace Payroll.IntegrationTest
 			var ranchWeeklyOverTimeHoursCalculator = new RanchWeeklyOTHoursCalculator(roundingService);
 			var ranchMinimumMakeUpCalculator = new RanchMinimumMakeUpCalculator(roundingService);
 			var ranchSummaryService = new RanchSummaryService(context);
+			var ranchBonusPayService = new RanchBonusPayService(context, roundingService);
 
 			var plantDailyOTDTHoursCalculator = new PlantDailyOTDTHoursCalculator();
 			var plantWeeklySummaryCalculator = new PlantWeeklySummaryCalculator(roundingService);
@@ -222,7 +228,9 @@ namespace Payroll.IntegrationTest
 				ranchPayrollOutRepo,
 				ranchPayrollAdjustmentOutRepo,
 				plantPayrollOutRepo,
-				plantPayrollAdjustmentOutRepo);
+				plantPayrollAdjustmentOutRepo,
+				ranchBonusPieceRatesRepo,
+				ranchBonusPayService);
 
 			// Create a new batch
 			var batch = new Batch
