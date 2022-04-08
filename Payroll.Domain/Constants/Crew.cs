@@ -13,6 +13,8 @@ namespace Payroll.Domain.Constants
 		OfficeClerical_EastWest = 8,
 		OfficeClerical_South = 9,
 		Security = 15,
+		EastTractor_Night = 21,
+		SouthTractor_Night = 24,
 		WestTractor_Night = 27,
 		Trucking = 56,
 		LandscapeMaintenance = 57,

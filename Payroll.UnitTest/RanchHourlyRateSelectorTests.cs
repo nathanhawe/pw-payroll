@@ -1157,7 +1157,7 @@ namespace Payroll.UnitTest
 			// the cultural rate.
 			// [CulturalRate] = If([Employee Hourly Rate]<[Crew Labor Rate],[Crew Labor Rate],[Employee Hourly Rate])
 			var effectiveDate = new DateTime(2021, 6, 6);
-			List<int> exceptionCrews = new List<int> { (int)Crew.WestTractor_Night, (int)Crew.LightDuty_East, (int)Crew.LightDuty_West };
+			List<int> exceptionCrews = new List<int> { (int)Crew.WestTractor_Night, (int)Crew.SouthTractor_Night, (int)Crew.EastTractor_Night, (int)Crew.LightDuty_East, (int)Crew.LightDuty_West };
 			for (int i = 1; i < 100; i++)
 			{
 				if (exceptionCrews.Contains(i)) continue;
@@ -1175,7 +1175,7 @@ namespace Payroll.UnitTest
 			// the cultural rate.
 			// [CulturalRate] = If([Employee Hourly Rate]<[Cultural Labor Rate],[Cultural Labor Rate],[Employee Hourly Rate])
 			var effectiveDate = new DateTime(2021, 6, 7);
-			List<int> exceptionCrews = new List<int> { (int)Crew.WestTractor_Night, (int)Crew.LightDuty_East, (int)Crew.LightDuty_West };
+			List<int> exceptionCrews = new List<int> { (int)Crew.WestTractor_Night, (int)Crew.SouthTractor_Night, (int)Crew.EastTractor_Night, (int)Crew.LightDuty_East, (int)Crew.LightDuty_West };
 			for (int i = 1; i < 100; i++)
 			{
 				if (exceptionCrews.Contains(i)) continue;
@@ -1212,6 +1212,34 @@ namespace Payroll.UnitTest
 
 			// Minimum Wage + .5
 			Assert.AreEqual(_culturalLaborRate + 2.5M, DefaultTest(crew: (int)Crew.WestTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+		}
+
+		[TestMethod]
+		public void Crew_24_SouthEquipmentOperator_Night_OnOrAfter20220404()
+		{
+			var effectiveDate = new DateTime(2022, 4, 4);
+
+			// [CulturalRate] + .5
+			Assert.AreEqual(_culturalLaborRate + .5M, DefaultTest(crew: (int)Crew.SouthTractor_Night, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + .5M, DefaultTest(crew: (int)Crew.SouthTractor_Night, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1.5M, DefaultTest(crew: (int)Crew.SouthTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+
+			// Minimum Wage + .5
+			Assert.AreEqual(_culturalLaborRate + 2.5M, DefaultTest(crew: (int)Crew.SouthTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
+		}
+
+		[TestMethod]
+		public void Crew_21_EastTractor_Night_OnOrAfter20220404()
+		{
+			var effectiveDate = new DateTime(2022, 4, 4);
+
+			// [CulturalRate] + .5
+			Assert.AreEqual(_culturalLaborRate + .5M, DefaultTest(crew: (int)Crew.EastTractor_Night, employeeHourlyRate: _culturalLaborRate - 1, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + .5M, DefaultTest(crew: (int)Crew.EastTractor_Night, employeeHourlyRate: _culturalLaborRate, shiftDate: effectiveDate));
+			Assert.AreEqual(_culturalLaborRate + 1.5M, DefaultTest(crew: (int)Crew.EastTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, shiftDate: effectiveDate));
+
+			// Minimum Wage + .5
+			Assert.AreEqual(_culturalLaborRate + 2.5M, DefaultTest(crew: (int)Crew.EastTractor_Night, employeeHourlyRate: _culturalLaborRate + 1, minimumWage: _culturalLaborRate + 2M, shiftDate: effectiveDate));
 		}
 
 		[TestMethod]

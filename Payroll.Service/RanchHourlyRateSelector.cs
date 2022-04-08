@@ -64,9 +64,7 @@ namespace Payroll.Service
 			if (laborCode == (int)RanchLaborCode.NonProductiveTime) return NonProductiveTimeRate();
 			if (laborCode == (int)RanchLaborCode.QualityControl && shiftDate >= new DateTime(2020, 5, 11)) return QualityControlRate(shiftDate, crew, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.SeasonalEquipmentOperator && shiftDate >= new DateTime(2022, 3, 7)) return SeasonalEquipmentOperator(shiftDate, employeeHourlyRate, minimumWageRate);
-			if (crew == (int)Crew.WestTractor_Night) return WestTractor_NightRate(shiftDate, employeeHourlyRate, minimumWageRate);
-			//if (crew == (int)Crew.LightDuty_East) return CrewLaborRate(shiftDate, minimumWageRate);
-			//if (crew == (int)Crew.LightDuty_West) return CrewLaborRate(shiftDate, minimumWageRate);
+			if (IsNightTractorCrew(crew)) return Tractor_NightRate(shiftDate, employeeHourlyRate, minimumWageRate);
 
 			if (IsCulturalCrew(crew))
 			{
@@ -287,7 +285,7 @@ namespace Payroll.Service
 			return CulturalRate(shiftDate, employeeHourlyRate, minimumWageRate) + .5M;
 		}
 
-		private decimal WestTractor_NightRate(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
+		private decimal Tractor_NightRate(DateTime shiftDate, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
 			if(shiftDate < new DateTime(2021, 6, 7))
 			{
@@ -352,6 +350,17 @@ namespace Payroll.Service
 		private bool IsCulturalCrew(int crew)
 		{
 			return (crew < 100 && crew != 75 && crew != 76);
+		}
+
+		/// <summary>
+		/// Returns true if the passed crew is designated as a over night tractor crew entitled to the 
+		/// over night equipment operator differential.
+		/// </summary>
+		/// <param name="crew"></param>
+		/// <returns></returns>
+		private bool IsNightTractorCrew(int crew)
+		{
+			return (crew == (int)Crew.EastTractor_Night || crew == (int)Crew.WestTractor_Night || crew == (int)Crew.SouthTractor_Night);
 		}
 	}
 }
