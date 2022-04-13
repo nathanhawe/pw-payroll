@@ -54,7 +54,7 @@ namespace Payroll.Service
 		private readonly IRanchMinimumMakeUpCalculator _ranchMinimumMakeUpCalculator;
 		private readonly IRanchSummaryService _ranchSummaryService;
 		private readonly IRanchBonusPayService _ranchBonusPayService;
-
+		private readonly ICrewBossBonusPayService _crewBossBonusPayService;
 		private readonly IPlantDailyOTDTHoursCalculator _plantDailyOTDTHoursCalculator;
 		private readonly IPlantWeeklySummaryCalculator _plantWeeklySummaryCalculator;
 		private readonly IPlantWeeklyOTHoursCalculator _plantWeeklyOverTimeHoursCalculator;
@@ -95,7 +95,8 @@ namespace Payroll.Service
 			IPlantPayrollOutRepo plantPayrollOutRepo,
 			IPlantPayrollAdjustmentOutRepo plantPayrollAdjustmentOutRepo,
 			IRanchBonusPieceRatesRepo ranchBonusPieceRatesRepo,
-			IRanchBonusPayService ranchBonusPayService)
+			IRanchBonusPayService ranchBonusPayService,
+			ICrewBossBonusPayService crewBossBonusPayService)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_context = payrollContext ?? throw new ArgumentNullException(nameof(payrollContext));
@@ -131,6 +132,7 @@ namespace Payroll.Service
 			_plantPayrollAdjustmentOutRepo = plantPayrollAdjustmentOutRepo ?? throw new ArgumentNullException(nameof(plantPayrollAdjustmentOutRepo));
 			_ranchBonusPieceRatesRepo = ranchBonusPieceRatesRepo ?? throw new ArgumentNullException(nameof(ranchBonusPieceRatesRepo));
 			_ranchBonusPayService = ranchBonusPayService ?? throw new ArgumentNullException(nameof(ranchBonusPayService));
+			_crewBossBonusPayService = crewBossBonusPayService ?? throw new ArgumentNullException(nameof(crewBossBonusPayService));
 		}
 
 		public void PerformCalculations(int batchId)
@@ -653,9 +655,11 @@ namespace Payroll.Service
 			_logger.Log(LogLevel.Information, "Calculating crew boss pay for batch {batchId}", batch.Id);
 			SetBatchStatus(batch.Id, BatchProcessingStatus.CrewBossCalculations);
 			var crewBossPayLines = _crewBossPayService.CalculateCrewBossPay(batch.Id);
+			var crewBossProductionIncentiveBonusLines = _crewBossBonusPayService.CalculateCrewBossBonusPayLines(batch.Id);
 
 			// Add crew boss pay lines to database.
 			_context.AddRange(crewBossPayLines);
+			_context.AddRange(crewBossProductionIncentiveBonusLines);
 			_context.SaveChanges();
 
 			/* Productivity Bonus Calculations */

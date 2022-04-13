@@ -14,6 +14,7 @@ namespace Payroll.Data
 		public DbSet<MinimumWage> MinimumWages { get; set; }
 		public DbSet<CrewBossWage> CrewBossWages { get; set; }
 		public DbSet<SouthCrewBossWage> SouthCrewBossWages { get; set; }
+		public DbSet<CrewBossBonusPieceRate> CrewBossBonusPieceRates { get; set; }
 		public DbSet<CrewBossPayLine> CrewBossPayLines { get; set; }
 		public DbSet<RanchPayLine> RanchPayLines { get; set; }
 		public DbSet<PaidSickLeave> PaidSickLeaves { get; set; }
