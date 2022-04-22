@@ -22,6 +22,7 @@ namespace Payroll.Data
 		public DbSet<CulturalLaborWage> CulturalLaborWages { get; set; }
 		public DbSet<RanchAdjustmentLine> RanchAdjustmentLines { get; set; }
 		public DbSet<RanchBonusPieceRate> RanchBonusPieceRates { get; set; }
+		public DbSet<RanchGroupBonusPieceRate> RanchGroupBonusPieceRates { get; set; }
 		public DbSet<RanchSummary> RanchSummaries { get; set; }
 		public DbSet<PlantPayLine> PlantPayLines { get; set; }
 		public DbSet<PlantAdjustmentLine> PlantAdjustmentLines { get; set; }

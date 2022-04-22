@@ -371,6 +371,31 @@ namespace Payroll.UnitTest.Helpers
 			};
 		}
 
+		public static RanchGroupBonusPieceRate MockRanchGroupBonusPieceRate(
+			int id = 0,
+			DateTime? dateCreated = null,
+			DateTime? dateModified = null,
+			bool isDeleted = false,
+			int laborCode = 0,
+			DateTime? effectiveDate = null,
+			decimal perVesselBonus = 0)
+		{
+			dateCreated ??= DateTime.Now;
+			dateModified ??= DateTime.Now;
+			effectiveDate ??= DateTime.Now;
+
+			return new RanchGroupBonusPieceRate
+			{
+				Id = id,
+				DateCreated = dateCreated.Value,
+				DateModified = dateModified.Value,
+				IsDeleted = isDeleted,
+				LaborCode = laborCode,
+				EffectiveDate = effectiveDate.Value,
+				PerVesselBonus = perVesselBonus,
+			};
+		}
+
 		public static CrewBossBonusPieceRate MockCrewBossBonusPieceRate(
 			int id = 0,
 			DateTime? dateCreated = null,
