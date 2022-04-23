@@ -36,13 +36,14 @@ namespace Payroll.Service
 			// Get a list of distinct crew boss and shift dates
 			var cbDates = _context.CrewBossPayLines
 				.Where(x => !x.IsDeleted && x.BatchId == batchId)
-				.Select(s => new
-				{
-					s.EmployeeId,
-					s.Crew,
-					s.ShiftDate
+				.GroupBy(g => new {g.EmployeeId, g.Crew, g.ShiftDate}, (key, group) => new 
+				{ 
+					key.EmployeeId,
+					key.Crew,
+					key.ShiftDate,
+					DisqualifiedCount = group.Sum(x => x.IsDisqualifiedFromQualityBonus ? 1 : 0)
 				})
-				.Distinct()
+				.Where(x => x.DisqualifiedCount == 0)
 				.ToList();
 
 			// For each labor code in bonus piece rates list, calculate the possible bonus for each crew boss

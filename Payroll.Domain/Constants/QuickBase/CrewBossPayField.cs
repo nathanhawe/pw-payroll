@@ -48,5 +48,10 @@
 		/// [High Heat Supplement Total Hours Cap] - Numeric indicating the total number of hours guaranteed to be paid out when a high-heat supplement is required.
 		/// </summary>
 		HighHeatSupplementTotalHoursCap = 76,
+
+		/// <summary>
+		/// [Disqualify from Quality Bonus] - Checkbox indicates that the crew boss has been disqualified from the quality bonus.
+		/// </summary>
+		DisqualifyFromQualityBonus = 78,
 	}
 }

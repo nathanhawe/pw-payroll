@@ -29,5 +29,7 @@ namespace Payroll.Domain
 
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal HighHeatSupplementTotalHoursCap { get; set; }
+
+		public bool IsDisqualifiedFromQualityBonus { get; set; }
 	}
 }

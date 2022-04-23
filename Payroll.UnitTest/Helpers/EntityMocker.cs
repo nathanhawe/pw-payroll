@@ -94,7 +94,8 @@ namespace Payroll.UnitTest.Helpers
 			decimal gross = 0,
 			bool fiveEight = false,
 			bool heatRelatedSupplement = false,
-			decimal heatRelatedSupplementTotalHoursCap = 8.5M)
+			decimal heatRelatedSupplementTotalHoursCap = 8.5M,
+			bool isDisqualifiedFromQualityBonus = false)
 		{
 			dateCreated ??= DateTime.Now;
 			dateModified ??= DateTime.Now;
@@ -122,6 +123,7 @@ namespace Payroll.UnitTest.Helpers
 				FiveEight = fiveEight,
 				HighHeatSupplement = heatRelatedSupplement,
 				HighHeatSupplementTotalHoursCap = heatRelatedSupplementTotalHoursCap,
+				IsDisqualifiedFromQualityBonus = isDisqualifiedFromQualityBonus,
 			};
 		}
 

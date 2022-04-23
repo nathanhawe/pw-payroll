@@ -124,6 +124,7 @@ namespace Payroll.Data.QuickBase
 						case (int)CrewBossPayField.FiveEight: temp.FiveEight = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)CrewBossPayField.HighHeatSupplement: temp.HighHeatSupplement = ParseBooleanFromCheckbox(field.Value); break;
 						case (int)CrewBossPayField.HighHeatSupplementTotalHoursCap: temp.HighHeatSupplementTotalHoursCap = ParseDecimal(field.Value) ?? 0; break;
+						case (int)CrewBossPayField.DisqualifyFromQualityBonus: temp.IsDisqualifiedFromQualityBonus = ParseBooleanFromCheckbox(field.Value); break;
 					}
 				}
 				crewBossPayLines.Add(temp);
@@ -149,6 +150,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)CrewBossPayField.FiveEight}.");
 			sb.Append($"{(int)CrewBossPayField.HighHeatSupplement}.");
 			sb.Append($"{(int)CrewBossPayField.HighHeatSupplementTotalHoursCap}.");
+			sb.Append($"{(int)CrewBossPayField.DisqualifyFromQualityBonus}.");
 
 			return sb.ToString();
 		}

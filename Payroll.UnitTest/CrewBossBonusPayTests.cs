@@ -151,7 +151,9 @@ namespace Payroll.UnitTest
 			var results = service.CalculateCrewBossBonusPayLines(1);
 
 			// Validate
+			
 			Assert.AreEqual(originalCount, context.RanchPayLines.Count());
+
 
 			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 0 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
 			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 1 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .1M && x.OtherGross == 7M && x.TotalGross == 7M).Count());
@@ -181,6 +183,9 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(0, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 16)).Count());
 			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 6 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 34 && x.PieceRate == .09M && x.OtherGross == 3.06M && x.TotalGross == 3.06M).Count());
 			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 13 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 36 && x.PieceRate == .09M && x.OtherGross == 3.24M && x.TotalGross == 3.24M).Count());
+
+			Assert.AreEqual(0, results.Where(x => x.Crew == 103).Count()); // No Crew
+			Assert.AreEqual(0, results.Where(x => x.Crew == 104).Count()); // Crew boss disqualified from quality bonus
 
 			Assert.AreEqual(24, results.Count());
 		}
@@ -292,6 +297,29 @@ namespace Payroll.UnitTest
 				context.Add(EntityMocker.MockRanchPayLine(batchId: batchId, crew: crew, employeeId: "Employee3", hoursWorked: 8, pieces: 25, shiftDate: dates[i], weekEndDate: weekEndDate, laborCode: laborCode));
 			}
 
+			// Crew 104 - CB Disqualified
+			crew = 104;
+			for (int i = 0; i < dates.Count; i++)
+			{
+				if (i % 3 == 0)
+				{
+					laborCode = (int)RanchLaborCode.PieceRateHarvest_Bucket;
+				}
+				else if (i % 3 == 1)
+				{
+					laborCode = (int)RanchLaborCode.PieceRateThinning;
+				}
+				else
+				{
+					laborCode = (int)RanchLaborCode.PieceRatePruningWinter;
+				}
+				context.Add(EntityMocker.MockCrewBossPayLine(batchId: batchId, weekEndDate: weekEndDate, shiftDate: dates[i], crew: crew, employeeId: $"CB{crew.ToString()}", payMethod: CrewBossPayMethod.SouthHourly, hoursWorked: 4, isDisqualifiedFromQualityBonus: true));
+				context.Add(EntityMocker.MockCrewBossPayLine(batchId: batchId, weekEndDate: weekEndDate, shiftDate: dates[i], crew: crew, employeeId: $"CB{crew.ToString()}", payMethod: CrewBossPayMethod.SouthHourly, hoursWorked: 4, isDisqualifiedFromQualityBonus: false));
+				context.Add(EntityMocker.MockRanchPayLine(batchId: batchId, crew: crew, employeeId: "Employee0", hoursWorked: 8, pieces: 10, shiftDate: dates[i], weekEndDate: weekEndDate, laborCode: laborCode));
+				context.Add(EntityMocker.MockRanchPayLine(batchId: batchId, crew: crew, employeeId: "Employee1", hoursWorked: 8, pieces: 15, shiftDate: dates[i], weekEndDate: weekEndDate, laborCode: laborCode));
+				context.Add(EntityMocker.MockRanchPayLine(batchId: batchId, crew: crew, employeeId: "Employee2", hoursWorked: 8, pieces: 20, shiftDate: dates[i], weekEndDate: weekEndDate, laborCode: laborCode));
+				context.Add(EntityMocker.MockRanchPayLine(batchId: batchId, crew: crew, employeeId: "Employee3", hoursWorked: 8, pieces: 25, shiftDate: dates[i], weekEndDate: weekEndDate, laborCode: laborCode));
+			}
 			context.SaveChanges();
 		}
 

@@ -1358,6 +1358,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.FiveEight), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.HighHeatSupplement), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.HighHeatSupplementTotalHoursCap), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(CrewBossPayLine.IsDisqualifiedFromQualityBonus), typeof(bool)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1382,6 +1383,7 @@ namespace Payroll.Service
 				row[nameof(CrewBossPayLine.FiveEight)] = payLine.FiveEight;
 				row[nameof(CrewBossPayLine.HighHeatSupplement)] = payLine.HighHeatSupplement;
 				row[nameof(CrewBossPayLine.HighHeatSupplementTotalHoursCap)] = payLine.HighHeatSupplementTotalHoursCap;
+				row[nameof(CrewBossPayLine.IsDisqualifiedFromQualityBonus)] = payLine.IsDisqualifiedFromQualityBonus;
 
 				table.Rows.Add(row);
 			}
