@@ -115,88 +115,142 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
-		/// Calculates individual bonuses based on crew performance using <c>RanchGroupBonusPieceRate</c>s.
+		/// Calculates individual bonuses based on crew performance.
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <returns></returns>
 		private List<RanchPayLine> CalculateGroupBonuses(int batchId)
 		{
 			var results = new List<RanchPayLine>();
+			
+			// TODO: Make this data driven.
+			results.AddRange(CreateHarvestBucketBonuses(batchId));
+			results.AddRange(CreateHarvestToteBonuses(batchId));
 
-			// Get a list of the bonus piece rates/thresholds
-			List<RanchGroupBonusPieceRate> bonusPieceRates = GetGroupBonusPieceRates();
+			return results;
+		}
 
-			// For each distinct labor code in the bonus piece rates list, query ranch pay lines and calculate possible bonus.
-			List<int> laborCodes = bonusPieceRates.Select(s => s.LaborCode).Distinct().ToList();
+		private List<RanchPayLine> CreateHarvestBucketBonuses(int batchId)
+		{
+			var results = new List<RanchPayLine>();
+			var rate = .1M;
 
-			foreach (var laborCode in laborCodes)
-			{
-				// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
-				var employeeGroups = _context.RanchPayLines
-					.Where(x => !x.IsDeleted && x.BatchId == batchId && x.LaborCode == laborCode && x.PayType == PayType.Regular)
-					.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
-					{
-						key.Crew,
-						key.EmployeeId,
-						key.ShiftDate,
-						key.BlockId,
-						Hours = group.Sum(x => x.HoursWorked),
-						Pieces = group.Sum(x => x.Pieces)
-					})
-					.ToList();
-
-				// Group the employee groupings into crews to be used for proportional distribution of group bonus.
-				var crewGroups = employeeGroups
-					.GroupBy(g => new { g.Crew, g.ShiftDate, g.BlockId }, (key, group) => new
-					{
-						key.Crew,
-						key.ShiftDate,
-						key.BlockId,
-						TotalHours = group.Sum(x => x.Hours),
-						TotalPieces = group.Sum(x => x.Pieces)
-					})
-					.ToList();
-
-				// For each crew group, lookup up the specific bonus and distribute it proportionally across all participating employees.
-				foreach (var crew in crewGroups)
+			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
+			var employeeGroups = _context.RanchPayLines
+				.Where(x => !x.IsDeleted && x.BatchId == batchId && x.PayType == PayType.Regular && (x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket || x.LaborCode == (int)RanchLaborCode.TractorPieceRateHarvest_Bucket))
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
 				{
-					var rate = bonusPieceRates
-						.Where(x =>
-							!x.IsDeleted
-							&& x.LaborCode == laborCode
-							&& x.EffectiveDate <= crew.ShiftDate)
-						.OrderByDescending(o => o.EffectiveDate)
-						.ThenByDescending(o => o.Id)
-						.FirstOrDefault();
+					key.Crew,
+					key.EmployeeId,
+					key.ShiftDate,
+					key.BlockId,
+					Hours = group.Sum(x => x.HoursWorked),
+					Pieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
 
-					if (rate != null && rate.PerVesselBonus > 0)
+			// Group the employee groupings into crews to be used for proportional distribution of group bonus.
+			var crewGroups = employeeGroups
+				.GroupBy(g => new { g.Crew, g.ShiftDate, g.BlockId }, (key, group) => new
+				{
+					key.Crew,
+					key.ShiftDate,
+					key.BlockId,
+					TotalHours = group.Sum(x => x.Hours),
+					TotalPieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+			// For each crew group, lookup up the specific bonus and distribute it proportionally across all participating employees.
+			foreach (var crew in crewGroups)
+			{
+				var employees = employeeGroups.Where(x => x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.Hours > 0).ToList();
+				foreach (var employee in employees)
+				{
+					decimal percentage = _roundingService.Round((employee.Hours / crew.TotalHours), 4);
+					decimal pieces = _roundingService.Round(percentage * crew.TotalPieces, 2);
+					decimal gross = _roundingService.Round(pieces * rate, 2);
+
+					if (gross > 0)
 					{
-
-						var employees = employeeGroups.Where(x => x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.Hours > 0).ToList();
-						foreach(var employee in employees)
+						results.Add(new RanchPayLine
 						{
-							decimal percentage = _roundingService.Round((employee.Hours / crew.TotalHours), 4);
-							decimal pieces = _roundingService.Round(percentage * crew.TotalPieces, 2);
-							decimal gross = _roundingService.Round(pieces * rate.PerVesselBonus, 2);
+							BatchId = batchId,
+							EmployeeId = employee.EmployeeId,
+							ShiftDate = employee.ShiftDate,
+							BlockId = employee.BlockId,
+							Crew = crew.Crew,
+							LaborCode = (int)RanchLaborCode.PieceRateHarvest_Bucket,
+							PayType = PayType.ProductionIncentiveBonus,
+							Pieces = pieces,
+							PieceRate = rate,
+							OtherGross = gross,
+							TotalGross = gross,
+						});
+					}
+				}
+			}
 
-							if(gross > 0)
-							{
-								results.Add(new RanchPayLine
-								{
-									BatchId = batchId,
-									EmployeeId = employee.EmployeeId,
-									ShiftDate = employee.ShiftDate,
-									BlockId = employee.BlockId,
-									Crew = crew.Crew,
-									LaborCode = laborCode,
-									PayType = PayType.ProductionIncentiveBonus,
-									Pieces = pieces,
-									PieceRate = rate.PerVesselBonus,
-									OtherGross = gross,
-									TotalGross = gross,
-								});
-							}
-						}
+			return results;
+		}
+
+		private List<RanchPayLine> CreateHarvestToteBonuses(int batchId)
+		{
+			var results = new List<RanchPayLine>();
+			var rate = .12M;
+
+			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
+			var employeeGroups = _context.RanchPayLines
+				.Where(x => !x.IsDeleted && x.BatchId == batchId && x.PayType == PayType.Regular && (x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Tote || x.LaborCode == (int)RanchLaborCode.TractorPieceRateHarvest_Tote))
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
+				{
+					key.Crew,
+					key.EmployeeId,
+					key.ShiftDate,
+					key.BlockId,
+					Hours = group.Sum(x => x.HoursWorked),
+					Pieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+			// Group the employee groupings into crews to be used for proportional distribution of group bonus.
+			var crewGroups = employeeGroups
+				.GroupBy(g => new { g.Crew, g.ShiftDate, g.BlockId }, (key, group) => new
+				{
+					key.Crew,
+					key.ShiftDate,
+					key.BlockId,
+					TotalHours = group.Sum(x => x.Hours),
+					TotalPieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+			// For each crew group, lookup up the specific bonus and distribute it proportionally across all participating employees.
+			foreach (var crew in crewGroups)
+			{
+				var employees = employeeGroups.Where(x => x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.Hours > 0).ToList();
+				foreach (var employee in employees)
+				{
+					decimal percentage = _roundingService.Round((employee.Hours / crew.TotalHours), 4);
+					decimal pieces = _roundingService.Round(percentage * crew.TotalPieces, 2);
+					decimal gross = _roundingService.Round(pieces * rate, 2);
+
+					if (gross > 0)
+					{
+						results.Add(new RanchPayLine
+						{
+							BatchId = batchId,
+							EmployeeId = employee.EmployeeId,
+							ShiftDate = employee.ShiftDate,
+							BlockId = employee.BlockId,
+							Crew = crew.Crew,
+							LaborCode = (int)RanchLaborCode.PieceRateHarvest_Tote,
+							PayType = PayType.ProductionIncentiveBonus,
+							Pieces = pieces,
+							PieceRate = rate,
+							OtherGross = gross,
+							TotalGross = gross,
+						});
 					}
 				}
 			}
@@ -208,10 +262,6 @@ namespace Payroll.Service
 		{
 			return _context.RanchBonusPieceRates.Where(x => !x.IsDeleted && x.BatchId == batchId).ToList();
 		}
-
-		private List<RanchGroupBonusPieceRate> GetGroupBonusPieceRates()
-		{
-			return _context.RanchGroupBonusPieceRates.Where(x => !x.IsDeleted).ToList();
-		}
+		
 	}
 }
