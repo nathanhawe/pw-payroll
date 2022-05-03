@@ -320,20 +320,6 @@ namespace Payroll.Service
 		/// <returns></returns>
 		private decimal Rate535(DateTime shiftDate, Plant plant, decimal calculatedEmployeeRate, decimal minimumWage, decimal h2ARate)
 		{
-			/*
-				[535 Rate] = 
-					[Shift Date] < #3-2-2020# =>
-						[Plant]=11 => [EmployeeHourlyRateCalc]
-						[EmployeeHourlyRateCalc]<[H-2A Rate] => [H-2A Rate]
-						ELSE [EmployeeHourlyRateCalc]
-					[Shift Date] < #3-22-2021# =>
-						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
-						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-					ELSE
-						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
-						[Plant] in (3, 4) MAX([EmployeeHourlyRateCalc], 16.05)
-						ELSE EmployeeHourlyRateCalc
-			*/
 			if (shiftDate < new DateTime(2020, 3, 2))
 			{
 				if (plant == Plant.Cutler)
@@ -356,7 +342,7 @@ namespace Payroll.Service
 					return Math.Max(calculatedEmployeeRate, 14.77M);
 				}
 			}
-			else
+			else if (shiftDate < new DateTime(2022, 4, 18))
 			{
 				if (plant == Plant.Cutler)
 				{
@@ -365,6 +351,14 @@ namespace Payroll.Service
 				else if (plant == Plant.Sanger || plant == Plant.Kerman)
 				{
 					return Math.Max(calculatedEmployeeRate, 16.05M);
+				}
+				else return calculatedEmployeeRate;
+			}
+			else
+			{
+				if (plant == Plant.Cutler || plant == Plant.Sanger || plant == Plant.Kerman)
+				{
+					return Math.Max(calculatedEmployeeRate, 17.51M);
 				}
 				else return calculatedEmployeeRate;
 			}
