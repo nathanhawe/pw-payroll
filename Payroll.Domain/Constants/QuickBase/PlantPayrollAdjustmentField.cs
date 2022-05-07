@@ -215,5 +215,10 @@
 		/// [Sick Leave Requested] - Numeric
 		/// </summary>
 		SickLeaveRequested = 102,
+
+		/// <summary>
+		/// [Plant - Position Title] - String.  The employee's position title.
+		/// </summary>
+		PositionTitle = 123,
 	}
 }

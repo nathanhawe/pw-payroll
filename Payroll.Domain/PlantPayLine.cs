@@ -85,6 +85,7 @@ namespace Payroll.Domain
 
 		public int PackerNumber { get; set; }
 		public string Packline { get; set; }
+		public string PositionTitle { get; set; }
 
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }

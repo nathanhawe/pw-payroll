@@ -69,7 +69,8 @@ namespace Payroll.Service
 					payLine.IsH2A,
 					plant,
 					payLine.ShiftDate,
-					payLine.HourlyRate);
+					payLine.HourlyRate,
+					payLine.PositionTitle);
 				
 				payLine.GrossFromHours = _roundingService.Round(payLine.HoursWorked * hourlyRate, 2);
 				payLine.HourlyRate = hourlyRate;
@@ -133,7 +134,8 @@ namespace Payroll.Service
 						adjustmentLine.IsH2A, 
 						plant, 
 						adjustmentLine.ShiftDate,
-						adjustmentLine.HourlyRate);
+						adjustmentLine.HourlyRate,
+						adjustmentLine.PositionTitle);
 				}
 
 				adjustmentLine.GrossFromHours = _roundingService.Round(adjustmentLine.HoursWorked * hourlyRate, 2);

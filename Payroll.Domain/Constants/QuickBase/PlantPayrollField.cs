@@ -203,6 +203,11 @@
 		H2AHoursOffered = 165,
 
 		/// <summary>
+		/// [Plant - Position Title] - String.  The employee's position title.
+		/// </summary>
+		PositionTitle = 166,
+
+		/// <summary>
 		/// [41.1 Approval] - Checkbox indicates that a pay line with pay type 41.1 is approved to be paid out.
 		/// </summary>
 		SpecialAdjustmentApproval = 182,

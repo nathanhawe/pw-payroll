@@ -53,17 +53,16 @@ namespace Payroll.Service
 		/// <param name="payLine"></param>
 		private void HourlyIncentive(PlantPayLine payLine)
 		{
-			/* 
-			 [555 Rate] = If([Incentive Disqualified]=true,0,2)
-			 [558 Rate] = If([Incentive Disqualified]=true,0,1)
-			*/
 			var grossIncentive = 0M;
 
 			if (!payLine.IsIncentiveDisqualified)
 			{
 				if(payLine.LaborCode == (int)PlantLaborCode.TagWriterLead)
 				{
-					grossIncentive = payLine.HoursWorked;
+					if(payLine.ShiftDate < new DateTime(2022,4,18))
+					{
+						grossIncentive = payLine.HoursWorked;
+					}
 				}
 				else
 				{

@@ -236,6 +236,7 @@ namespace Payroll.Data.QuickBase
 						case (int)PlantPayrollField.SickLeaveRequested: temp.SickLeaveRequested = ParseDecimal(field.Value) ?? 0; break;
 						case (int)PlantPayrollField.PackerNumber: temp.PackerNumber = ParseInt(field.Value) ?? 0; break;
 						case (int)PlantPayrollField.Packline: temp.Packline = field.Value; break;
+						case (int)PlantPayrollField.PositionTitle: temp.PositionTitle = field.Value.ToUpper().Trim(); break;
 					}
 				}
 				PlantPayLines.Add(temp);
@@ -282,6 +283,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)PlantPayrollField.SickLeaveRequested}.");
 			sb.Append($"{(int)PlantPayrollField.PackerNumber}.");
 			sb.Append($"{(int)PlantPayrollField.Packline}.");
+			sb.Append($"{(int)PlantPayrollField.PositionTitle}.");
 
 			return sb.ToString();
 		}

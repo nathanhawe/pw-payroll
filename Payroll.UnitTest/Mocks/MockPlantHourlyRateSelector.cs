@@ -15,7 +15,7 @@ namespace Payroll.UnitTest.Mocks
             Rate = rate;
         }
         
-        public decimal GetHourlyRate(string payType, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, bool isH2A, Plant plant, DateTime shiftDate, decimal payLineHourlyRate)
+        public decimal GetHourlyRate(string payType, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, bool isH2A, Plant plant, DateTime shiftDate, decimal payLineHourlyRate, string positionTitle)
         {
             return Rate;
         }

@@ -1730,6 +1730,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.SickLeaveRequested), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.PackerNumber), typeof(int)));
 			table.Columns.Add(new DataColumn(nameof(PlantPayLine.Packline), typeof(string)));
+			table.Columns.Add(new DataColumn(nameof(PlantPayLine.PositionTitle), typeof(string)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1778,6 +1779,7 @@ namespace Payroll.Service
 				row[nameof(PlantPayLine.SickLeaveRequested)] = payLine.SickLeaveRequested;
 				row[nameof(PlantPayLine.PackerNumber)] = payLine.PackerNumber;
 				row[nameof(PlantPayLine.Packline)] = payLine.Packline;
+				row[nameof(PlantPayLine.PositionTitle)] = payLine.PositionTitle;
 				table.Rows.Add(row);
 			}
 
@@ -1850,6 +1852,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.IsIncentiveDisqualified), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.StartTime), typeof(DateTime)));
 			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.SickLeaveRequested), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(PlantAdjustmentLine.PositionTitle), typeof(string)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var adjustmentLine in adjustmentLines)
@@ -1895,6 +1898,7 @@ namespace Payroll.Service
 				row[nameof(PlantAdjustmentLine.IsIncentiveDisqualified)] = adjustmentLine.IsIncentiveDisqualified;
 				row[nameof(PlantAdjustmentLine.StartTime)] = adjustmentLine.StartTime ?? (object)DBNull.Value;
 				row[nameof(PlantAdjustmentLine.SickLeaveRequested)] = adjustmentLine.SickLeaveRequested;
+				row[nameof(PlantAdjustmentLine.PositionTitle)] = adjustmentLine.PositionTitle;
 				table.Rows.Add(row);
 			}
 

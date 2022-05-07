@@ -272,7 +272,6 @@ namespace Payroll.UnitTest
 			using var context = new PayrollContext(options);
 			context.Database.EnsureCreated();
 
-			int pendingBlock = 1;
 			int excludedBlock = 1075;
 			int group1 = 1074;
 			int group2 = 682;

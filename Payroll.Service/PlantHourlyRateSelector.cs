@@ -29,8 +29,18 @@ namespace Payroll.Service
 		/// <param name="plant"></param>
 		/// <param name="shiftDate"></param>
 		/// <param name="payLineHourlyRate">Assumed to be the 90-Day Hourly Rate for sick leave and COVID-19 lines, othewise 0</param>
+		/// <param name="positionTitle"></param>
 		/// <returns></returns>
-		public decimal GetHourlyRate(string payType, int laborCode, decimal employeeHourlyRate, decimal hourlyRateOverride, bool isH2A, Domain.Constants.Plant plant, DateTime shiftDate, decimal payLineHourlyRate)
+		public decimal GetHourlyRate(
+			string payType, 
+			int laborCode, 
+			decimal employeeHourlyRate, 
+			decimal hourlyRateOverride, 
+			bool isH2A, 
+			Domain.Constants.Plant plant, 
+			DateTime shiftDate, 
+			decimal payLineHourlyRate,
+			string positionTitle)
 		{
 			var minimumWage = _minimumWageService.GetMinimumWageOnDate(shiftDate);
 			var calculatedEmployeeRate = EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
@@ -89,6 +99,11 @@ namespace Payroll.Service
 			if (isH2A)
 			{
 				return H2ARate(shiftDate);
+			}
+
+			if (laborCode == (int)PlantLaborCode.PackerNoPieces && plant == Plant.Cutler && positionTitle == PositionTitle.PackerL2 && shiftDate >= new DateTime(2022, 4, 18))
+			{
+				return Math.Max(calculatedEmployeeRate, 15.5M);
 			}
 
 			if (laborCode == (int)PlantLaborCode.Palletizing)
@@ -175,19 +190,6 @@ namespace Payroll.Service
 		/// <returns></returns>
 		private decimal Rate125(DateTime shiftDate, Plant plant, decimal calculatedEmployeeRate, decimal minimumWage)
 		{
-			/*
-				 [125 Rate] = 
-					[Shift Date] < #5-27-2019# => MAX([EmployeeHourlyRateCalc], 12.5)
-					[Shift Date] < #3/2/2020# => 
-						[Plant] = 11 => [Minimum Wage] + 0.5
-						ELSE Max([EmployeeHourlyRateCalc], 13)
-					[Shift Date] < #3/22/2021# =>
-						[Plant] = 11 => MAX([EmployeeHourlyRateCalc], [Minimum Wage] + 1)
-						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
-					ELSE
-						[Plant] in (3, 4, 11) => MAX([EmployeeHourlyRateCalc, 16.05)
-						ELSE EmployeeHourlyRateCalc
-			*/
 			if(shiftDate < new DateTime(2019, 5, 27))
 			{
 				return Math.Max(calculatedEmployeeRate, 12.5M);
@@ -225,11 +227,19 @@ namespace Payroll.Service
 					return Math.Max(calculatedEmployeeRate, 14.77M);
 				}
 			}
-			else
+			else if (shiftDate < new DateTime(2022, 4, 18))
 			{
 				if (plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler)
 				{
 					return Math.Max(calculatedEmployeeRate, 16.05M);
+				}
+				else return calculatedEmployeeRate;
+			}
+			else
+			{
+				if (plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler)
+				{
+					return Math.Max(calculatedEmployeeRate, minimumWage + 1.5M);
 				}
 				else return calculatedEmployeeRate;
 			}
@@ -269,17 +279,6 @@ namespace Payroll.Service
 		/// <returns></returns>
 		private decimal Rate503(DateTime shiftDate, Plant plant, decimal calculatedEmployeeRate, decimal minimumWage)
 		{
-			/*
-				[503 Rate] = 
-					[Shift Date] < #5-27-2019# => MAX([EmployeeHourlyRateCalc], 12)
-					[Shift Date] < #3/2/2020# =>  MAX([EmployeeHourlyRateCalc], 13)
-					[Shift Date] < #3/22/2021# =>
-						[Plant] = 11 => [EmployeeHourlyRateCalc]
-						ELSE MAX([EmployeeHourlyRateCalc], Minimum + 1)
-					ELSE
-						[Plant] NOT IN (3, 4) => [EmployeeHourlyRateCalc]
-						ELSE MAX([EmployeeHourlyRateCalc], 15)
-			*/
 			if (shiftDate < new DateTime(2019, 5, 27))
 			{
 				return Math.Max(calculatedEmployeeRate, 12M);
@@ -299,13 +298,17 @@ namespace Payroll.Service
 					return Math.Max(calculatedEmployeeRate, (minimumWage + 1));
 				}
 			}
-			else
+			else if (shiftDate < new DateTime(2022, 4, 18))
 			{
 				if (plant == Plant.Sanger || plant == Plant.Kerman)
 				{
 					return Math.Max(calculatedEmployeeRate, 15);
 				}
 				else return calculatedEmployeeRate;
+			}
+			else
+			{
+				return Math.Max(calculatedEmployeeRate, minimumWage + 1);
 			}
 		}
 
@@ -380,13 +383,23 @@ namespace Payroll.Service
 			{
 				return calculatedEmployeeRate;
 			}
-			else
+			else if (shiftDate < new DateTime(2022, 4, 18))
 			{
 				if ((plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler) 
 					&& shiftDate.Month >= 5 
 					&& (shiftDate.Month < 10 || (shiftDate.Month == 10 && shiftDate.Day <= 15)))
 				{
 					return (calculatedEmployeeRate + 3M);
+				}
+				else return calculatedEmployeeRate;
+			}
+			else
+			{
+				if ((plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler)
+					&& shiftDate.Month >= 5
+					&& (shiftDate.Month < 10 || (shiftDate.Month == 10 && shiftDate.Day <= 15)))
+				{
+					return (calculatedEmployeeRate + 2M);
 				}
 				else return calculatedEmployeeRate;
 			}

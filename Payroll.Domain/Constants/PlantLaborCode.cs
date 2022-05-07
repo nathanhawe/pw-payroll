@@ -7,6 +7,7 @@ namespace Payroll.Domain.Constants
 	public enum PlantLaborCode
 	{
 		Unknown = 1,
+		PackerNoPieces = 115,
 		Packing = 123,
 		Palletizing = 125,
 		FreshCut = 151,

@@ -76,5 +76,7 @@ namespace Payroll.Domain
 
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal SickLeaveRequested { get; set; }
+
+		public string PositionTitle { get; set; }
 	}
 }
