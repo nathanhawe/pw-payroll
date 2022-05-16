@@ -14,7 +14,7 @@ namespace Payroll.UnitTest
 		private readonly decimal _minimumWage = 10M;
 		private MockMinimumWageService _mockMinimumWageService;
 		private PlantHourlyRateSelector _plantHourlyRateSelector;
-		private readonly decimal _currentH2ARate = 16.05M;
+		private readonly decimal _currentH2ARate = 17.51M;
 
 		[TestInitialize]
 		public void Setup()
@@ -86,7 +86,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void H2A_OnOrAfter20210426_Returns16_05()
+		public void H2A_OnOrAfter20210426_Before20220509_Returns16_05()
 		{
 			var payType = Payroll.Domain.Constants.PayType.Regular;
 			var laborCode = -1;
@@ -94,10 +94,25 @@ namespace Payroll.UnitTest
 			var hourlyRateOverride = 0M;
 			var isH2A = true;
 			var startDate = new DateTime(2021, 4, 26);
-			var endDate = startDate.AddYears(5);
+			var endDate = new DateTime(2022, 5, 8);
 
 			Assert.AreEqual(16.05M, _plantHourlyRateSelector.GetHourlyRate(payType, laborCode, employeeHourlyRate, hourlyRateOverride, isH2A, Plant.Sanger, startDate, 0, ""));
 			Assert.AreEqual(16.05M, _plantHourlyRateSelector.GetHourlyRate(payType, laborCode, employeeHourlyRate, hourlyRateOverride, isH2A, Plant.Sanger, endDate, 0, ""));
+		}
+
+		[TestMethod]
+		public void H2A_OnOrAfter20220509_Returns17_51()
+		{
+			var payType = Payroll.Domain.Constants.PayType.Regular;
+			var laborCode = -1;
+			var employeeHourlyRate = 0M;
+			var hourlyRateOverride = 0M;
+			var isH2A = true;
+			var startDate = new DateTime(2022, 5, 09);
+			var endDate = startDate.AddYears(5);
+
+			Assert.AreEqual(17.51M, _plantHourlyRateSelector.GetHourlyRate(payType, laborCode, employeeHourlyRate, hourlyRateOverride, isH2A, Plant.Sanger, startDate, 0, ""));
+			Assert.AreEqual(17.51M, _plantHourlyRateSelector.GetHourlyRate(payType, laborCode, employeeHourlyRate, hourlyRateOverride, isH2A, Plant.Sanger, endDate, 0, ""));
 		}
 
 		[TestMethod]

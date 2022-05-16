@@ -32,13 +32,13 @@ namespace Payroll.Service
 		/// <param name="positionTitle"></param>
 		/// <returns></returns>
 		public decimal GetHourlyRate(
-			string payType, 
-			int laborCode, 
-			decimal employeeHourlyRate, 
-			decimal hourlyRateOverride, 
-			bool isH2A, 
-			Domain.Constants.Plant plant, 
-			DateTime shiftDate, 
+			string payType,
+			int laborCode,
+			decimal employeeHourlyRate,
+			decimal hourlyRateOverride,
+			bool isH2A,
+			Domain.Constants.Plant plant,
+			DateTime shiftDate,
 			decimal payLineHourlyRate,
 			string positionTitle)
 		{
@@ -78,13 +78,13 @@ namespace Payroll.Service
 					return payLineHourlyRate;
 				}
 			}
-			
-			if(
-				payType == PayType.Covid19 
-				|| payType == PayType.Covid19WageContinuation 
+
+			if (
+				payType == PayType.Covid19
+				|| payType == PayType.Covid19WageContinuation
 				|| payType == PayType.Covid19W)
 			{
-				if(isH2A)
+				if (isH2A)
 				{
 					return H2ARate(shiftDate);
 				}
@@ -115,34 +115,34 @@ namespace Payroll.Service
 			{
 				return Rate151(shiftDate, plant, calculatedEmployeeRate);
 			}
-			
+
 			if (laborCode == (int)PlantLaborCode.ReceivingAndMarkingGrapes)
 			{
 				// Same as 125
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
-			
+
 			if (laborCode == (int)PlantLaborCode.NightSanitation)
 			{
 				return Rate535(shiftDate, plant, calculatedEmployeeRate, minimumWage, H2ARate(shiftDate));
 			}
-			
+
 			if (laborCode == (int)PlantLaborCode.NightShiftSupervision)
 			{
 				return Rate536(shiftDate, plant, calculatedEmployeeRate);
 			}
-			
+
 			if (laborCode == (int)PlantLaborCode.NightShiftAuditor)
 			{
 				// [537 Rate] = [EmployeeHourlyRateCalc] + 1.5
 				return (calculatedEmployeeRate + 1.5M);
 			}
-			
+
 			if (laborCode == (int)PlantLaborCode.Receiving_Break)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
-			
+
 			if (laborCode == (int)PlantLaborCode.ReceivingFreshFruit)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
@@ -160,7 +160,7 @@ namespace Payroll.Service
 
 			return EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 		}
-		
+
 		/// <summary>
 		/// Returns the effective H-2A rate for the provided shift date.
 		/// </summary>
@@ -176,8 +176,14 @@ namespace Payroll.Service
 			{
 				return 14.77M;
 			}
-			else return 16.05M;
+			else if (shiftDate < new DateTime(2022, 5, 9)) 
+			{
+				return 16.05M;
+			}
+			else return 17.51M;
 		}
+
+		
 
 
 		/// <summary>
