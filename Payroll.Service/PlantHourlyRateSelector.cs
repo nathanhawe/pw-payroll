@@ -365,7 +365,7 @@ namespace Payroll.Service
 			}
 			else
 			{
-				if (plant == Plant.Cutler || plant == Plant.Sanger || plant == Plant.Kerman)
+				if (plant == Plant.Cutler || plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Reedley)
 				{
 					return Math.Max(calculatedEmployeeRate, 17.51M);
 				}
@@ -401,7 +401,7 @@ namespace Payroll.Service
 			}
 			else
 			{
-				if ((plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler)
+				if ((plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler || plant == Plant.Reedley)
 					&& shiftDate.Month >= 5
 					&& (shiftDate.Month < 10 || (shiftDate.Month == 10 && shiftDate.Day <= 15)))
 				{
