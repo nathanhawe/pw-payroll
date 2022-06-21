@@ -32,7 +32,8 @@ namespace Payroll.Service
 		public List<RanchPayLine> CalculateRanchBonusPayLines(int batchId)
 		{
 			var results = CalculateIndividualBonuses(batchId);
-			results.AddRange(CalculateGroupBonuses(batchId));
+			results.AddRange(CalculateGroupHarvestBonuses(batchId));
+			results.AddRange(CalculateIndividualHarvestBonuses(batchId));
 			
 			return results;
 		}
@@ -114,23 +115,24 @@ namespace Payroll.Service
 			return results;
 		}
 
+		#region - Harvest Group Bonus
 		/// <summary>
 		/// Calculates individual bonuses based on crew performance.
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <returns></returns>
-		private List<RanchPayLine> CalculateGroupBonuses(int batchId)
+		private List<RanchPayLine> CalculateGroupHarvestBonuses(int batchId)
 		{
 			var results = new List<RanchPayLine>();
 			
 			// TODO: Make this data driven.
-			results.AddRange(CreateHarvestBucketBonuses(batchId));
-			results.AddRange(CreateHarvestToteBonuses(batchId));
+			results.AddRange(CreateGroupHarvestBucketBonuses(batchId));
+			results.AddRange(CreateGroupHarvestToteBonuses(batchId));
 
 			return results;
 		}
 
-		private List<RanchPayLine> CreateHarvestBucketBonuses(int batchId)
+		private List<RanchPayLine> CreateGroupHarvestBucketBonuses(int batchId)
 		{
 			var results = new List<RanchPayLine>();
 			var rate = .1M;
@@ -194,7 +196,7 @@ namespace Payroll.Service
 			return results;
 		}
 
-		private List<RanchPayLine> CreateHarvestToteBonuses(int batchId)
+		private List<RanchPayLine> CreateGroupHarvestToteBonuses(int batchId)
 		{
 			var results = new List<RanchPayLine>();
 			var rate = .12M;
@@ -257,6 +259,209 @@ namespace Payroll.Service
 
 			return results;
 		}
+#endregion
+
+		#region - Harvest Individual Bonus
+		/// <summary>
+		/// Calculates individual bonuses based on individual performance.
+		/// </summary>
+		/// <param name="batchId"></param>
+		/// <returns></returns>
+		private List<RanchPayLine> CalculateIndividualHarvestBonuses(int batchId)
+		{
+			var results = new List<RanchPayLine>();
+
+			// TODO: Make this data driven.
+			results.AddRange(CreateIndividualHarvestBucketBonuses(batchId));
+			results.AddRange(CreateIndividualHarvestToteBonuses(batchId));
+
+			return results;
+		}
+
+		private List<RanchPayLine> CreateIndividualHarvestBucketBonuses(int batchId)
+		{
+			var results = new List<RanchPayLine>();
+			var rate = .1M;
+			var tractorDriverRate = .005M;
+
+			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
+			var employeeGroups = _context.RanchPayLines
+				.Where(x => !x.IsDeleted && x.BatchId == batchId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket)
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
+				{
+					key.Crew,
+					key.EmployeeId,
+					key.ShiftDate,
+					key.BlockId,
+					Pieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+			// Group the employee groupings into crews to be used for tractor driver bonuses
+			var crewGroups = employeeGroups
+				.GroupBy(g => new { g.Crew, g.ShiftDate, g.BlockId }, (key, group) => new
+				{
+					key.Crew,
+					key.ShiftDate,
+					key.BlockId,
+					TotalPieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+
+			// Calculate individual bonus for each employee.
+			foreach (var employee in employeeGroups)
+			{
+				decimal gross = _roundingService.Round(employee.Pieces * rate, 2);
+				if(gross > 0)
+				{
+					results.Add(new RanchPayLine
+					{
+						BatchId = batchId,
+						EmployeeId = employee.EmployeeId,
+						ShiftDate = employee.ShiftDate,
+						BlockId = employee.BlockId,
+						Crew = employee.Crew,
+						LaborCode = (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket,
+						PayType = PayType.ProductionIncentiveBonus,
+						Pieces = employee.Pieces,
+						PieceRate = rate,
+						OtherGross = gross,
+						TotalGross = gross,
+					});
+				}
+			}
+
+
+			// For each crew group, look up tractor drivers and calculate tractor driver bonus.
+			foreach (var crew in crewGroups)
+			{
+				var employees = _context.RanchPayLines
+					.Where(x => !x.IsDeleted && x.BatchId == batchId && x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket)
+					.Select(s => new { s.EmployeeId })
+					.Distinct()
+					.ToList();
+
+				foreach (var employee in employees)
+				{
+					decimal pieces = crew.TotalPieces;
+					decimal gross = _roundingService.Round(pieces * tractorDriverRate, 2);
+
+					if (gross > 0)
+					{
+						results.Add(new RanchPayLine
+						{
+							BatchId = batchId,
+							EmployeeId = employee.EmployeeId,
+							ShiftDate = crew.ShiftDate,
+							BlockId = crew.BlockId,
+							Crew = crew.Crew,
+							LaborCode = (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket,
+							PayType = PayType.ProductionIncentiveBonus,
+							Pieces = pieces,
+							PieceRate = tractorDriverRate,
+							OtherGross = gross,
+							TotalGross = gross,
+						});
+					}
+				}
+			}
+
+			return results;
+		}
+
+		private List<RanchPayLine> CreateIndividualHarvestToteBonuses(int batchId)
+		{
+			var results = new List<RanchPayLine>();
+			var rate = .12M;
+			var tractorDriverRate = .005M;
+
+			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
+			var employeeGroups = _context.RanchPayLines
+				.Where(x => !x.IsDeleted && x.BatchId == batchId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote)
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
+				{
+					key.Crew,
+					key.EmployeeId,
+					key.ShiftDate,
+					key.BlockId,
+					Pieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+			// Group the employee groupings into crews to be used for tractor driver bonuses
+			var crewGroups = employeeGroups
+				.GroupBy(g => new { g.Crew, g.ShiftDate, g.BlockId }, (key, group) => new
+				{
+					key.Crew,
+					key.ShiftDate,
+					key.BlockId,
+					TotalPieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+
+			// Calculate individual bonus for each employee.
+			foreach (var employee in employeeGroups)
+			{
+				decimal gross = _roundingService.Round(employee.Pieces * rate, 2);
+				if (gross > 0)
+				{
+					results.Add(new RanchPayLine
+					{
+						BatchId = batchId,
+						EmployeeId = employee.EmployeeId,
+						ShiftDate = employee.ShiftDate,
+						BlockId = employee.BlockId,
+						Crew = employee.Crew,
+						LaborCode = (int)RanchLaborCode.Individual_PieceRateHarvest_Tote,
+						PayType = PayType.ProductionIncentiveBonus,
+						Pieces = employee.Pieces,
+						PieceRate = rate,
+						OtherGross = gross,
+						TotalGross = gross,
+					});
+				}
+			}
+
+
+			// For each crew group, look up tractor drivers and calculate tractor driver bonus.
+			foreach (var crew in crewGroups)
+			{
+				var employees = _context.RanchPayLines
+					.Where(x => !x.IsDeleted && x.BatchId == batchId && x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote)
+					.Select(s => new {s.EmployeeId})
+					.Distinct()
+					.ToList();
+
+				foreach (var employee in employees)
+				{
+					decimal pieces = crew.TotalPieces;
+					decimal gross = _roundingService.Round(pieces * tractorDriverRate, 2);
+
+					if (gross > 0)
+					{
+						results.Add(new RanchPayLine
+						{
+							BatchId = batchId,
+							EmployeeId = employee.EmployeeId,
+							ShiftDate = crew.ShiftDate,
+							BlockId = crew.BlockId,
+							Crew = crew.Crew,
+							LaborCode = (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote,
+							PayType = PayType.ProductionIncentiveBonus,
+							Pieces = pieces,
+							PieceRate = tractorDriverRate,
+							OtherGross = gross,
+							TotalGross = gross,
+						});
+					}
+				}
+			}
+
+			return results;
+		}
+		#endregion
 
 		private List<RanchBonusPieceRate> GetBonusPieceRatesForBatch(int batchId)
 		{
