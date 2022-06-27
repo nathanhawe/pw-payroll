@@ -2073,6 +2073,75 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void PlantPayLine_ProductionIncentiveBonus()
+		{
+			var dbName = "PlantPayLine_ProductionIncentiveBonus";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+
+			// Mock plant pay lines
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 25, grossFromIncentive: 0, otherGross: 0, totalGross: (25 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (110 + 0 + 0 + 0), payType: PayType.Regular));
+
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (165 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: .33M, grossFromHours: 4.95M, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantPayLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 5.1M, grossFromIncentive: 0, otherGross: 0, totalGross: (5.1M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+
+			context.SaveChanges();
+
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummaries(batch.Id, Company.Plants);
+
+			Assert.AreEqual(6, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 125 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 12.5M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 11).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 150 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10.66M && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15.48M).Count());
+		}
+
+		[TestMethod]
 		public void PlantPayLine_Pieces()
 		{
 			var dbName = "PlantPayLine_Pieces";
@@ -2665,6 +2734,77 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 150 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
 			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+		}
+
+		[TestMethod]
+		public void PlantAdjustmentLine_ProductionIncentiveBonus()
+		{
+			var dbName = "PlantAdjustmentLine_ProductionIncentiveBonus";
+			var options = new DbContextOptionsBuilder<PayrollContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
+
+			using var context = new PayrollContext(options);
+			context.Database.EnsureCreated();
+
+			// Mock a new batch
+			var batch = EntityMocker.MockBatch(id: 1);
+			context.Add(batch);
+
+			// Mock plant pay lines
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 50, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (50 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 20, grossFromIncentive: 0, otherGross: 0, totalGross: (20 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 25, grossFromIncentive: 0, otherGross: 0, totalGross: (25 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 110, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (110 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 10, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (10 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee1", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 2.5M, grossFromIncentive: 0, otherGross: 0, totalGross: (2.5M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, grossFromHours: 75, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (75 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 18), hoursWorked: 11, grossFromHours: 165, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (165 + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 1, grossFromHours: 15, grossFromPieces: 0, grossFromIncentive: 0, otherGross: 0, totalGross: (15 + 0 + 0 + 0), payType: PayType.Regular));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 4.95M, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 4.95M, grossFromIncentive: 0, otherGross: 0, totalGross: (4.95M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+			context.Add(EntityMocker.MockPlantAdjustmentLine(batchId: batch.Id, employeeId: "Employee2", weekEndDate: new DateTime(2020, 2, 23), shiftDate: new DateTime(2020, 2, 19), hoursWorked: 0, grossFromHours: 0, grossFromPieces: 5.1M, grossFromIncentive: 0, otherGross: 0, totalGross: (5.1M + 0 + 0 + 0), payType: PayType.ProductionIncentiveBonus));
+
+			context.SaveChanges();
+
+
+			var dailySummaryCalculator = new DailySummaryCalculator(context, _mockMinimumWageService, _roundingService, _mockCrewLaborWageService);
+			var rates = dailySummaryCalculator.GetDailySummariesFromAdjustments(batch.Id, Company.Plants);
+
+			Assert.AreEqual(6, rates.Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 145 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 14.5M).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 10).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee1" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 110 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 11).Count());
+			
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 17) && x.TotalHours == 10 && x.TotalGross == 150 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 18) && x.TotalHours == 11 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 15).Count());
+			Assert.AreEqual(1, rates.Where(x => x.EmployeeId == "Employee2" && x.WeekEndDate == new DateTime(2020, 2, 23) && x.ShiftDate == new DateTime(2020, 2, 19) && x.TotalHours == 10 && x.TotalGross == 165 && x.NonProductiveTime == 0 && x.EffectiveHourlyRate == 16.5M).Count());
 		}
 
 		[TestMethod]

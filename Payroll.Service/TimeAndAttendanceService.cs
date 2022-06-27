@@ -655,7 +655,7 @@ namespace Payroll.Service
 			_logger.Log(LogLevel.Information, "Calculating crew boss pay for batch {batchId}", batch.Id);
 			SetBatchStatus(batch.Id, BatchProcessingStatus.CrewBossCalculations);
 			var crewBossPayLines = _crewBossPayService.CalculateCrewBossPay(batch.Id);
-			var crewBossProductionIncentiveBonusLines = _crewBossBonusPayService.CalculateCrewBossBonusPayLines(batch.Id);
+			var crewBossProductionIncentiveBonusLines = _crewBossBonusPayService.CalculateCrewBossBonusPayLines(batch.Id, batch.WeekEndDate);
 
 			// Add crew boss pay lines to database.
 			_context.AddRange(crewBossPayLines);
@@ -665,7 +665,7 @@ namespace Payroll.Service
 			/* Productivity Bonus Calculations */
 			_logger.Log(LogLevel.Information, "Calculating productivity bonuses for batch {batchId}", batch.Id);
 			SetBatchStatus(batch.Id, BatchProcessingStatus.ProductivityBonus);
-			var productivityBonusLines = _ranchBonusPayService.CalculateRanchBonusPayLines(batch.Id);
+			var productivityBonusLines = _ranchBonusPayService.CalculateRanchBonusPayLines(batch.Id, batch.WeekEndDate);
 			BulkInsert(productivityBonusLines);
 
 			/* PSL Requires hours and gross for regular, piece, and CB pay types; also requires hours on Sick Leave pay types*/

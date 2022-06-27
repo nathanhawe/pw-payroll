@@ -26,7 +26,7 @@ namespace Payroll.Service
 			_roundingService = roundingService ?? throw new ArgumentNullException(nameof(context));
 		}
 
-		public List<RanchPayLine> CalculateCrewBossBonusPayLines(int batchId)
+		public List<RanchPayLine> CalculateCrewBossBonusPayLines(int batchId, DateTime weekEndDate)
 		{
 			var results = new List<RanchPayLine>();
 
@@ -87,6 +87,7 @@ namespace Payroll.Service
 							{
 								BatchId = batchId,
 								EmployeeId = crewBoss.EmployeeId,
+								WeekEndDate = weekEndDate,
 								ShiftDate = group.ShiftDate,
 								BlockId = group.BlockId,
 								Crew = crewBoss.Crew,

@@ -223,6 +223,7 @@ namespace Payroll.Service
 			 Select only pay types:
 				1-Regular
 				4-Pieces
+				4.2-Production Incentive Bonus
 			*/
 
 			var commonLineProperties = _context.PlantPayLines
@@ -230,7 +231,8 @@ namespace Payroll.Service
 					x.BatchId == batchId
 					&& (
 						x.PayType == PayType.Regular
-						|| x.PayType == PayType.Pieces))
+						|| x.PayType == PayType.Pieces
+						|| x.PayType == PayType.ProductionIncentiveBonus))
 				.Select(x => new CommonLineProperties
 				{
 					EmployeeId = x.EmployeeId,
@@ -263,6 +265,7 @@ namespace Payroll.Service
 			 Select only pay types:
 				1-Regular
 				4-Pieces
+				4.2-Production Incentive Bonus
 			*/
 
 			var commonLineProperties = _context.PlantAdjustmentLines
@@ -270,7 +273,8 @@ namespace Payroll.Service
 					x.BatchId == batchId
 					&& (
 						x.PayType == PayType.Regular
-						|| x.PayType == PayType.Pieces)
+						|| x.PayType == PayType.Pieces
+						|| x.PayType == PayType.ProductionIncentiveBonus)
 					&& !x.IsOriginal)
 				.Select(x => new CommonLineProperties
 				{

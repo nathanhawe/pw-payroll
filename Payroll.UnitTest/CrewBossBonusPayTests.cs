@@ -33,7 +33,7 @@ namespace Payroll.UnitTest
 
 			// Execute
 			var service = new CrewBossBonusPayService(context, _roundingService);
-			var results = service.CalculateCrewBossBonusPayLines(1);
+			var results = service.CalculateCrewBossBonusPayLines(1, new DateTime(2022, 4, 17));
 
 			// Validate
 			Assert.AreEqual(originalCount, context.RanchPayLines.Count());
@@ -60,7 +60,7 @@ namespace Payroll.UnitTest
 
 			// Execute
 			var service = new CrewBossBonusPayService(context, _roundingService);
-			var results = service.CalculateCrewBossBonusPayLines(1);
+			var results = service.CalculateCrewBossBonusPayLines(1, new DateTime(2022, 4, 17));
 
 			// Validate
 			Assert.AreEqual(originalCount, context.RanchPayLines.Count());
@@ -88,7 +88,7 @@ namespace Payroll.UnitTest
 
 			// Execute
 			var service = new CrewBossBonusPayService(context, _roundingService);
-			var results = service.CalculateCrewBossBonusPayLines(1);
+			var results = service.CalculateCrewBossBonusPayLines(1, new DateTime(2022, 4, 17));
 
 			// Validate
 			Assert.AreEqual(originalCount, context.RanchPayLines.Count());
@@ -116,7 +116,7 @@ namespace Payroll.UnitTest
 
 			// Execute
 			var service = new CrewBossBonusPayService(context, _roundingService);
-			var results = service.CalculateCrewBossBonusPayLines(1);
+			var results = service.CalculateCrewBossBonusPayLines(1, new DateTime(2022, 4, 17));
 
 			// Validate
 			Assert.AreEqual(originalCount, context.RanchPayLines.Count());
@@ -130,6 +130,7 @@ namespace Payroll.UnitTest
 			var options = new DbContextOptionsBuilder<PayrollContext>()
 				.UseInMemoryDatabase(databaseName: dbName)
 				.Options;
+			var weekEndDate = new DateTime(2022, 4, 17);
 
 			using var context = new PayrollContext(options);
 			context.Database.EnsureCreated();
@@ -148,41 +149,41 @@ namespace Payroll.UnitTest
 
 			// Execute
 			var service = new CrewBossBonusPayService(context, _roundingService);
-			var results = service.CalculateCrewBossBonusPayLines(1);
+			var results = service.CalculateCrewBossBonusPayLines(1, new DateTime(2022, 4, 17));
 
 			// Validate
 			
 			Assert.AreEqual(originalCount, context.RanchPayLines.Count());
 
 
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 0 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 1 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .1M && x.OtherGross == 7M && x.TotalGross == 7M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 13) && x.BlockId == 2 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .12M && x.OtherGross == 8.4M && x.TotalGross == 8.4M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 3 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 4 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .11M && x.OtherGross == 7.7M && x.TotalGross == 7.7M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 16) && x.BlockId == 5 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .13M && x.OtherGross == 9.1M && x.TotalGross == 9.1M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 6 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .09M && x.OtherGross == 6.3M && x.TotalGross == 6.3M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 0 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 1 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .1M && x.OtherGross == 7M && x.TotalGross == 7M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 13) && x.BlockId == 2 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .12M && x.OtherGross == 8.4M && x.TotalGross == 8.4M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 3 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 4 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .11M && x.OtherGross == 7.7M && x.TotalGross == 7.7M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 16) && x.BlockId == 5 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .13M && x.OtherGross == 9.1M && x.TotalGross == 9.1M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB100" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 6 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .09M && x.OtherGross == 6.3M && x.TotalGross == 6.3M).Count());
 
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 0 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 1 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .1M && x.OtherGross == 7M && x.TotalGross == 7M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.ShiftDate == new DateTime(2022, 4, 13) && x.BlockId == 2 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .12M && x.OtherGross == 8.4M && x.TotalGross == 8.4M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 3 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 4 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .11M && x.OtherGross == 7.7M && x.TotalGross == 7.7M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.ShiftDate == new DateTime(2022, 4, 16) && x.BlockId == 5 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .13M && x.OtherGross == 9.1M && x.TotalGross == 9.1M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 6 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .09M && x.OtherGross == 6.3M && x.TotalGross == 6.3M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 0 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 1 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .1M && x.OtherGross == 7M && x.TotalGross == 7M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 13) && x.BlockId == 2 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .12M && x.OtherGross == 8.4M && x.TotalGross == 8.4M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 3 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .08M && x.OtherGross == 5.6M && x.TotalGross == 5.6M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 4 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 70 && x.PieceRate == .11M && x.OtherGross == 7.7M && x.TotalGross == 7.7M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 16) && x.BlockId == 5 && x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter && x.Pieces == 70 && x.PieceRate == .13M && x.OtherGross == 9.1M && x.TotalGross == 9.1M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB101" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 6 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 70 && x.PieceRate == .09M && x.OtherGross == 6.3M && x.TotalGross == 6.3M).Count());
 
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 0 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 34 && x.PieceRate == .08M && x.OtherGross == 2.72M && x.TotalGross == 2.72M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 7 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 36 && x.PieceRate == .08M && x.OtherGross == 2.88M && x.TotalGross == 2.88M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 1 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 34 && x.PieceRate == .1M && x.OtherGross == 3.4M && x.TotalGross == 3.4M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 8 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 36 && x.PieceRate == .1M && x.OtherGross == 3.6M && x.TotalGross == 3.6M).Count());
-			Assert.AreEqual(0, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 13)).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 3 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 34 && x.PieceRate == .08M && x.OtherGross == 2.72M && x.TotalGross == 2.72M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 10 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 36 && x.PieceRate == .08M && x.OtherGross == 2.88M && x.TotalGross == 2.88M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 4 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 34 && x.PieceRate == .11M && x.OtherGross == 3.74M && x.TotalGross == 3.74M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 11 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 36 && x.PieceRate == .11M && x.OtherGross == 3.96M && x.TotalGross == 3.96M).Count());
-			Assert.AreEqual(0, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 16)).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 6 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 34 && x.PieceRate == .09M && x.OtherGross == 3.06M && x.TotalGross == 3.06M).Count());
-			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 13 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 36 && x.PieceRate == .09M && x.OtherGross == 3.24M && x.TotalGross == 3.24M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 0 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 34 && x.PieceRate == .08M && x.OtherGross == 2.72M && x.TotalGross == 2.72M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 11) && x.BlockId == 7 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 36 && x.PieceRate == .08M && x.OtherGross == 2.88M && x.TotalGross == 2.88M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 1 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 34 && x.PieceRate == .1M && x.OtherGross == 3.4M && x.TotalGross == 3.4M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 12) && x.BlockId == 8 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 36 && x.PieceRate == .1M && x.OtherGross == 3.6M && x.TotalGross == 3.6M).Count());
+			Assert.AreEqual(0, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 13)).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 3 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 34 && x.PieceRate == .08M && x.OtherGross == 2.72M && x.TotalGross == 2.72M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 14) && x.BlockId == 10 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 36 && x.PieceRate == .08M && x.OtherGross == 2.88M && x.TotalGross == 2.88M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 4 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 34 && x.PieceRate == .11M && x.OtherGross == 3.74M && x.TotalGross == 3.74M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 15) && x.BlockId == 11 && x.LaborCode == (int)RanchLaborCode.PieceRateThinning && x.Pieces == 36 && x.PieceRate == .11M && x.OtherGross == 3.96M && x.TotalGross == 3.96M).Count());
+			Assert.AreEqual(0, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 16)).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 6 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 34 && x.PieceRate == .09M && x.OtherGross == 3.06M && x.TotalGross == 3.06M).Count());
+			Assert.AreEqual(1, results.Where(x => x.PayType == PayType.ProductionIncentiveBonus && x.EmployeeId == "CB102" && x.WeekEndDate == weekEndDate && x.ShiftDate == new DateTime(2022, 4, 17) && x.BlockId == 13 && x.LaborCode == (int)RanchLaborCode.PieceRateHarvest_Bucket && x.Pieces == 36 && x.PieceRate == .09M && x.OtherGross == 3.24M && x.TotalGross == 3.24M).Count());
 
 			Assert.AreEqual(0, results.Where(x => x.Crew == 103).Count()); // No Crew
 			Assert.AreEqual(0, results.Where(x => x.Crew == 104).Count()); // Crew boss disqualified from quality bonus
@@ -196,7 +197,7 @@ namespace Payroll.UnitTest
 		{
 			var dates = GetWeekDates(weekEndDate);
 			int crew, laborCode;
-
+						
 			// Crew 100
 			crew = 100;
 			for(int i = 0; i < dates.Count; i++)

@@ -29,11 +29,11 @@ namespace Payroll.Service
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <returns></returns>
-		public List<RanchPayLine> CalculateRanchBonusPayLines(int batchId)
+		public List<RanchPayLine> CalculateRanchBonusPayLines(int batchId, DateTime weekEndDate)
 		{
-			var results = CalculateIndividualBonuses(batchId);
-			results.AddRange(CalculateGroupHarvestBonuses(batchId));
-			results.AddRange(CalculateIndividualHarvestBonuses(batchId));
+			var results = CalculateIndividualBonuses(batchId, weekEndDate);
+			results.AddRange(CalculateGroupHarvestBonuses(batchId, weekEndDate));
+			results.AddRange(CalculateIndividualHarvestBonuses(batchId, weekEndDate));
 			
 			return results;
 		}
@@ -43,7 +43,7 @@ namespace Payroll.Service
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <returns></returns>
-		private List<RanchPayLine> CalculateIndividualBonuses(int batchId)
+		private List<RanchPayLine> CalculateIndividualBonuses(int batchId, DateTime weekEndDate)
 		{ 
 			var results = new List<RanchPayLine>();
 
@@ -96,6 +96,7 @@ namespace Payroll.Service
 								{
 									BatchId = batchId,
 									EmployeeId = empGroup.EmployeeId,
+									WeekEndDate = weekEndDate,
 									ShiftDate = empGroup.ShiftDate,
 									BlockId = empGroup.BlockId,
 									Crew = empGroup.MaxCrew,
@@ -121,18 +122,18 @@ namespace Payroll.Service
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <returns></returns>
-		private List<RanchPayLine> CalculateGroupHarvestBonuses(int batchId)
+		private List<RanchPayLine> CalculateGroupHarvestBonuses(int batchId, DateTime weekEndDate)
 		{
 			var results = new List<RanchPayLine>();
 			
 			// TODO: Make this data driven.
-			results.AddRange(CreateGroupHarvestBucketBonuses(batchId));
-			results.AddRange(CreateGroupHarvestToteBonuses(batchId));
+			results.AddRange(CreateGroupHarvestBucketBonuses(batchId, weekEndDate));
+			results.AddRange(CreateGroupHarvestToteBonuses(batchId, weekEndDate));
 
 			return results;
 		}
 
-		private List<RanchPayLine> CreateGroupHarvestBucketBonuses(int batchId)
+		private List<RanchPayLine> CreateGroupHarvestBucketBonuses(int batchId, DateTime weekEndDate)
 		{
 			var results = new List<RanchPayLine>();
 			var rate = .1M;
@@ -179,6 +180,7 @@ namespace Payroll.Service
 						{
 							BatchId = batchId,
 							EmployeeId = employee.EmployeeId,
+							WeekEndDate = weekEndDate,
 							ShiftDate = employee.ShiftDate,
 							BlockId = employee.BlockId,
 							Crew = crew.Crew,
@@ -196,7 +198,7 @@ namespace Payroll.Service
 			return results;
 		}
 
-		private List<RanchPayLine> CreateGroupHarvestToteBonuses(int batchId)
+		private List<RanchPayLine> CreateGroupHarvestToteBonuses(int batchId, DateTime weekEndDate)
 		{
 			var results = new List<RanchPayLine>();
 			var rate = .12M;
@@ -243,6 +245,7 @@ namespace Payroll.Service
 						{
 							BatchId = batchId,
 							EmployeeId = employee.EmployeeId,
+							WeekEndDate = weekEndDate,
 							ShiftDate = employee.ShiftDate,
 							BlockId = employee.BlockId,
 							Crew = crew.Crew,
@@ -267,18 +270,18 @@ namespace Payroll.Service
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <returns></returns>
-		private List<RanchPayLine> CalculateIndividualHarvestBonuses(int batchId)
+		private List<RanchPayLine> CalculateIndividualHarvestBonuses(int batchId, DateTime weekEndDate)
 		{
 			var results = new List<RanchPayLine>();
 
 			// TODO: Make this data driven.
-			results.AddRange(CreateIndividualHarvestBucketBonuses(batchId));
-			results.AddRange(CreateIndividualHarvestToteBonuses(batchId));
+			results.AddRange(CreateIndividualHarvestBucketBonuses(batchId, weekEndDate));
+			results.AddRange(CreateIndividualHarvestToteBonuses(batchId, weekEndDate));
 
 			return results;
 		}
 
-		private List<RanchPayLine> CreateIndividualHarvestBucketBonuses(int batchId)
+		private List<RanchPayLine> CreateIndividualHarvestBucketBonuses(int batchId, DateTime weekEndDate)
 		{
 			var results = new List<RanchPayLine>();
 			var rate = .1M;
@@ -319,6 +322,7 @@ namespace Payroll.Service
 					{
 						BatchId = batchId,
 						EmployeeId = employee.EmployeeId,
+						WeekEndDate = weekEndDate,
 						ShiftDate = employee.ShiftDate,
 						BlockId = employee.BlockId,
 						Crew = employee.Crew,
@@ -353,6 +357,7 @@ namespace Payroll.Service
 						{
 							BatchId = batchId,
 							EmployeeId = employee.EmployeeId,
+							WeekEndDate = weekEndDate,
 							ShiftDate = crew.ShiftDate,
 							BlockId = crew.BlockId,
 							Crew = crew.Crew,
@@ -370,7 +375,7 @@ namespace Payroll.Service
 			return results;
 		}
 
-		private List<RanchPayLine> CreateIndividualHarvestToteBonuses(int batchId)
+		private List<RanchPayLine> CreateIndividualHarvestToteBonuses(int batchId, DateTime weekEndDate)
 		{
 			var results = new List<RanchPayLine>();
 			var rate = .12M;
@@ -411,6 +416,7 @@ namespace Payroll.Service
 					{
 						BatchId = batchId,
 						EmployeeId = employee.EmployeeId,
+						WeekEndDate = weekEndDate,
 						ShiftDate = employee.ShiftDate,
 						BlockId = employee.BlockId,
 						Crew = employee.Crew,
@@ -445,6 +451,7 @@ namespace Payroll.Service
 						{
 							BatchId = batchId,
 							EmployeeId = employee.EmployeeId,
+							WeekEndDate = weekEndDate,
 							ShiftDate = crew.ShiftDate,
 							BlockId = crew.BlockId,
 							Crew = crew.Crew,
