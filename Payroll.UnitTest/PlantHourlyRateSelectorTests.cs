@@ -680,7 +680,16 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_536_NightShiftSupervision_Before20201019()
+		public void LaborCode_536_NightShiftSupervision()
+		{
+			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
+			NightShiftSupervision_Before20201019(laborCode);
+			NightShiftSupervision_OnOrAfter20201019_Before20210322(laborCode);
+			NightShiftSupervision_OnOrAfter20210322_Before20220418(laborCode);
+			NightShiftSupervision_OnOrAfter20220418(laborCode);
+		}
+
+		private void NightShiftSupervision_Before20201019(int laborCode)
 		{
 			/*
 				Always returns 3 + [EmployeeHourlyRateCalc].  The formula for [EmployeeHourlyRateCalc] is:
@@ -688,7 +697,6 @@ namespace Payroll.UnitTest
 						[Hourly Rate Override] > 0 => [Hourly Rate Override]
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
-			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
 			var shiftDate = new DateTime(2020, 10, 18);
 
 			// Override
@@ -701,11 +709,9 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(18.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: shiftDate));
 		}
 
-		[TestMethod]
-		public void LaborCode_536_NightShiftSupervision_OnOrAfter20201019_Before20210322()
+		private void NightShiftSupervision_OnOrAfter20201019_Before20210322(int laborCode)
 		{
 			// Always returns the employee hourly rate
-			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
 			var startDate = new DateTime(2020, 10, 19);
 			var endDate = new DateTime(2021, 3, 21);
 
@@ -722,8 +728,7 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(15.75M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
 		}
 
-		[TestMethod]
-		public void LaborCode_536_NightShiftSupervision_OnOrAfter20210322()
+		private void NightShiftSupervision_OnOrAfter20210322_Before20220418(int laborCode)
 		{
 			/*
 				Always returns 3 + [EmployeeHourlyRateCalc] when at plants 3, 4, and 11 from May 1 through October 15 
@@ -732,7 +737,6 @@ namespace Payroll.UnitTest
 						[Hourly Rate Override] > 0 => [Hourly Rate Override]
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
-			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
 			var startYear = 2021;
 
 			/* Before May 1 or after October 15 is [EmployeeHourlyRateCalc] */
@@ -855,8 +859,7 @@ namespace Payroll.UnitTest
 
 		}
 
-		[TestMethod]
-		public void LaborCode_536_NightShiftSupervision_OnOrAfter20220418()
+		private void NightShiftSupervision_OnOrAfter20220418(int laborCode)
 		{
 			/*
 				Always returns 2 + [EmployeeHourlyRateCalc] when at plants 2, 3, 4, and 11 from May 1 through October 15 
@@ -865,7 +868,6 @@ namespace Payroll.UnitTest
 						[Hourly Rate Override] > 0 => [Hourly Rate Override]
 						ELSE MAX([Employee Hourly Rate], [Minimum Wage])
 			*/
-			var laborCode = (int)PlantLaborCode.NightShiftSupervision;
 			var startYear = 2022;
 
 			/* Before May 1 or after October 15 is [EmployeeHourlyRateCalc] */
@@ -1172,6 +1174,16 @@ namespace Payroll.UnitTest
 		public void LaborCode_503_ReceivingFreshFruit()
 		{
 			Rate503Tests((int)PlantLaborCode.ReceivingFreshFruit);
+		}
+
+		[TestMethod]
+		public void LaborCode_923_FoodSafetyNightShift()
+		{
+			var laborCode = (int)PlantLaborCode.FoodSafetyNightShift;
+			NightShiftSupervision_Before20201019(laborCode);
+			NightShiftSupervision_OnOrAfter20201019_Before20210322(laborCode);
+			NightShiftSupervision_OnOrAfter20210322_Before20220418(laborCode);
+			NightShiftSupervision_OnOrAfter20220418(laborCode);
 		}
 
 		#endregion

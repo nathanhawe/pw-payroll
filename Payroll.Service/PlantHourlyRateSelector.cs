@@ -158,6 +158,11 @@ namespace Payroll.Service
 				return Rate603(shiftDate, calculatedEmployeeRate);
 			}
 
+			if (laborCode == (int)PlantLaborCode.FoodSafetyNightShift)
+			{
+				return Rate536(shiftDate, plant, calculatedEmployeeRate);
+			}
+
 			return EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 		}
 

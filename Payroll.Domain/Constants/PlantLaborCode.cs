@@ -23,6 +23,7 @@ namespace Payroll.Domain.Constants
 		Covid19 = 600,
 		Covid19PreScreening = 602,
 		Covid19Sanitation = 603,
+		FoodSafetyNightShift = 923,
 		Receiving_Break = 9503
 	}
 }
