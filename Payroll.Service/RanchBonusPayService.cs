@@ -289,13 +289,20 @@ namespace Payroll.Service
 
 			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
 			var employeeGroups = _context.RanchPayLines
-				.Where(x => !x.IsDeleted && x.BatchId == batchId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket)
-				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
+				.Where(x => 
+					!x.IsDeleted 
+					&& x.BatchId == batchId 
+					&& x.PayType == PayType.Regular 
+					&& (
+						x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket 
+						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket))
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
 					key.Crew,
 					key.EmployeeId,
 					key.ShiftDate,
 					key.BlockId,
+					key.LaborCode,
 					Pieces = group.Sum(x => x.Pieces)
 				})
 				.ToList();
@@ -326,7 +333,7 @@ namespace Payroll.Service
 						ShiftDate = employee.ShiftDate,
 						BlockId = employee.BlockId,
 						Crew = employee.Crew,
-						LaborCode = (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket,
+						LaborCode = employee.LaborCode,
 						PayType = PayType.ProductionIncentiveBonus,
 						Pieces = employee.Pieces,
 						PieceRate = rate,
@@ -383,13 +390,20 @@ namespace Payroll.Service
 
 			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
 			var employeeGroups = _context.RanchPayLines
-				.Where(x => !x.IsDeleted && x.BatchId == batchId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote)
-				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
+				.Where(x => 
+					!x.IsDeleted 
+					&& x.BatchId == batchId 
+					&& x.PayType == PayType.Regular 
+					&& (
+						x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote
+						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Tote))
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
 					key.Crew,
 					key.EmployeeId,
 					key.ShiftDate,
 					key.BlockId,
+					key.LaborCode,
 					Pieces = group.Sum(x => x.Pieces)
 				})
 				.ToList();
@@ -420,7 +434,7 @@ namespace Payroll.Service
 						ShiftDate = employee.ShiftDate,
 						BlockId = employee.BlockId,
 						Crew = employee.Crew,
-						LaborCode = (int)RanchLaborCode.Individual_PieceRateHarvest_Tote,
+						LaborCode = employee.LaborCode,
 						PayType = PayType.ProductionIncentiveBonus,
 						Pieces = employee.Pieces,
 						PieceRate = rate,

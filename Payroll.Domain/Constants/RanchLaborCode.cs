@@ -33,5 +33,7 @@ namespace Payroll.Domain.Constants
 		Individual_PieceRateHarvest_Tote = 9372,
 		Individual_TractorPieceRateHarvest_Bucket = 9373,
 		Individual_TractorPieceRateHarvest_Tote = 9330,
+		Individual_LightDuty_PieceRateHarvest_Bucket = 9374,
+		Individual_LightDuty_PieceRateHarvest_Tote = 9375
 	}
 }
