@@ -95,7 +95,7 @@ namespace Payroll.Service
 								PayType = PayType.ProductionIncentiveBonus,
 								Pieces = group.TotalPieces,
 								PieceRate = rate.PerTreeBonus,
-								OtherGross = gross,
+								GrossFromPieces = gross,
 								TotalGross = gross,
 							});
 						}

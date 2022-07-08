@@ -104,7 +104,7 @@ namespace Payroll.Service
 									PayType = PayType.ProductionIncentiveBonus,
 									Pieces = pieces,
 									PieceRate = rate.PerTreeBonus,
-									OtherGross = gross,
+									GrossFromPieces = gross,
 									TotalGross = gross,
 								});
 							}
@@ -188,7 +188,7 @@ namespace Payroll.Service
 							PayType = PayType.ProductionIncentiveBonus,
 							Pieces = pieces,
 							PieceRate = rate,
-							OtherGross = gross,
+							GrossFromPieces = gross,
 							TotalGross = gross,
 						});
 					}
@@ -253,7 +253,7 @@ namespace Payroll.Service
 							PayType = PayType.ProductionIncentiveBonus,
 							Pieces = pieces,
 							PieceRate = rate,
-							OtherGross = gross,
+							GrossFromPieces = gross,
 							TotalGross = gross,
 						});
 					}
@@ -330,7 +330,7 @@ namespace Payroll.Service
 						PayType = PayType.ProductionIncentiveBonus,
 						Pieces = employee.Pieces,
 						PieceRate = rate,
-						OtherGross = gross,
+						GrossFromPieces = gross,
 						TotalGross = gross,
 					});
 				}
@@ -365,7 +365,7 @@ namespace Payroll.Service
 							PayType = PayType.ProductionIncentiveBonus,
 							Pieces = pieces,
 							PieceRate = tractorDriverRate,
-							OtherGross = gross,
+							GrossFromPieces = gross,
 							TotalGross = gross,
 						});
 					}
@@ -424,7 +424,7 @@ namespace Payroll.Service
 						PayType = PayType.ProductionIncentiveBonus,
 						Pieces = employee.Pieces,
 						PieceRate = rate,
-						OtherGross = gross,
+						GrossFromPieces = gross,
 						TotalGross = gross,
 					});
 				}
@@ -459,7 +459,7 @@ namespace Payroll.Service
 							PayType = PayType.ProductionIncentiveBonus,
 							Pieces = pieces,
 							PieceRate = tractorDriverRate,
-							OtherGross = gross,
+							GrossFromPieces = gross,
 							TotalGross = gross,
 						});
 					}
