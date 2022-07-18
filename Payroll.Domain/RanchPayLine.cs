@@ -63,6 +63,8 @@ namespace Payroll.Domain
 
 		public bool IsLayoffTagFirstOfTwoInWeek { get; set; }
 
+		public int CrewLocation { get; set; }
+
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }
 	}

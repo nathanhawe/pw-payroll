@@ -286,6 +286,7 @@ namespace Payroll.Service
 			var results = new List<RanchPayLine>();
 			var rate = .1M;
 			var tractorDriverRate = .005M;
+			var tractorDriverRateSouth = .01M;
 
 			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
 			var employeeGroups = _context.RanchPayLines
@@ -349,14 +350,15 @@ namespace Payroll.Service
 			{
 				var employees = _context.RanchPayLines
 					.Where(x => !x.IsDeleted && x.BatchId == batchId && x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket)
-					.Select(s => new { s.EmployeeId })
+					.Select(s => new { s.EmployeeId, s.CrewLocation })
 					.Distinct()
 					.ToList();
 
 				foreach (var employee in employees)
 				{
 					decimal pieces = crew.TotalPieces;
-					decimal gross = _roundingService.Round(pieces * tractorDriverRate, 2);
+					var pieceRate = employee.CrewLocation == (int)Location.South ? tractorDriverRateSouth : tractorDriverRate;
+					decimal gross = _roundingService.Round(pieces * pieceRate, 2);
 
 					if (gross > 0)
 					{
@@ -371,9 +373,10 @@ namespace Payroll.Service
 							LaborCode = (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket,
 							PayType = PayType.ProductionIncentiveBonus,
 							Pieces = pieces,
-							PieceRate = tractorDriverRate,
+							PieceRate = pieceRate,
 							GrossFromPieces = gross,
 							TotalGross = gross,
+							CrewLocation = employee.CrewLocation,
 						});
 					}
 				}
@@ -387,6 +390,7 @@ namespace Payroll.Service
 			var results = new List<RanchPayLine>();
 			var rate = .12M;
 			var tractorDriverRate = .005M;
+			var tractorDriverRateSouth = .01M;
 
 			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
 			var employeeGroups = _context.RanchPayLines
@@ -450,14 +454,15 @@ namespace Payroll.Service
 			{
 				var employees = _context.RanchPayLines
 					.Where(x => !x.IsDeleted && x.BatchId == batchId && x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.PayType == PayType.Regular && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote)
-					.Select(s => new {s.EmployeeId})
+					.Select(s => new {s.EmployeeId, s.CrewLocation})
 					.Distinct()
 					.ToList();
 
 				foreach (var employee in employees)
 				{
 					decimal pieces = crew.TotalPieces;
-					decimal gross = _roundingService.Round(pieces * tractorDriverRate, 2);
+					var pieceRate = employee.CrewLocation == (int)Location.South ? tractorDriverRateSouth : tractorDriverRate;
+					decimal gross = _roundingService.Round(pieces * pieceRate, 2);
 
 					if (gross > 0)
 					{
@@ -472,9 +477,10 @@ namespace Payroll.Service
 							LaborCode = (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote,
 							PayType = PayType.ProductionIncentiveBonus,
 							Pieces = pieces,
-							PieceRate = tractorDriverRate,
+							PieceRate = pieceRate,
 							GrossFromPieces = gross,
 							TotalGross = gross,
+							CrewLocation = employee.CrewLocation,
 						});
 					}
 				}

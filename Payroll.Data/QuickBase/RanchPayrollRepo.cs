@@ -279,6 +279,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchPayrollField.EndTime: temp.EndTime = ParseTimeOfDay(field.Value); break;
 						case (int)RanchPayrollField.SickLeaveRequested: temp.SickLeaveRequested = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchPayrollField.LayoffTagFirstOfTwoInWeek: temp.IsLayoffTagFirstOfTwoInWeek = ParseBooleanFromCheckbox(field.Value); break;
+						case (int)RanchPayrollField.CrewDesignatedLocation: temp.CrewLocation = ParseLocation(field.Value); break;
 					}
 				}
 				ranchPayLines.Add(temp);
@@ -316,6 +317,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollField.EndTime}.");
 			sb.Append($"{(int)RanchPayrollField.SickLeaveRequested}.");
 			sb.Append($"{(int)RanchPayrollField.LayoffTagFirstOfTwoInWeek}.");
+			sb.Append($"{(int)RanchPayrollField.CrewDesignatedLocation}.");
 
 			return sb.ToString();
 		}

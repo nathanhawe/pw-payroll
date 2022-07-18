@@ -93,5 +93,16 @@ namespace Payroll.Data.QuickBase
 
 			return $"{(hourPart < 10 ? "0":"")}{hourPart}:{(minutePart < 10 ? "0":"")}{minutePart}";
 		}
+
+		protected int ParseLocation(string value)
+		{
+			return (value?.Trim().ToLower() ?? String.Empty) switch
+			{
+				"east" => (int)Domain.Constants.Location.East,
+				"west" => (int)Domain.Constants.Location.West,
+				"south" => (int)Domain.Constants.Location.South,
+				_ => (int)Domain.Constants.Location.Undefined,
+			};
+		}
 	}
 }

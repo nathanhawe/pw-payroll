@@ -318,18 +318,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchBonusPieceRate(batchId: batch.Id, blockId: group3, laborCode: (int)RanchLaborCode.PieceRatePruningSummer, effectiveDate: monday, perHourThreshold: 0, perTreeBonus: .15M));
 			context.Add(EntityMocker.MockRanchBonusPieceRate(batchId: batch.Id, blockId: group4, laborCode: (int)RanchLaborCode.PieceRatePruningSummer, effectiveDate: monday, perHourThreshold: 0, perTreeBonus: .15M));
 
-			// Mock Ranch Group Bonus Piece Rates
-			//context.Add(EntityMocker.MockRanchGroupBonusPieceRate(laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, effectiveDate: tuesday, perVesselBonus: 0M));
-			//context.Add(EntityMocker.MockRanchGroupBonusPieceRate(laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, effectiveDate: tuesday, perVesselBonus: 0M));
-
-			//context.Add(EntityMocker.MockRanchGroupBonusPieceRate(laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, effectiveDate: wednesday, perVesselBonus: 0.10M));
-			//context.Add(EntityMocker.MockRanchGroupBonusPieceRate(laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, effectiveDate: wednesday, perVesselBonus: 0.12M));
 			
-			//context.Add(EntityMocker.MockRanchGroupBonusPieceRate(laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, effectiveDate: friday, perVesselBonus: 0.11M));
-			//context.Add(EntityMocker.MockRanchGroupBonusPieceRate(laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, effectiveDate: friday, perVesselBonus: 0.13M));
-
-			//context.Add(EntityMocker.MockRanchGroupBonusPieceRate(laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, effectiveDate: saturday, perVesselBonus: 0M));
-
 			// Mock Ranch Pay Lines
 			/* Monday */
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: monday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
@@ -353,25 +342,25 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: monday, laborCode: (int)RanchLaborCode.QualityControl));
 			
 			/* Tuesday */
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
 			/* Wednesday */
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: wednesday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket));
@@ -387,17 +376,17 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: wednesday, laborCode: (int)RanchLaborCode.QualityControl));
 
 			/* Thursday */
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 5.98M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 15, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 5.98M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 15, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 4.5M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2, pieces: 5, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 4.5M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2, pieces: 5, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 3.25M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 3, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 3.25M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 3, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
 			
 			/* Friday */
@@ -416,17 +405,17 @@ namespace Payroll.UnitTest
 
 
 			/* Saturday */
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 5.98M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2.02M, pieces: 15, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 5.98M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2.02M, pieces: 15, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 4.5M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2.15M, pieces: 5, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 4.5M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2.15M, pieces: 5, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.PieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 3.25M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 3, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 3.25M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 3, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
 			/* Sunday */
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 8, pieces: 1000, weekEndDate: weekEndDate, shiftDate: weekEndDate, laborCode: (int)RanchLaborCode.TractorPieceRateHarvest_Tote));
@@ -622,30 +611,30 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: monday, laborCode: (int)RanchLaborCode.QualityControl));
 
 			/* Tuesday */
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group1, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group2, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group3, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: tuesday, laborCode: (int)RanchLaborCode.QualityControl, crewLocation: (int)Location.South));
 
 			/* Wednesday */
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: wednesday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket));
@@ -664,8 +653,8 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeA, blockId: group4, hoursWorked: 2, pieces: 25, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Tote));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 5.98M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket));
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 15, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group1, hoursWorked: 5.98M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeB, blockId: group4, hoursWorked: 2, pieces: 15, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote, crewLocation: (int)Location.South));
 
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 4.5M, pieces: 0, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2, pieces: 5, weekEndDate: weekEndDate, shiftDate: thursday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Tote));
@@ -701,7 +690,7 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group1, hoursWorked: 4.5M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeC, blockId: group4, hoursWorked: 2.15M, pieces: 5, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.Individual_PieceRateHarvest_Tote));
 
-			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 3.25M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket));
+			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group1, hoursWorked: 3.25M, pieces: 0, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket, crewLocation: (int)Location.South));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeD, blockId: group4, hoursWorked: 2, pieces: 3, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.QualityControl));
 
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: employeeLightDuty, blockId: group1, hoursWorked: 6, pieces: 1000, weekEndDate: weekEndDate, shiftDate: saturday, laborCode: (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket));
@@ -744,16 +733,16 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeD && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == monday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 100M && x.PieceRate == .005M && x.OtherGross == 0 && x.GrossFromPieces == 0.5M && x.TotalGross == 0.5M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeLightDuty && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == monday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
 
-			/* Tuesday */
+			/* Tuesday - All crew South */
 			Assert.AreEqual(10, results.Where(x => x.BatchId == batch.Id && x.ShiftDate == tuesday && x.WeekEndDate == weekEndDate).Count());
 
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeA && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
-			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 100M && x.PieceRate == .005M && x.OtherGross == 0 && x.GrossFromPieces == 0.5M && x.TotalGross == 0.5M).Count());
+			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 100M && x.PieceRate == .01M && x.OtherGross == 0 && x.GrossFromPieces == 1M && x.TotalGross == 1M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeC && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeD && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeLightDuty && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeA && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
-			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 100M && x.PieceRate == .005M && x.OtherGross == 0 && x.GrossFromPieces == 0.5M && x.TotalGross == 0.5M).Count());
+			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 100M && x.PieceRate == .01M && x.OtherGross == 0 && x.GrossFromPieces == 1M && x.TotalGross == 1M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeC && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeD && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeLightDuty && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == tuesday && x.BlockId == group2 && x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket && x.Pieces == 25M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 2.5M && x.TotalGross == 2.5M).Count());
@@ -761,15 +750,15 @@ namespace Payroll.UnitTest
 			/* Wednesday */
 			Assert.AreEqual(0, results.Where(x => x.BatchId == batch.Id && x.ShiftDate == wednesday && x.WeekEndDate == weekEndDate).Count());
 
-			/* Thursday */
+			/* Thursday - TD South */
 			Assert.AreEqual(8, results.Where(x => x.BatchId == batch.Id && x.ShiftDate == thursday && x.WeekEndDate == weekEndDate).Count());
 
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeA && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 1000M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 100M && x.TotalGross == 100M).Count());
-			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 2000M && x.PieceRate == .005M && x.OtherGross == 0 && x.GrossFromPieces == 10M && x.TotalGross == 10M).Count());
+			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 2000M && x.PieceRate == .01M && x.OtherGross == 0 && x.GrossFromPieces == 20M && x.TotalGross == 20M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeLightDuty && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket && x.Pieces == 1000M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 100M && x.TotalGross == 100M).Count());
 
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeA && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote && x.Pieces == 25M && x.PieceRate == .12M && x.OtherGross == 0 && x.GrossFromPieces == 3M && x.TotalGross == 3M).Count());
-			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote && x.Pieces == 58M && x.PieceRate == .005M && x.OtherGross == 0 && x.GrossFromPieces == 0.29M && x.TotalGross == 0.29M).Count());
+			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote && x.Pieces == 58M && x.PieceRate == .01M && x.OtherGross == 0 && x.GrossFromPieces == 0.58M && x.TotalGross == 0.58M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeC && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote && x.Pieces == 5M && x.PieceRate == .12M && x.OtherGross == 0 && x.GrossFromPieces == 0.6M && x.TotalGross == 0.6M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeD && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote && x.Pieces == 3M && x.PieceRate == .12M && x.OtherGross == 0 && x.GrossFromPieces == 0.36M && x.TotalGross == 0.36M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeLightDuty && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == thursday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Tote && x.Pieces == 25M && x.PieceRate == .12M && x.OtherGross == 0 && x.GrossFromPieces == 3M && x.TotalGross == 3M).Count());
@@ -781,11 +770,11 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeB && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == friday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote && x.Pieces == 15M && x.PieceRate == .12M && x.OtherGross == 0 && x.GrossFromPieces == 1.8M && x.TotalGross == 1.8M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeC && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == friday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote && x.Pieces == 5M && x.PieceRate == .12M && x.OtherGross == 0 && x.GrossFromPieces == 0.6M && x.TotalGross == 0.6M).Count());
 
-			/* Saturday */
+			/* Saturday - TD South */
 			Assert.AreEqual(7, results.Where(x => x.BatchId == batch.Id && x.ShiftDate == saturday && x.WeekEndDate == weekEndDate).Count());
 
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeA && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == saturday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket && x.Pieces == 1000M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 100M && x.TotalGross == 100M).Count());
-			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeD && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == saturday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 2000M && x.PieceRate == .005M && x.OtherGross == 0 && x.GrossFromPieces == 10M && x.TotalGross == 10M).Count());
+			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeD && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == saturday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket && x.Pieces == 2000M && x.PieceRate == .01M && x.OtherGross == 0 && x.GrossFromPieces == 20M && x.TotalGross == 20M).Count());
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeLightDuty && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == saturday && x.BlockId == group1 && x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket && x.Pieces == 1000M && x.PieceRate == .10M && x.OtherGross == 0 && x.GrossFromPieces == 100M && x.TotalGross == 100M).Count());
 
 			Assert.AreEqual(1, results.Where(x => x.BatchId == batch.Id && x.EmployeeId == employeeA && x.PayType == PayType.ProductionIncentiveBonus && x.ShiftDate == saturday && x.BlockId == group4 && x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote && x.Pieces == 25M && x.PieceRate == .12M && x.OtherGross == 0 && x.GrossFromPieces == 3M && x.TotalGross == 3M).Count());

@@ -108,5 +108,11 @@
 		/// [Sick Leave Requested] - Numeric used for displaying the amount of requested sick leave on vouchers
 		/// </summary>
 		SickLeaveRequested = 300,
+
+		/// <summary>
+		/// [Crew - Designated Location] - Text field that indicates the check distribution location.  Used
+		/// also to identify crew location such as for tractor driver production incentive bonus.
+		/// </summary>
+		CrewDesignatedLocation = 316,
 	}
 }

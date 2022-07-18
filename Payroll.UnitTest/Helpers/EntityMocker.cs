@@ -35,7 +35,8 @@ namespace Payroll.UnitTest.Helpers
 			bool fiveEight = false,
 			decimal totalGross = 0,
 			int lastCrew = 0,
-			decimal hourlyRateOverride = 0)
+			decimal hourlyRateOverride = 0,
+			int crewLocation = 0)
 		{
 			dateCreated ??= DateTime.Now;
 			dateModified ??= DateTime.Now;
@@ -71,7 +72,8 @@ namespace Payroll.UnitTest.Helpers
 				TotalGross = totalGross,
 				AlternativeWorkWeek = alternativeWorkWeek,
 				FiveEight = fiveEight,
-				HourlyRateOverride = hourlyRateOverride
+				HourlyRateOverride = hourlyRateOverride,
+				CrewLocation = crewLocation
 			};
 		}
 
