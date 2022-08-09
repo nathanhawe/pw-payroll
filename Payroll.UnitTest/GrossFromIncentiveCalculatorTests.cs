@@ -25,95 +25,39 @@ namespace Payroll.UnitTest
 		[TestMethod]
 		public void LaborCode_555_TallyTagWriter_Incentive_ReturnsIncentive()
 		{
-			var laborCode = (int)PlantLaborCode.TallyTagWriter;
+			TallyTagWriter_Incentive_ReturnsIncentive((int)PlantLaborCode.TallyTagWriter);
+		}
 
-			var tests = new List<GrossFromIncentiveTestCase>
-			{
-				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 16M},
-				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
-				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = .5M},
-				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 40M},
-			};
-
-			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
-				id: x.Id,
-				hoursWorked: x.HoursWorked,
-				pieces: x.Pieces,
-				increasedRate: x.IncreasedRate,
-				primaRate: x.PrimaRate,
-				nonPrimaRate: x.NonPrimaRate,
-				isIncentiveDisqualified: false,
-				hasNonPrimaViolation: false,
-				laborCode: x.LaborCode)).ToList();
-
-			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
-
-			foreach (var test in tests)
-			{
-				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
-			}
+		[TestMethod]
+		public void LaborCode_7555_LightDutyTallyTagWriter_Incentive_ReturnsIncentive()
+		{
+			TallyTagWriter_Incentive_ReturnsIncentive((int)PlantLaborCode.LightDuty_TallyTagWriter);
 		}
 
 		[TestMethod]
 		public void LaborCode_555_TallyTagWriter_IncentiveDisqualified_ReturnsZero()
 		{
-			var laborCode = (int)PlantLaborCode.TallyTagWriter;
-			var tests = new List<GrossFromIncentiveTestCase>
-			{
-				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
-				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
-				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
-				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
-			};
+			TallyTagWriter_IncentiveDisqualified_ReturnsZero((int)PlantLaborCode.TallyTagWriter);
+			
+		}
 
-			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
-				id: x.Id,
-				hoursWorked: x.HoursWorked,
-				pieces: x.Pieces,
-				increasedRate: x.IncreasedRate,
-				primaRate: x.PrimaRate,
-				nonPrimaRate: x.NonPrimaRate,
-				isIncentiveDisqualified: true,
-				hasNonPrimaViolation: false,
-				laborCode: x.LaborCode)).ToList();
+		[TestMethod]
+		public void LaborCode_7555_LightDutyTallyTagWriter_IncentiveDisqualified_ReturnsZero()
+		{
+			TallyTagWriter_IncentiveDisqualified_ReturnsZero((int)PlantLaborCode.TallyTagWriter);
 
-			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
-
-			foreach (var test in tests)
-			{
-				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
-			}
 		}
 
 		[TestMethod]
 		public void LaborCode_555_TallyTagWriter_Incentive_IgnoresNonPrima()
 		{
-			var laborCode = (int)PlantLaborCode.TallyTagWriter;
-			var tests = new List<GrossFromIncentiveTestCase>
-			{
-				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 16M},
-				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
-				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = .5M},
-				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 40M},
-			};
+			TallyTagWriter_Incentive_IgnoresNonPrima((int)PlantLaborCode.TallyTagWriter);
+		}
 
-			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
-				id: x.Id,
-				hoursWorked: x.HoursWorked,
-				pieces: x.Pieces,
-				increasedRate: x.IncreasedRate,
-				primaRate: x.PrimaRate,
-				nonPrimaRate: x.NonPrimaRate,
-				isIncentiveDisqualified: false,
-				hasNonPrimaViolation: true,
-				laborCode: x.LaborCode)).ToList();
-
-			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
-
-			foreach (var test in tests)
-			{
-				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
-			}
+		[TestMethod]
+		public void LaborCode_7555_LightDutyTallyTagWriter_Incentive_IgnoresNonPrima()
+		{
+			TallyTagWriter_Incentive_IgnoresNonPrima((int)PlantLaborCode.LightDuty_TallyTagWriter);
 		}
 
 		[TestMethod]
@@ -645,5 +589,95 @@ namespace Payroll.UnitTest
 				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
 			}
 		}
+
+		#region Helpers
+		private void TallyTagWriter_Incentive_IgnoresNonPrima(int laborCode)
+		{
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 16M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = .5M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 40M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: false,
+				hasNonPrimaViolation: true,
+				laborCode: x.LaborCode)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		private void TallyTagWriter_Incentive_ReturnsIncentive(int laborCode)
+		{
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 16M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = .5M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 40M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: false,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		private void TallyTagWriter_IncentiveDisqualified_ReturnsZero(int laborCode)
+		{
+			var tests = new List<GrossFromIncentiveTestCase>
+			{
+				new GrossFromIncentiveTestCase { Id = 1, LaborCode =  laborCode, HoursWorked = 8, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 2, LaborCode =  laborCode, HoursWorked = 0, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 3, LaborCode =  laborCode, HoursWorked = .25M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+				new GrossFromIncentiveTestCase { Id = 4, LaborCode =  laborCode, HoursWorked = 20M, Pieces = 0, IncreasedRate = .83M, PrimaRate = .75M, NonPrimaRate = .68M, ExpectedGross = 0M},
+			};
+
+			var testLines = tests.Select(x => EntityMocker.MockPlantPayLine(
+				id: x.Id,
+				hoursWorked: x.HoursWorked,
+				pieces: x.Pieces,
+				increasedRate: x.IncreasedRate,
+				primaRate: x.PrimaRate,
+				nonPrimaRate: x.NonPrimaRate,
+				isIncentiveDisqualified: true,
+				hasNonPrimaViolation: false,
+				laborCode: x.LaborCode)).ToList();
+
+			_grossFromIncentiveCalculator.CalculateGrossFromIncentive(testLines);
+
+			foreach (var test in tests)
+			{
+				Assert.AreEqual(1, testLines.Where(x => x.Id == test.Id && x.GrossFromIncentive == test.ExpectedGross).Count());
+			}
+		}
+
+		#endregion
 	}
 }

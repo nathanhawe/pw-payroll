@@ -24,6 +24,10 @@ namespace Payroll.Domain.Constants
 		Covid19PreScreening = 602,
 		Covid19Sanitation = 603,
 		FoodSafetyNightShift = 923,
-		Receiving_Break = 9503
+		Receiving_Break = 9503,
+		LightDuty_Palletizing = 7125,
+		LightDuty_ReceivingFreshFruit = 7503,
+		LightDuty_NightSanitation = 7535,
+		LightDuty_TallyTagWriter = 7555,
 	}
 }

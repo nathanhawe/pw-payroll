@@ -543,6 +543,12 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void LaborCode_7125_LightDutyPalletizing()
+		{
+			Rate125Tests((int)PlantLaborCode.LightDuty_Palletizing);
+		}
+
+		[TestMethod]
 		public void LaborCode_151_FreshCut_Before20200518()
 		{
 			/*
@@ -671,12 +677,13 @@ namespace Payroll.UnitTest
 		[TestMethod]
 		public void LaborCode_535_NightSanitation()
 		{
-			LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A();
-			LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate();
-			LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne();
-			LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77();
-			LaborCode_535_NightSanitation_OnOrAfter20210322_Before20220418();
-			LaborCode_535_NightSanitation_OnOrAfter20220418();
+			Rate535Tests((int)PlantLaborCode.NightSanitation);
+		}
+
+		[TestMethod]
+		public void LaborCode_7535_LightDutyNightSanitation()
+		{
+			Rate535Tests((int)PlantLaborCode.LightDuty_NightSanitation);
 		}
 
 		[TestMethod]
@@ -1177,6 +1184,12 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void LaborCode_7503_LightDutyReceivingFreshFruit()
+		{
+			Rate503Tests((int)PlantLaborCode.LightDuty_ReceivingFreshFruit);
+		}
+
+		[TestMethod]
 		public void LaborCode_923_FoodSafetyNightShift()
 		{
 			var laborCode = (int)PlantLaborCode.FoodSafetyNightShift;
@@ -1198,6 +1211,16 @@ namespace Payroll.UnitTest
 			Palletizer_OnOrAfter20200518_Before20210322(laborCode);
 			Palletizer_OnOrAfter20210322_Before20220418(laborCode);
 			Palletizer_OnOrAfter20220418(laborCode);
+		}
+
+		private void Rate535Tests(int laborCode)
+		{
+			LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A(laborCode);
+			LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate(laborCode);
+			LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne(laborCode);
+			LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77(laborCode);
+			LaborCode_535_NightSanitation_OnOrAfter20210322_Before20220418(laborCode);
+			LaborCode_535_NightSanitation_OnOrAfter20220418(laborCode);
 		}
 
 		private void Palletizer_Before20190527(int laborCode)
@@ -1829,7 +1852,7 @@ namespace Payroll.UnitTest
 
 		}
 
-		private void LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A()
+		private void LaborCode_535_NightSanitation_Before20200302_Cutler_IgnoreH2A(int laborCode)
 		{
 			/*
 				[535 Rate] = 
@@ -1841,7 +1864,6 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var plant = Plant.Cutler;
 			var startDate = new DateTime(2000, 1, 1);
 			var endDate = new DateTime(2020, 3, 1);
@@ -1859,7 +1881,7 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(15.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
 		}
 
-		private void LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate()
+		private void LaborCode_535_NightSanitation_Before20200302_NonCutler_EnsuresMinimumH2ARate(int laborCode)
 		{
 			/*
 				[535 Rate] = 
@@ -1871,7 +1893,6 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var startDate = new DateTime(2000, 1, 1);
 			var endDate = new DateTime(2020, 3, 1);
 			var historicalH2ARate = 13.92M;
@@ -1897,7 +1918,7 @@ namespace Payroll.UnitTest
 			Assert.AreEqual((historicalH2ARate), DefaultTest(laborCode: laborCode, employeeHourlyRate: (historicalH2ARate - 1), minimumWage: (historicalH2ARate - .5M), hourlyRateOverride: 0, shiftDate: endDate));
 		}
 
-		private void LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne()
+		private void LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_Cutler_MaxOf_EmployeeHourlyRateCalc_MinimumPlusOne(int laborCode)
 		{
 			/*
 				[535 Rate] = 
@@ -1909,7 +1930,6 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var plant = Plant.Cutler;
 			var startDate = new DateTime(2020, 3, 2);
 			var endDate = new DateTime(2021, 3, 21);
@@ -1935,7 +1955,7 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(16.75M, DefaultTest(plant: plant, laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 0M, shiftDate: endDate));
 		}
 
-		private void LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77()
+		private void LaborCode_535_NightSanitation_OnOrAfter20200302_Before20210322_NonCutler_MaxOf_EmployeeHourlyRateCalc_14_77(int laborCode)
 		{
 			/*
 				[535 Rate] = 
@@ -1947,7 +1967,6 @@ namespace Payroll.UnitTest
 						[Plant]=11 => MAX([EmployeeHourlyRateCalc], [MinimumWage] + 1)
 						ELSE MAX([EmployeeHourlyRateCalc], 14.77)
 			*/
-			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var startDate = new DateTime(2020, 3, 2);
 			var endDate = new DateTime(2021, 3, 21);
 
@@ -1977,10 +1996,8 @@ namespace Payroll.UnitTest
 		}
 
 
-		private void LaborCode_535_NightSanitation_OnOrAfter20210322_Before20220418()
+		private void LaborCode_535_NightSanitation_OnOrAfter20210322_Before20220418(int laborCode)
 		{
-
-			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var startDate = new DateTime(2021, 3, 22);
 			var endDate = new DateTime(2022, 4, 17);
 
@@ -2053,10 +2070,8 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(10M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 10, minimumWage: 10, hourlyRateOverride: 0, plant: Plant.Unknown, shiftDate: endDate));
 		}
 
-		private void LaborCode_535_NightSanitation_OnOrAfter20220418()
+		private void LaborCode_535_NightSanitation_OnOrAfter20220418(int laborCode)
 		{
-
-			var laborCode = (int)PlantLaborCode.NightSanitation;
 			var startDate = new DateTime(2022, 4, 18);
 			var endDate = startDate.AddYears(5);
 			var rate = 17.51M;

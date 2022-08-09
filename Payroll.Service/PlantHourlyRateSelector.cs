@@ -106,7 +106,7 @@ namespace Payroll.Service
 				return Math.Max(calculatedEmployeeRate, 15.5M);
 			}
 
-			if (laborCode == (int)PlantLaborCode.Palletizing)
+			if (laborCode == (int)PlantLaborCode.Palletizing || laborCode == (int)PlantLaborCode.LightDuty_Palletizing)
 			{
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
@@ -122,7 +122,7 @@ namespace Payroll.Service
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
-			if (laborCode == (int)PlantLaborCode.NightSanitation)
+			if (laborCode == (int)PlantLaborCode.NightSanitation || laborCode == (int)PlantLaborCode.LightDuty_NightSanitation)
 			{
 				return Rate535(shiftDate, plant, calculatedEmployeeRate, minimumWage, H2ARate(shiftDate));
 			}
@@ -143,7 +143,7 @@ namespace Payroll.Service
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
-			if (laborCode == (int)PlantLaborCode.ReceivingFreshFruit)
+			if (laborCode == (int)PlantLaborCode.ReceivingFreshFruit || laborCode == (int)PlantLaborCode.LightDuty_ReceivingFreshFruit)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
