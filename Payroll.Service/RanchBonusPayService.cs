@@ -296,7 +296,8 @@ namespace Payroll.Service
 					&& x.PayType == PayType.Regular 
 					&& (
 						x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket 
-						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket))
+						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket
+						|| x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket))
 				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
 					key.Crew,
@@ -304,7 +305,8 @@ namespace Payroll.Service
 					key.ShiftDate,
 					key.BlockId,
 					key.LaborCode,
-					Pieces = group.Sum(x => x.Pieces)
+					Pieces = group.Sum(x => x.LaborCode != (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket ? x.Pieces : 0),
+					TDPieces = group.Sum(x => x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket ? x.Pieces : 0)
 				})
 				.ToList();
 
@@ -315,7 +317,7 @@ namespace Payroll.Service
 					key.Crew,
 					key.ShiftDate,
 					key.BlockId,
-					TotalPieces = group.Sum(x => x.Pieces)
+					TotalPieces = group.Sum(x => x.Pieces + x.TDPieces)
 				})
 				.ToList();
 
@@ -400,7 +402,8 @@ namespace Payroll.Service
 					&& x.PayType == PayType.Regular 
 					&& (
 						x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote
-						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Tote))
+						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Tote
+						|| x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote))
 				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
 					key.Crew,
@@ -408,7 +411,8 @@ namespace Payroll.Service
 					key.ShiftDate,
 					key.BlockId,
 					key.LaborCode,
-					Pieces = group.Sum(x => x.Pieces)
+					Pieces = group.Sum(x => x.LaborCode != (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote ? x.Pieces : 0),
+					TDPieces = group.Sum(x => x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote ? x.Pieces : 0)
 				})
 				.ToList();
 
@@ -419,7 +423,7 @@ namespace Payroll.Service
 					key.Crew,
 					key.ShiftDate,
 					key.BlockId,
-					TotalPieces = group.Sum(x => x.Pieces)
+					TotalPieces = group.Sum(x => x.Pieces + x.TDPieces)
 				})
 				.ToList();
 
