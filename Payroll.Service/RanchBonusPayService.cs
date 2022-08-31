@@ -34,6 +34,8 @@ namespace Payroll.Service
 			var results = CalculateIndividualBonuses(batchId, weekEndDate);
 			results.AddRange(CalculateGroupHarvestBonuses(batchId, weekEndDate));
 			results.AddRange(CalculateIndividualHarvestBonuses(batchId, weekEndDate));
+			results.AddRange(CalculateWinterPruningBonuses(batchId, weekEndDate));
+			results.AddRange(CalculateSummerPruningBonuses(batchId, weekEndDate));
 			
 			return results;
 		}
@@ -494,6 +496,125 @@ namespace Payroll.Service
 		}
 		#endregion
 
+		#region - Pruning Bonus
+
+		/// <summary>
+		/// Calculates summer pruning bonuses based on individual performance.
+		/// </summary>
+		/// <param name="batchId"></param>
+		/// <param name="weekEndDate"></param>
+		/// <returns></returns>
+		private List<RanchPayLine> CalculateSummerPruningBonuses(int batchId, DateTime weekEndDate)
+		{
+			var results = new List<RanchPayLine>();
+			var rate = .10M;
+
+			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
+			var employeeGroups = _context.RanchPayLines
+				.Where(x =>
+					!x.IsDeleted
+					&& x.BatchId == batchId
+					&& x.PayType == PayType.Regular
+					&& (
+						x.LaborCode == (int)RanchLaborCode.Pruning_Summer
+						))
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
+				{
+					key.Crew,
+					key.EmployeeId,
+					key.ShiftDate,
+					key.BlockId,
+					key.LaborCode,
+					Pieces = group.Sum(x => x.Pieces)					
+				})
+				.ToList();
+
+			// Calculate individual bonus for each employee.
+			foreach (var employee in employeeGroups)
+			{
+				decimal gross = _roundingService.Round(employee.Pieces * rate, 2);
+				if (gross > 0)
+				{
+					results.Add(new RanchPayLine
+					{
+						BatchId = batchId,
+						EmployeeId = employee.EmployeeId,
+						WeekEndDate = weekEndDate,
+						ShiftDate = employee.ShiftDate,
+						BlockId = employee.BlockId,
+						Crew = employee.Crew,
+						LaborCode = employee.LaborCode,
+						PayType = PayType.ProductionIncentiveBonus,
+						Pieces = employee.Pieces,
+						PieceRate = rate,
+						GrossFromPieces = gross,
+						TotalGross = gross,
+					});
+				}
+			}
+
+			return results;
+		}
+
+		/// <summary>
+		/// Calculates winter pruning bonuses based on individual performance.
+		/// </summary>
+		/// <param name="batchId"></param>
+		/// <param name="weekEndDate"></param>
+		/// <returns></returns>
+		private List<RanchPayLine> CalculateWinterPruningBonuses(int batchId, DateTime weekEndDate)
+		{
+			var results = new List<RanchPayLine>();
+			var rate = .25M;
+
+			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
+			var employeeGroups = _context.RanchPayLines
+				.Where(x =>
+					!x.IsDeleted
+					&& x.BatchId == batchId
+					&& x.PayType == PayType.Regular
+					&& (
+						x.LaborCode == (int)RanchLaborCode.Pruning_Winter
+						))
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
+				{
+					key.Crew,
+					key.EmployeeId,
+					key.ShiftDate,
+					key.BlockId,
+					key.LaborCode,
+					Pieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+			// Calculate individual bonus for each employee.
+			foreach (var employee in employeeGroups)
+			{
+				decimal gross = _roundingService.Round(employee.Pieces * rate, 2);
+				if (gross > 0)
+				{
+					results.Add(new RanchPayLine
+					{
+						BatchId = batchId,
+						EmployeeId = employee.EmployeeId,
+						WeekEndDate = weekEndDate,
+						ShiftDate = employee.ShiftDate,
+						BlockId = employee.BlockId,
+						Crew = employee.Crew,
+						LaborCode = employee.LaborCode,
+						PayType = PayType.ProductionIncentiveBonus,
+						Pieces = employee.Pieces,
+						PieceRate = rate,
+						GrossFromPieces = gross,
+						TotalGross = gross,
+					});
+				}
+			}
+
+			return results;
+		}
+
+		#endregion
 		private List<RanchBonusPieceRate> GetBonusPieceRatesForBatch(int batchId)
 		{
 			return _context.RanchBonusPieceRates.Where(x => !x.IsDeleted && x.BatchId == batchId).ToList();
