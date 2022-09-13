@@ -516,7 +516,7 @@ namespace Payroll.Service
 					&& x.BatchId == batchId
 					&& x.PayType == PayType.Regular
 					&& (
-						x.LaborCode == (int)RanchLaborCode.Pruning_Summer
+						x.LaborCode == (int)RanchLaborCode.PieceRatePruningSummer
 						))
 				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
@@ -574,7 +574,7 @@ namespace Payroll.Service
 					&& x.BatchId == batchId
 					&& x.PayType == PayType.Regular
 					&& (
-						x.LaborCode == (int)RanchLaborCode.Pruning_Winter
+						x.LaborCode == (int)RanchLaborCode.PieceRatePruningWinter
 						))
 				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
