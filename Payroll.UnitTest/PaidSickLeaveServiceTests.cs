@@ -4,6 +4,7 @@ using Payroll.Data;
 using Payroll.Domain.Constants;
 using Payroll.Service;
 using Payroll.UnitTest.Helpers;
+using Payroll.UnitTest.Mocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,19 @@ namespace Payroll.UnitTest
 	public class PaidSickLeaveServiceTests
 	{
 		private RoundingService _roundingService = new RoundingService();
+		private MockMinimumWageService _mockMinimumWageService = new MockMinimumWageService();
+
+		[TestInitialize]
+		public void Setup()
+		{
+			// Mock Minimum Wage
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 3, 23), 12.5M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 3, 24), 12.75M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 3, 25), 13M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 3, 26), 13.25M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 3, 27), 13.5M);
+			_mockMinimumWageService.Test_AddMinimumWage(new DateTime(2020, 3, 28), 13.75M);
+		}
 
 		[TestMethod]
 		public void UpdateTracking_Ranch_AddNewPSL()
@@ -52,7 +66,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -122,7 +136,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -183,7 +197,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(6, context.PaidSickLeaves.Count());
@@ -214,10 +228,9 @@ namespace Payroll.UnitTest
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 50, payType: PayType.Regular));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 100, payType: PayType.Pieces));
 			context.Add(EntityMocker.MockRanchPayLine(batchId: batch.Id, employeeId: "Employee1", shiftDate: new DateTime(2020, 2, 17), hoursWorked: 5, totalGross: 100, payType: PayType.Pieces, isDeleted: true));
-
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(1, context.PaidSickLeaves.Count());
@@ -247,7 +260,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -284,7 +297,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -327,7 +340,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -363,7 +376,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Ranches);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -402,7 +415,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Ranches, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(21, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -461,7 +474,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Ranches, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(14, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -526,7 +539,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -593,7 +606,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -661,7 +674,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(12, context.PaidSickLeaves.Count());
@@ -702,7 +715,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateTracking(batch.Id, Company.Plants);
 
 			Assert.AreEqual(1, context.PaidSickLeaves.Count());
@@ -732,7 +745,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -769,7 +782,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -812,7 +825,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -844,7 +857,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.UpdateUsage(batch.Id, Company.Plants);
 
 			Assert.AreEqual(3, context.PaidSickLeaves.Count());
@@ -882,7 +895,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Plants, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(21, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -941,7 +954,7 @@ namespace Payroll.UnitTest
 			}
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 			pslService.CalculateNinetyDay(batch.Id, Company.Plants, new DateTime(2020, 3, 30), new DateTime(2020, 4, 5));
 
 			Assert.AreEqual(14, context.PaidSickLeaves.Where(x => x.NinetyDayGross > 0 && x.NinetyDayHours > 0).Count());
@@ -1031,7 +1044,7 @@ namespace Payroll.UnitTest
 
 			context.SaveChanges();
 
-			var pslService = new PaidSickLeaveService(context, _roundingService);
+			var pslService = new PaidSickLeaveService(context, _roundingService, _mockMinimumWageService);
 
 			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 23)));
 			Assert.AreEqual(15M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee1", new DateTime(2020, 3, 24)));
@@ -1048,11 +1061,11 @@ namespace Payroll.UnitTest
 			Assert.AreEqual(18.01M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee2", new DateTime(2020, 3, 28)));
 
 			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 23)));
-			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 24)));
-			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 25)));
-			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 26)));
-			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 27)));
-			Assert.AreEqual(12.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 28)));
+			Assert.AreEqual(12.75M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 24)));
+			Assert.AreEqual(13M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 25)));
+			Assert.AreEqual(13.25M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 26)));
+			Assert.AreEqual(13.5M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 27)));
+			Assert.AreEqual(13.75M, pslService.GetNinetyDayRate(batch.Id, Company.Plants, "Employee3", new DateTime(2020, 3, 28)));
 
 			Assert.AreEqual(14.5M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 23)));
 			Assert.AreEqual(14.31M, pslService.GetNinetyDayRate(batch.Id, Company.Ranches, "Employee1", new DateTime(2020, 3, 24)));

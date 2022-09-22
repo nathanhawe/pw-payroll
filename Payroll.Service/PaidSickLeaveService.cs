@@ -16,6 +16,7 @@ namespace Payroll.Service
 	{
 		private readonly PayrollContext _context;
 		private readonly IRoundingService _roundingService;
+		private readonly IMinimumWageService _minimumWageService;
 
 		/// <summary>
 		/// Type of action performed by UpdateOrInsert method.
@@ -28,10 +29,11 @@ namespace Payroll.Service
 			NinetyDay
 		}
 
-		public PaidSickLeaveService(PayrollContext context, IRoundingService roundingService)
+		public PaidSickLeaveService(PayrollContext context, IRoundingService roundingService, IMinimumWageService minimumWageService)
 		{
 			_context = context ?? throw new ArgumentNullException(nameof(context));
 			_roundingService = roundingService ?? throw new ArgumentNullException();
+			_minimumWageService = minimumWageService ?? throw new ArgumentNullException();
 		}
 
 		/// <summary>
@@ -125,8 +127,8 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
-		/// Returns the calculated ninety day rate for the provided parameter values.  This method assumes that ninety day gross and ninety day hours
-		/// total values have been calculated already.
+		/// Returns the greater of the calculated ninety day rate for the provided parameter values and minimum wage.  This method 
+		/// assumes that ninety day gross and ninety day hours total values have been calculated already.
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <param name="company"></param>
@@ -135,6 +137,8 @@ namespace Payroll.Service
 		/// <returns></returns>
 		public decimal GetNinetyDayRate(int batchId, string company, string employeeId, DateTime shiftDate)
 		{
+			var minimumWage = _minimumWageService.GetMinimumWageOnDate(shiftDate);
+
 			var psl = _context.PaidSickLeaves
 				.Where(x =>
 					x.BatchId == batchId
@@ -144,9 +148,10 @@ namespace Payroll.Service
 					&& !x.IsDeleted)
 				.FirstOrDefault();
 
-			if ((psl?.NinetyDayHours ?? 0) == 0) return 0;
+			// Avoid dividing by zero
+			if ((psl?.NinetyDayHours ?? 0) == 0) return minimumWage;
 
-			return _roundingService.Round(psl.NinetyDayGross / psl.NinetyDayHours, 2);
+			return Math.Max(minimumWage, _roundingService.Round(psl.NinetyDayGross / psl.NinetyDayHours, 2));
 		}
 
 		/// <summary>

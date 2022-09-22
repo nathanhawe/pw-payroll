@@ -60,7 +60,7 @@ namespace Payroll.IntegrationTest
 			var dailySummaryCalculator = new DailySummaryCalculator(context, minimumWageService, roundingService, crewLaborWageService);
 			
 
-			var paidSickLeaveService = new PaidSickLeaveService(context, roundingService);
+			var paidSickLeaveService = new PaidSickLeaveService(context, roundingService, minimumWageService);
 			var crewBossPayService = new CrewBossPayService(context, new CrewBossWageService(context), new SouthCrewBossWageService(context), roundingService);
 			var crewBossBonusPayService = new CrewBossBonusPayService(context, roundingService);
 			var ranchDailyOTDTHoursCalculator = new RanchDailyOTDTHoursCalculator();
