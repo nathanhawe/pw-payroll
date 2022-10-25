@@ -18,6 +18,7 @@ namespace Payroll.Domain.Constants
 		Pruning_Summer = 209,
 		Girdling = 215,
 		Grafting_BuddingExpertCrew = 217,
+		Chainsaw = 226,
 		SeasonalEquipmentOperator = 234,
 		PieceRatePruningSummer = 261,
 		PieceRatePruningWinter = 262,

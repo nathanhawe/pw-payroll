@@ -999,7 +999,7 @@ namespace Payroll.UnitTest
 			var laborCode = (int)RanchLaborCode.Grafting_BuddingExpertCrew;
 			var effectiveDate = new DateTime(2022, 3, 14);
 
-			// Return 16.25 unless minimum wage is h igher
+			// Return 16.25 unless minimum wage is higher
 			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
 			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 18.25M, shiftDate: effectiveDate));
 			Assert.AreEqual((17.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 17.25M, shiftDate: effectiveDate));
@@ -1008,6 +1008,23 @@ namespace Payroll.UnitTest
 			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate.AddYears(10)));
 			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 18.25M, shiftDate: effectiveDate.AddYears(10)));
 			Assert.AreEqual((17.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 17.25M, shiftDate: effectiveDate.AddYears(10)));
+		}
+
+		[TestMethod]
+		public void LaborCode_226_Chainsaw_OnOrAfter20221001()
+		{
+			var laborCode = (int)RanchLaborCode.Chainsaw;
+			var effectiveDate = new DateTime(2022, 10, 1);
+
+			// Returns the default rate before 10/1/2022
+			Assert.AreEqual(_crewLaborRate, DefaultTest(laborCode: laborCode, shiftDate: effectiveDate.AddDays(-1)));
+
+			// Returns the greater of employee hourly rate and crew labor rate plus 1 on or after 10/1/2022
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, shiftDate: effectiveDate));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, shiftDate: effectiveDate, employeeHourlyRate: _crewLaborRate + 1));
+
+			Assert.AreEqual(_crewLaborRate + 1, DefaultTest(laborCode: laborCode, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual(_crewLaborRate + 2, DefaultTest(laborCode: laborCode, shiftDate: effectiveDate.AddYears(10), employeeHourlyRate: _crewLaborRate + 1));
 		}
 
 		[TestMethod]
