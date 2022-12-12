@@ -31,12 +31,15 @@ namespace Payroll.Service
 		/// <returns></returns>
 		public List<RanchPayLine> CalculateRanchBonusPayLines(int batchId, DateTime weekEndDate)
 		{
-			var results = CalculateIndividualBonuses(batchId, weekEndDate);
+			var results = CalculateVariableBonuses(batchId, weekEndDate);
 			results.AddRange(CalculateGroupHarvestBonuses(batchId, weekEndDate));
 			results.AddRange(CalculateIndividualHarvestBonuses(batchId, weekEndDate));
-			results.AddRange(CalculateWinterPruningBonuses(batchId, weekEndDate));
 			results.AddRange(CalculateSummerPruningBonuses(batchId, weekEndDate));
-			
+	
+			// Only calculate the non-variable winter pruning bonuses before 12/12/2022
+			if(weekEndDate <= new DateTime(2022, 12, 11))
+				results.AddRange(CalculateWinterPruningBonuses(batchId, weekEndDate));
+
 			return results;
 		}
 
@@ -45,7 +48,7 @@ namespace Payroll.Service
 		/// </summary>
 		/// <param name="batchId"></param>
 		/// <returns></returns>
-		private List<RanchPayLine> CalculateIndividualBonuses(int batchId, DateTime weekEndDate)
+		private List<RanchPayLine> CalculateVariableBonuses(int batchId, DateTime weekEndDate)
 		{ 
 			var results = new List<RanchPayLine>();
 
