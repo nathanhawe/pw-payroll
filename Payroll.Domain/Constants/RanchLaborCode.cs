@@ -10,6 +10,7 @@ namespace Payroll.Domain.Constants
 		AlmondHarvestEquipmentOperatorDay = 103,
 		AlmondHarvestEquipmentOperatorNight = 104,
 		AlmondHarvestGeneral = 105,
+		Replanting = 115,
 		CrewHelper = 116,
 		CrewHelper_BonusRate = 117,
 		GrapeHarvestSupport = 120,
