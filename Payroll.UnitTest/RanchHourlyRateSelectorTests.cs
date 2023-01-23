@@ -977,7 +977,7 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_217_GraftingBuddingExpertCrew_OnOrAfter20210111_ReturnsCrewLaborRatePlus1()
+		public void LaborCode_217_GraftingBuddingExpertCrew_OnOrAfter20210111_Before20220314_ReturnsCrewLaborRatePlus1()
 		{
 			var laborCode = (int) RanchLaborCode.Grafting_BuddingExpertCrew;
 			var effectiveDate = new DateTime(2021, 1, 11);
@@ -994,10 +994,11 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
-		public void LaborCode_217_GraftingBuddingExpertCrew_OnOrAfter20220314_Returns_16_25()
+		public void LaborCode_217_GraftingBuddingExpertCrew_OnOrAfter20220314_Before20230101_Returns_16_25()
 		{
 			var laborCode = (int)RanchLaborCode.Grafting_BuddingExpertCrew;
 			var effectiveDate = new DateTime(2022, 3, 14);
+			var endDate = new DateTime(2022, 12, 31);
 
 			// Return 16.25 unless minimum wage is higher
 			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate));
@@ -1005,9 +1006,27 @@ namespace Payroll.UnitTest
 			Assert.AreEqual((17.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 17.25M, shiftDate: effectiveDate));
 			
 
-			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: effectiveDate.AddYears(10)));
-			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 18.25M, shiftDate: effectiveDate.AddYears(10)));
-			Assert.AreEqual((17.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 17.25M, shiftDate: effectiveDate.AddYears(10)));
+			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, shiftDate: endDate));
+			Assert.AreEqual((16.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 18.25M, shiftDate: endDate));
+			Assert.AreEqual((17.25M), DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 17.25M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_217_GraftingBuddingExpertCrew_OnOrAfter20230101_Returns_Min_Plus_1()
+		{
+			var laborCode = (int)RanchLaborCode.Grafting_BuddingExpertCrew;
+			var effectiveDate = new DateTime(2023, 1, 1);
+			var endDate = effectiveDate.AddYears(10);
+
+			// Return minimum wage + 1 regardless of employee hourly rate or crew labor rate
+			Assert.AreEqual(11M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 10M, shiftDate: effectiveDate));
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 18.25M, minimumWage: 15.5M, shiftDate: effectiveDate));
+			Assert.AreEqual(18.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 17.25M, shiftDate: effectiveDate));
+
+
+			Assert.AreEqual(11M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 10M, shiftDate: endDate));
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 18.25M, minimumWage: 15.5M, shiftDate: endDate));
+			Assert.AreEqual(18.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 8M, minimumWage: 17.25M, shiftDate: endDate));
 		}
 
 		[TestMethod]

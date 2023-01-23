@@ -314,9 +314,13 @@ namespace Payroll.Service
 			{
 				return CrewLaborRate(shiftDate, minimumWageRate) + 1;
 			}
-			else
+			else if (shiftDate < new DateTime(2023, 1, 1))
 			{
 				return Math.Max(16.25M, CrewLaborRate(shiftDate, minimumWageRate));
+			}
+			else
+			{
+				return minimumWageRate + 1M;
 			}
 		}
 
