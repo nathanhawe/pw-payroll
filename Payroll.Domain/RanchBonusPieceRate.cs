@@ -18,5 +18,7 @@ namespace Payroll.Domain
 
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal PerTreeBonus { get; set; }
+		
+		public string Designation { get; set; }
 	}
 }

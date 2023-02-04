@@ -65,6 +65,8 @@ namespace Payroll.Domain
 
 		public int CrewLocation { get; set; }
 
+		public string Designation { get; set; }
+
 		[NotMapped]
 		public bool SpecialAdjustmentApproved { get; set; }
 	}

@@ -46,6 +46,29 @@ namespace Payroll.Service
 		}
 
 		/// <summary>
+		/// Sets the "Group Designation" on <c>RanchPayLine</c>s using the passed lists to determine the effective
+		/// bonus rate for each payline record.
+		/// </summary>
+		/// <param name="bonusPieceRates"></param>
+		/// <param name="ranchPayLines"></param>
+		public void SetRegularLineGroupDesignation(List<RanchBonusPieceRate> bonusPieceRates, List<RanchPayLine> ranchPayLines)
+		{
+			if ((bonusPieceRates?.Count() ?? 0) == 0 || (ranchPayLines?.Count() ?? 0) == 0) return;
+
+			ranchPayLines.ForEach(r => 
+				r.Designation = bonusPieceRates
+						.Where(x =>
+							!x.IsDeleted
+							&& x.LaborCode == r.LaborCode
+							&& x.BlockId == r.BlockId
+							&& x.EffectiveDate <= r.ShiftDate)
+						.OrderByDescending(o => o.EffectiveDate)
+						.ThenByDescending(o => o.QuickBaseRecordId)
+						.FirstOrDefault()?.Designation ?? ""			
+			);
+		}
+
+		/// <summary>
 		/// Calculates productivity bonuses based on individual performance using the <c>RanchBonusPieceRate</c> records.
 		/// </summary>
 		/// <param name="batchId"></param>
@@ -113,6 +136,7 @@ namespace Payroll.Service
 									PieceRate = rate.PerTreeBonus,
 									GrossFromPieces = gross,
 									TotalGross = gross,
+									Designation = rate.Designation,
 								});
 							}
 						}
@@ -742,6 +766,5 @@ namespace Payroll.Service
 		{
 			return _context.RanchBonusPieceRates.Where(x => !x.IsDeleted && x.BatchId == batchId).ToList();
 		}
-		
 	}
 }

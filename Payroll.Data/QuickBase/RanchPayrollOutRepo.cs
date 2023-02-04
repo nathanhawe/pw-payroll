@@ -124,6 +124,7 @@ namespace Payroll.Data.QuickBase
 				sb.Append($"{(line.QuickBaseRecordId > 0 ? line.QuickBaseRecordId.ToString() : "")},");
 				sb.Append($"{line.SickLeaveRequested},");
 				sb.Append($"{(line.IsLayoffTagFirstOfTwoInWeek ? "1" : "0") },");
+				sb.Append($"\"{line.Designation}\",");
 
 				sb.Append("\n");
 			}
@@ -232,6 +233,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchPayrollOutField.SourceRid}.");
 			sb.Append($"{(int)RanchPayrollOutField.SickLeaveRequested}.");
 			sb.Append($"{(int)RanchPayrollOutField.LayoffTagFirstOfTwoInWeek}.");
+			sb.Append($"{(int)RanchPayrollOutField.Group}.");
 
 			return sb.ToString();
 		}

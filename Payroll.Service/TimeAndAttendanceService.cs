@@ -969,6 +969,11 @@ namespace Payroll.Service
 			var ranchBonusPieceRates = _ranchBonusPieceRatesRepo.Get().ToList();
 			ranchBonusPieceRates.ForEach(x => x.BatchId = batch.Id);
 
+			// Group Designation
+			_logger.Log(LogLevel.Information, "Writing group designation to ranch pay lines fro {batchId}", batch.Id);
+			_ranchBonusPayService.SetRegularLineGroupDesignation(ranchBonusPieceRates, ranchPayLines);
+
+
 			/* Gross Calculations */
 			_logger.Log(LogLevel.Information, "Calculating initial gross for batch {batchId}", batch.Id);
 			SetBatchStatus(batch.Id, BatchProcessingStatus.GrossCalculations);
@@ -1451,6 +1456,7 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.SickLeaveRequested), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.IsLayoffTagFirstOfTwoInWeek), typeof(bool)));
 			table.Columns.Add(new DataColumn(nameof(RanchPayLine.CrewLocation), typeof(int)));
+			table.Columns.Add(new DataColumn(nameof(RanchPayLine.Designation), typeof(string)));
 
 			var utcNow = DateTime.UtcNow;
 			foreach (var payLine in payLines)
@@ -1490,6 +1496,7 @@ namespace Payroll.Service
 				row[nameof(RanchPayLine.SickLeaveRequested)] = payLine.SickLeaveRequested;
 				row[nameof(RanchPayLine.IsLayoffTagFirstOfTwoInWeek)] = payLine.IsLayoffTagFirstOfTwoInWeek;
 				row[nameof(RanchPayLine.CrewLocation)] = payLine.CrewLocation;
+				row[nameof(RanchPayLine.Designation)] = payLine.Designation;
 				table.Rows.Add(row);
 			}
 
@@ -1640,22 +1647,24 @@ namespace Payroll.Service
 			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.EffectiveDate), typeof(System.DateTime)));
 			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.PerHourThreshold), typeof(decimal)));
 			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.PerTreeBonus), typeof(decimal)));
+			table.Columns.Add(new DataColumn(nameof(RanchBonusPieceRate.Designation), typeof(string)));
 
 			var utcNow = DateTime.UtcNow;
-			foreach (var adjustmentLine in ranchBonusPieceRates)
+			foreach (var rate in ranchBonusPieceRates)
 			{
 				var row = table.NewRow();
 				row[nameof(RanchBonusPieceRate.Id)] = 0;
 				row[nameof(RanchBonusPieceRate.DateCreated)] = utcNow;
 				row[nameof(RanchBonusPieceRate.DateModified)] = utcNow;
-				row[nameof(RanchBonusPieceRate.IsDeleted)] = adjustmentLine.IsDeleted;
-				row[nameof(RanchBonusPieceRate.BatchId)] = adjustmentLine.BatchId;
-				row[nameof(RanchBonusPieceRate.QuickBaseRecordId)] = adjustmentLine.QuickBaseRecordId;
-				row[nameof(RanchBonusPieceRate.BlockId)] = adjustmentLine.BlockId;
-				row[nameof(RanchBonusPieceRate.LaborCode)] = adjustmentLine.LaborCode;
-				row[nameof(RanchBonusPieceRate.EffectiveDate)] = adjustmentLine.EffectiveDate;
-				row[nameof(RanchBonusPieceRate.PerHourThreshold)] = adjustmentLine.PerHourThreshold;
-				row[nameof(RanchBonusPieceRate.PerTreeBonus)] = adjustmentLine.PerTreeBonus;
+				row[nameof(RanchBonusPieceRate.IsDeleted)] = rate.IsDeleted;
+				row[nameof(RanchBonusPieceRate.BatchId)] = rate.BatchId;
+				row[nameof(RanchBonusPieceRate.QuickBaseRecordId)] = rate.QuickBaseRecordId;
+				row[nameof(RanchBonusPieceRate.BlockId)] = rate.BlockId;
+				row[nameof(RanchBonusPieceRate.LaborCode)] = rate.LaborCode;
+				row[nameof(RanchBonusPieceRate.EffectiveDate)] = rate.EffectiveDate;
+				row[nameof(RanchBonusPieceRate.PerHourThreshold)] = rate.PerHourThreshold;
+				row[nameof(RanchBonusPieceRate.PerTreeBonus)] = rate.PerTreeBonus;
+				row[nameof(RanchBonusPieceRate.Designation)] = rate.Designation;
 				
 				table.Rows.Add(row);
 			}

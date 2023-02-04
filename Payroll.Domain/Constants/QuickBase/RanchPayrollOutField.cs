@@ -145,5 +145,10 @@
 		/// [Layoff Tag First of Two in Week] - Checkbox
 		/// </summary>
 		LayoffTagFirstOfTwoInWeek = 96,
+
+		/// <summary>
+		/// [Group] - Text that indicates the group designation for certain production incentive bonus records.
+		/// </summary>
+		Group = 117,
 	}
 }

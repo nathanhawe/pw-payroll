@@ -65,6 +65,7 @@ namespace Payroll.Data.QuickBase
 						case (int)RanchBonusPieceRateField.EffectiveDate: temp.EffectiveDate = ParseDate(field.Value); break;
 						case (int)RanchBonusPieceRateField.PerHourThreshold: temp.PerHourThreshold = ParseDecimal(field.Value) ?? 0; break;
 						case (int)RanchBonusPieceRateField.PerTreeBonus: temp.PerTreeBonus = ParseDecimal(field.Value) ?? 0; break;
+						case (int)RanchBonusPieceRateField.Designation: temp.Designation = field.Value; break;
 					}
 				}
 				bonusPieceRates.Add(temp);
@@ -85,6 +86,7 @@ namespace Payroll.Data.QuickBase
 			sb.Append($"{(int)RanchBonusPieceRateField.EffectiveDate}.");
 			sb.Append($"{(int)RanchBonusPieceRateField.PerHourThreshold}.");
 			sb.Append($"{(int)RanchBonusPieceRateField.PerTreeBonus}.");
+			sb.Append($"{(int)RanchBonusPieceRateField.Designation}.");
 
 			return sb.ToString();
 		}

@@ -353,7 +353,8 @@ namespace Payroll.UnitTest.Helpers
 			int laborCode = 0,
 			DateTime? effectiveDate = null, 
 			decimal perHourThreshold = 0,
-			decimal perTreeBonus = 0)
+			decimal perTreeBonus = 0,
+			string designation = "")
 		{
 			dateCreated ??= DateTime.Now;
 			dateModified ??= DateTime.Now;
@@ -372,6 +373,7 @@ namespace Payroll.UnitTest.Helpers
 				EffectiveDate = effectiveDate.Value,
 				PerHourThreshold = perHourThreshold,
 				PerTreeBonus = perTreeBonus,
+				Designation = designation,
 			};
 		}
 

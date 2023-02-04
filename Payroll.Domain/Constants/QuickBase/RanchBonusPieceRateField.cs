@@ -32,5 +32,10 @@
 		/// [Related Labor Code] - Numeric Reference
 		/// </summary>
 		RelatedLaborCode = 15,
+
+		/// <summary>
+		/// [Designation] - Text that indicates the incentive "group"
+		/// </summary>
+		Designation = 17,
 	}
 }
