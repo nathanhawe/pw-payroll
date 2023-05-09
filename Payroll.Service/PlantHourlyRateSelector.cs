@@ -103,22 +103,11 @@ namespace Payroll.Service
 
 			if (laborCode == (int)PlantLaborCode.PackerNoPieces && plant == Plant.Cutler && positionTitle == PositionTitle.PackerL2 && shiftDate >= new DateTime(2022, 4, 18))
 			{
-				return Math.Max(calculatedEmployeeRate, 15.5M);
+				return RatePackerL2(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
 			if (laborCode == (int)PlantLaborCode.Palletizing || laborCode == (int)PlantLaborCode.LightDuty_Palletizing)
 			{
-				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
-			}
-
-			if (laborCode == (int)PlantLaborCode.FreshCut)
-			{
-				return Rate151(shiftDate, plant, calculatedEmployeeRate);
-			}
-
-			if (laborCode == (int)PlantLaborCode.ReceivingAndMarkingGrapes)
-			{
-				// Same as 125
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
@@ -132,12 +121,6 @@ namespace Payroll.Service
 				return Rate536(shiftDate, plant, calculatedEmployeeRate);
 			}
 
-			if (laborCode == (int)PlantLaborCode.NightShiftAuditor)
-			{
-				// [537 Rate] = [EmployeeHourlyRateCalc] + 1.5
-				return (calculatedEmployeeRate + 1.5M);
-			}
-
 			if (laborCode == (int)PlantLaborCode.Receiving_Break)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
@@ -146,16 +129,6 @@ namespace Payroll.Service
 			if (laborCode == (int)PlantLaborCode.ReceivingFreshFruit || laborCode == (int)PlantLaborCode.LightDuty_ReceivingFreshFruit)
 			{
 				return Rate503(shiftDate, plant, calculatedEmployeeRate, minimumWage);
-			}
-
-			if (laborCode == (int)PlantLaborCode.Covid19PreScreening)
-			{
-				return Rate602(shiftDate, calculatedEmployeeRate);
-			}
-
-			if (laborCode == (int)PlantLaborCode.Covid19Sanitation)
-			{
-				return Rate603(shiftDate, calculatedEmployeeRate);
 			}
 
 			if (laborCode == (int)PlantLaborCode.FoodSafetyNightShift)
@@ -185,10 +158,30 @@ namespace Payroll.Service
 			{
 				return 16.05M;
 			}
-			else return 17.51M;
+			else if (shiftDate < new DateTime(2023, 5, 1))
+			{
+				return 17.51M;
+			}
+			else return 18.65M;
 		}
-
 		
+		/// <summary>
+		/// Returns the calculated rate for L2 Packers in Cutler
+		/// </summary>
+		/// <param name="shiftDate"></param>
+		/// <param name="plant"></param>
+		/// <param name="calculatedEmployeeRate"></param>
+		/// <param name="minimumWage"></param>
+		/// <returns></returns>
+		/// <exception cref="NotImplementedException"></exception>
+		private decimal RatePackerL2(DateTime shiftDate, Plant plant, decimal calculatedEmployeeRate, decimal minimumWage)
+		{
+			if(shiftDate < new DateTime(2023, 5, 1))
+			{
+				return Math.Max(calculatedEmployeeRate, 15.5M);
+			}
+			else return Math.Max(calculatedEmployeeRate, 15.75M);
+		}
 
 
 		/// <summary>
@@ -253,30 +246,6 @@ namespace Payroll.Service
 					return Math.Max(calculatedEmployeeRate, minimumWage + 1.5M);
 				}
 				else return calculatedEmployeeRate;
-			}
-		}
-
-		/// <summary>
-		/// Returns the calculated rate for LC151 work.
-		/// </summary>
-		/// <param name="shiftDate"></param>
-		/// <param name="plant"></param>
-		/// <param name="calculatedEmployeeRate"></param>
-		/// <returns></returns>
-		private decimal Rate151(DateTime shiftDate, Plant plant, decimal calculatedEmployeeRate)
-		{
-			/*
-				[151 Rate]
-					[Plant] = 2 => [EmployeeHourlyRateCalc] + 2
-					ELSE [EmployeeHourlyRateCalc]
-			*/
-			if(shiftDate < new DateTime(2020, 5, 18))
-			{
-				return calculatedEmployeeRate + (plant == Plant.Reedley ? 2 : 0);
-			}
-			else
-			{
-				return calculatedEmployeeRate + 2.0M;
 			}
 		}
 
@@ -368,11 +337,31 @@ namespace Payroll.Service
 				}
 				else return calculatedEmployeeRate;
 			}
-			else
+			else if (shiftDate < new DateTime(2023, 4, 29))
 			{
 				if (plant == Plant.Cutler || plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Reedley)
 				{
 					return Math.Max(calculatedEmployeeRate, 17.51M);
+				}
+				else return calculatedEmployeeRate;
+			}
+			else if (shiftDate < new DateTime(2023, 5, 8))
+			{
+				if (plant == Plant.Cutler)
+				{
+					return Math.Max(calculatedEmployeeRate, 17.51M);
+				}
+				else if (plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Reedley)
+				{
+					return Math.Max(calculatedEmployeeRate, 18.65M);
+				}
+				else return calculatedEmployeeRate;
+			}
+			else
+			{
+				if (plant == Plant.Cutler || plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Reedley)
+				{
+					return Math.Max(calculatedEmployeeRate, 18.65M);
 				}
 				else return calculatedEmployeeRate;
 			}
@@ -404,7 +393,7 @@ namespace Payroll.Service
 				}
 				else return calculatedEmployeeRate;
 			}
-			else
+			else if (shiftDate < new DateTime(2023, 5, 1))
 			{
 				if ((plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler || plant == Plant.Reedley)
 					&& shiftDate.Month >= 5
@@ -414,37 +403,17 @@ namespace Payroll.Service
 				}
 				else return calculatedEmployeeRate;
 			}
+			else
+			{
+				if ((plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Cutler)
+					&& shiftDate.Month >= 5
+					&& (shiftDate.Month < 10 || (shiftDate.Month == 10 && shiftDate.Day <= 15)))
+				{
+					return (calculatedEmployeeRate + 2M);
+				}
+				else return calculatedEmployeeRate;
+			}
 			
-		}
-
-		/// <summary>
-		/// Returns the calculated rate for COVID-19 Pre-Screening
-		/// </summary>
-		/// <param name="shiftDate"></param>
-		/// <param name="calculatedEmployeeRate"></param>
-		/// <returns></returns>
-		private decimal Rate602(DateTime shiftDate, decimal calculatedEmployeeRate)
-		{
-			if (shiftDate < new DateTime(2020, 4, 27))
-			{
-				return calculatedEmployeeRate;
-			}
-			else
-			{
-				return calculatedEmployeeRate + 1.5M;
-			}
-		}
-
-		private decimal Rate603(DateTime shiftDate, decimal calculatedEmployeeRate)
-		{
-			if (shiftDate < new DateTime(2020, 7, 01))
-			{
-				return calculatedEmployeeRate;
-			}
-			else
-			{
-				return Math.Max(calculatedEmployeeRate, 14.5M);
-			}
 		}
 
 		/// <summary>
