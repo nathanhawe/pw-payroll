@@ -345,26 +345,19 @@ namespace Payroll.Service
 				}
 				else return calculatedEmployeeRate;
 			}
-			else if (shiftDate < new DateTime(2023, 5, 8))
+			else
 			{
-				if (plant == Plant.Cutler)
+				if (plant == Plant.Cutler || plant == Plant.Reedley)
 				{
 					return Math.Max(calculatedEmployeeRate, 17.51M);
 				}
-				else if (plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Reedley)
+				else if (plant == Plant.Sanger || plant == Plant.Kerman)
 				{
 					return Math.Max(calculatedEmployeeRate, 18.65M);
 				}
 				else return calculatedEmployeeRate;
 			}
-			else
-			{
-				if (plant == Plant.Cutler || plant == Plant.Sanger || plant == Plant.Kerman || plant == Plant.Reedley)
-				{
-					return Math.Max(calculatedEmployeeRate, 18.65M);
-				}
-				else return calculatedEmployeeRate;
-			}
+			
 		}
 
 		/// <summary>
