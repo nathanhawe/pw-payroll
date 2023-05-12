@@ -33,6 +33,7 @@ namespace Payroll.Domain.Constants
 		NonProductiveTime = 381,
 		QualityControl = 551,
 		Covid19 = 600,
+		TractorReplanting = 9115,
 		Individual_PieceRateHarvest_Bucket = 9336,
 		Individual_PieceRateHarvest_Tote = 9372,
 		Individual_TractorPieceRateHarvest_Bucket = 9373,

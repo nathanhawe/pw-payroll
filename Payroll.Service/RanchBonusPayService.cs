@@ -716,45 +716,58 @@ namespace Payroll.Service
 
 			// Group records for this labor code by crew, employee number, shift date, and block summing the hours and pieces.
 			var employeeGroups = _context.RanchPayLines
-				.Where(x =>
-					!x.IsDeleted
-					&& x.BatchId == batchId
-					&& x.PayType == PayType.Regular
-					&& (
-						x.LaborCode == (int)RanchLaborCode.Replanting
-						))
-				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
+				.Where(x => !x.IsDeleted && x.BatchId == batchId && x.PayType == PayType.Regular && (x.LaborCode == (int)RanchLaborCode.Replanting || x.LaborCode == (int)RanchLaborCode.TractorReplanting))
+				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId }, (key, group) => new
 				{
 					key.Crew,
 					key.EmployeeId,
 					key.ShiftDate,
 					key.BlockId,
-					key.LaborCode,
+					Hours = group.Sum(x => x.HoursWorked),
 					Pieces = group.Sum(x => x.Pieces)
 				})
 				.ToList();
 
-			// Calculate individual bonus for each employee.
-			foreach (var employee in employeeGroups)
-			{
-				decimal gross = _roundingService.Round(employee.Pieces * rate, 2);
-				if (gross > 0)
+			// Group the employee groupings into crews to be used for proportional distribution of group bonus.
+			var crewGroups = employeeGroups
+				.GroupBy(g => new { g.Crew, g.ShiftDate, g.BlockId }, (key, group) => new
 				{
-					results.Add(new RanchPayLine
+					key.Crew,
+					key.ShiftDate,
+					key.BlockId,
+					TotalHours = group.Sum(x => x.Hours),
+					TotalPieces = group.Sum(x => x.Pieces)
+				})
+				.ToList();
+
+			// For each crew group, lookup up the specific bonus and distribute it proportionally across all participating employees.
+			foreach (var crew in crewGroups)
+			{
+				var employees = employeeGroups.Where(x => x.Crew == crew.Crew && x.ShiftDate == crew.ShiftDate && x.BlockId == crew.BlockId && x.Hours > 0).ToList();
+				foreach (var employee in employees)
+				{
+					decimal percentage = _roundingService.Round((employee.Hours / crew.TotalHours), 4);
+					decimal pieces = _roundingService.Round(percentage * crew.TotalPieces, 2);
+					decimal gross = _roundingService.Round(pieces * rate, 2);
+
+					if (gross > 0)
 					{
-						BatchId = batchId,
-						EmployeeId = employee.EmployeeId,
-						WeekEndDate = weekEndDate,
-						ShiftDate = employee.ShiftDate,
-						BlockId = employee.BlockId,
-						Crew = employee.Crew,
-						LaborCode = employee.LaborCode,
-						PayType = PayType.ProductionIncentiveBonus,
-						Pieces = employee.Pieces,
-						PieceRate = rate,
-						GrossFromPieces = gross,
-						TotalGross = gross,
-					});
+						results.Add(new RanchPayLine
+						{
+							BatchId = batchId,
+							EmployeeId = employee.EmployeeId,
+							WeekEndDate = weekEndDate,
+							ShiftDate = employee.ShiftDate,
+							BlockId = employee.BlockId,
+							Crew = crew.Crew,
+							LaborCode = (int)RanchLaborCode.Replanting,
+							PayType = PayType.ProductionIncentiveBonus,
+							Pieces = pieces,
+							PieceRate = rate,
+							GrossFromPieces = gross,
+							TotalGross = gross,
+						});
+					}
 				}
 			}
 
