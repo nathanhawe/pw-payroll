@@ -136,6 +136,11 @@ namespace Payroll.Service
 				return Rate536(shiftDate, plant, calculatedEmployeeRate);
 			}
 
+			if (laborCode == (int)PlantLaborCode.Charoleros && plant == Plant.Cutler && shiftDate >= new DateTime(2023, 5, 15))
+			{
+				return Math.Max(employeeHourlyRate, minimumWage + .5M);
+			}
+
 			return EmployeeHourlyRateCalculation(employeeHourlyRate, hourlyRateOverride, minimumWage);
 		}
 

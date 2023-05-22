@@ -10,6 +10,7 @@ namespace Payroll.Domain.Constants
 		PackerNoPieces = 115,
 		Packing = 123,
 		Palletizing = 125,
+		Charoleros = 130,
 		FreshCut = 151,
 		ReceivingAndMarkingGrapes = 312,
 		RecoveryTime = 380,

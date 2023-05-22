@@ -594,6 +594,38 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void LaborCode_130_Charoleros_OnOrAfter20230515()
+		{
+			var startDate = new DateTime(2023, 5, 15);
+			var endDate = startDate.AddYears(5);
+			int laborCode = (int)PlantLaborCode.Charoleros;
+
+			// Override - No incentive paid
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, plant: Plant.Cutler, shiftDate: endDate));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(15M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 15.5M, minimumWage: 15.75M, hourlyRateOverride: 15M, plant: Plant.Sanger, shiftDate: endDate));
+
+			// Employee Hourly Rate is greater than minimum wage + 0.5 - employee rate
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 15M, hourlyRateOverride: 0M, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 15M, hourlyRateOverride: 0M, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 15M, hourlyRateOverride: 0M, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 15M, hourlyRateOverride: 0M, plant: Plant.Cutler, shiftDate: endDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 15M, hourlyRateOverride: 0M, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 15M, hourlyRateOverride: 0M, plant: Plant.Sanger, shiftDate: endDate));
+
+			// Minimum Wage + .5 is greater than employee rate (Only in Cutler)
+			Assert.AreEqual(20.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 19.75M, hourlyRateOverride: 0M, plant: Plant.Cutler, shiftDate: startDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 19.75M, hourlyRateOverride: 0M, plant: Plant.Kerman, shiftDate: startDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 19.75M, hourlyRateOverride: 0M, plant: Plant.Sanger, shiftDate: startDate));
+			Assert.AreEqual(20.25M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 19.75M, hourlyRateOverride: 0M, plant: Plant.Cutler, shiftDate: endDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 19.75M, hourlyRateOverride: 0M, plant: Plant.Kerman, shiftDate: endDate));
+			Assert.AreEqual(20M, DefaultTest(laborCode: laborCode, employeeHourlyRate: 20M, minimumWage: 19.75M, hourlyRateOverride: 0M, plant: Plant.Sanger, shiftDate: endDate));
+		}
+
+		[TestMethod]
 		public void LaborCode_7125_LightDutyPalletizing()
 		{
 			Rate125Tests((int)PlantLaborCode.LightDuty_Palletizing);
