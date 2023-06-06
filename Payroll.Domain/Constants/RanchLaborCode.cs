@@ -27,6 +27,7 @@ namespace Payroll.Domain.Constants
 		TractorPieceRateHarvest_Tote = 330,
 		PieceRateHarvest_Bucket = 336,
 		PieceRateThinning = 351,
+		TransportationForklift = 367,
 		PieceRateHarvest_Tote = 372,
 		TractorPieceRateHarvest_Bucket = 373,
 		RecoveryTime = 380,

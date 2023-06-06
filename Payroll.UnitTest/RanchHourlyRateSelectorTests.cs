@@ -1067,6 +1067,80 @@ namespace Payroll.UnitTest
 		}
 
 		[TestMethod]
+		public void LaborCode_367_TransportationForklift_OnOrAfter20220523_Before20230522_CrewLabor_Returns1650()
+		{
+			var laborCode = (int)RanchLaborCode.TransportationForklift;
+			var culturalCrew = (int)Crew.Trucking;
+			var shiftDate = new DateTime(2022, 5, 23);
+			var endDate = new DateTime(2023, 5, 21);
+
+			// CREW gets 16.50 when operating forklifts during harvest
+
+			// Override is less than 16.50 return 16.50
+			Assert.AreEqual(15, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 15, shiftDate: shiftDate));
+			Assert.AreEqual(15, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 15, shiftDate: endDate));
+
+			// Employee Hourly Rate is less than 16.50 return 16.50
+			Assert.AreEqual(16.5M , DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: shiftDate));
+			Assert.AreEqual(16.5M , DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: endDate));
+
+			// Employee Hourly Rate is greater than 16.50 return 16.50
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: shiftDate));
+			Assert.AreEqual(16.5M, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: endDate));
+
+			// Minimum wage is greater than 16.50, return minimum wage
+			Assert.AreEqual(30M, DefaultTest(laborCode: laborCode, minimumWage: 30, hourlyRateOverride: 0, employeeHourlyRate: 8M, shiftDate: shiftDate));
+			Assert.AreEqual(30M, DefaultTest(laborCode: laborCode, minimumWage: 30, hourlyRateOverride: 0, employeeHourlyRate: 8M, shiftDate: endDate));
+
+
+			// CULTURAL unaffected by labor code
+			// Employee Hourly Rate is less than 16.50, return max (EHR, cultural rate)
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: shiftDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: endDate));
+
+			// Employee Hourly Rate is greater than 16.50, return max (EHR, cultural rate)
+			Assert.AreEqual(30, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: shiftDate));
+			Assert.AreEqual(30, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: endDate));
+		}
+
+		[TestMethod]
+		public void LaborCode_367_TransportationForklift_OnOrAfter20230522_CrewLabor_Returns1675()
+		{
+			var laborCode = (int)RanchLaborCode.TransportationForklift;
+			var culturalCrew = (int)Crew.Trucking;
+			var shiftDate = new DateTime(2023, 5, 22);
+			var endDate = shiftDate.AddYears(5);
+
+			// CREW gets 16.75 when operating forklifts during harvest
+
+			// Override is less than 16.75 return 16.75
+			Assert.AreEqual(15, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 15, shiftDate: shiftDate));
+			Assert.AreEqual(15, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 15, shiftDate: endDate));
+
+			// Employee Hourly Rate is less than 16.75 return 16.75
+			Assert.AreEqual(16.75M, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: shiftDate));
+			Assert.AreEqual(16.75M, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: endDate));
+
+			// Employee Hourly Rate is greater than 16.75 return 16.75
+			Assert.AreEqual(16.75M, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: shiftDate));
+			Assert.AreEqual(16.75M, DefaultTest(laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: endDate));
+
+			// Minimum wage is greater than 16.75, return minimum wage
+			Assert.AreEqual(30M, DefaultTest(laborCode: laborCode, minimumWage: 30, hourlyRateOverride: 0, employeeHourlyRate: 8M, shiftDate: shiftDate));
+			Assert.AreEqual(30M, DefaultTest(laborCode: laborCode, minimumWage: 30, hourlyRateOverride: 0, employeeHourlyRate: 8M, shiftDate: endDate));
+
+
+			// CULTURAL unaffected by labor code
+			// Employee Hourly Rate is less than 16.75, return max (EHR, cultural rate)
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: shiftDate));
+			Assert.AreEqual(_culturalLaborRate, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 10M, shiftDate: endDate));
+
+			// Employee Hourly Rate is greater than 16.75, return max (EHR, cultural rate)
+			Assert.AreEqual(30, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: shiftDate));
+			Assert.AreEqual(30, DefaultTest(crew: culturalCrew, laborCode: laborCode, minimumWage: 8, hourlyRateOverride: 0, employeeHourlyRate: 30M, shiftDate: endDate));
+		}
+
+		[TestMethod]
 		public void LaborCode_380_RecoveryTime_ReturnsZero()
 		{
 			var laborCode = (int)RanchLaborCode.RecoveryTime;

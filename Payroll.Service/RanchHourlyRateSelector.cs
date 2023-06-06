@@ -65,6 +65,7 @@ namespace Payroll.Service
 			if (laborCode == (int)RanchLaborCode.QualityControl && shiftDate >= new DateTime(2020, 5, 11)) return QualityControlRate(shiftDate, crew, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.SeasonalEquipmentOperator && shiftDate >= new DateTime(2022, 3, 7)) return SeasonalEquipmentOperator(shiftDate, employeeHourlyRate, minimumWageRate);
 			if (laborCode == (int)RanchLaborCode.Chainsaw && shiftDate >= new DateTime(2022, 10, 1)) return ChainsawRate(shiftDate, crew, employeeHourlyRate, minimumWageRate);
+			if (laborCode == (int)RanchLaborCode.TransportationForklift && shiftDate >= new DateTime(2022, 5, 23) && !IsCulturalCrew(crew)) return TransportationForkliftRate(shiftDate, crew, employeeHourlyRate, minimumWageRate);
 			if (IsNightTractorCrew(crew)) return Tractor_NightRate(shiftDate, employeeHourlyRate, minimumWageRate);
 
 			if (IsCulturalCrew(crew))
@@ -327,6 +328,18 @@ namespace Payroll.Service
 		private decimal ChainsawRate(DateTime shiftDate, int crew, decimal employeeHourlyRate, decimal minimumWageRate)
 		{
 			return Math.Max(employeeHourlyRate, CrewLaborRate(shiftDate, minimumWageRate)) + 1;
+		}
+
+		private decimal TransportationForkliftRate(DateTime shiftDate, int crew, decimal employeeHourlyRate, decimal minimumWageRate)
+		{
+			if (shiftDate < new DateTime(2023, 5, 22))
+			{
+				return Math.Max(16.5M, CrewLaborRate(shiftDate, minimumWageRate));
+			}
+			else
+			{
+				return Math.Max(16.75M, CrewLaborRate(shiftDate, minimumWageRate));
+			}
 		}
 
 		/// <summary>
