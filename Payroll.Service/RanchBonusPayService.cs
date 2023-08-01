@@ -327,7 +327,6 @@ namespace Payroll.Service
 					&& x.PayType == PayType.Regular 
 					&& (
 						x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Bucket 
-						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Bucket
 						|| x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Bucket))
 				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
@@ -433,7 +432,6 @@ namespace Payroll.Service
 					&& x.PayType == PayType.Regular 
 					&& (
 						x.LaborCode == (int)RanchLaborCode.Individual_PieceRateHarvest_Tote
-						|| x.LaborCode == (int)RanchLaborCode.Individual_LightDuty_PieceRateHarvest_Tote
 						|| x.LaborCode == (int)RanchLaborCode.Individual_TractorPieceRateHarvest_Tote))
 				.GroupBy(g => new { g.Crew, g.EmployeeId, g.ShiftDate, g.BlockId, g.LaborCode }, (key, group) => new
 				{
