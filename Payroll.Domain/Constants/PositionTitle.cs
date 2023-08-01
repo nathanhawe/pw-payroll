@@ -11,5 +11,6 @@ namespace Payroll.Domain.Constants
 	{
 		public const string PackerL1 = "PACKER L1";
 		public const string PackerL2 = "PACKER L2";
+		public const string Spider = "SPIDER";
 	}
 }

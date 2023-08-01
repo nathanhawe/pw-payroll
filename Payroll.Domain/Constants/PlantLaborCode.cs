@@ -8,6 +8,7 @@ namespace Payroll.Domain.Constants
 	{
 		Unknown = 1,
 		PackerNoPieces = 115,
+		GeneralLabor = 120,
 		Packing = 123,
 		Palletizing = 125,
 		Charoleros = 130,

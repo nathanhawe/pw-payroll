@@ -106,6 +106,11 @@ namespace Payroll.Service
 				return RatePackerL2(shiftDate, plant, calculatedEmployeeRate, minimumWage);
 			}
 
+			if (laborCode == (int)PlantLaborCode.GeneralLabor && plant == Plant.Cutler && positionTitle == PositionTitle.Spider && shiftDate >= new DateTime(2023, 7, 24))
+			{
+				return RateSpider(shiftDate, plant, calculatedEmployeeRate, minimumWage);
+			}
+
 			if (laborCode == (int)PlantLaborCode.Palletizing || laborCode == (int)PlantLaborCode.LightDuty_Palletizing)
 			{
 				return Rate125(shiftDate, plant, calculatedEmployeeRate, minimumWage);
@@ -412,6 +417,19 @@ namespace Payroll.Service
 				else return calculatedEmployeeRate;
 			}
 			
+		}
+
+		/// <summary>
+		/// Returns the effective rate for the "SPIDER" job
+		/// </summary>
+		/// <param name="shiftDate"></param>
+		/// <param name="plant"></param>
+		/// <param name="calculatedEmployeeRate"></param>
+		/// <param name="minimumWage"></param>
+		/// <returns></returns>
+		private decimal RateSpider(DateTime shiftDate, Plant plant, decimal calculatedEmployeeRate, decimal minimumWage)
+		{
+			return Math.Max(calculatedEmployeeRate, 15.75M);
 		}
 
 		/// <summary>
