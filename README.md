@@ -3,7 +3,7 @@
 Payroll is an ASP.NET Core application that performs weekly time and attendance calculations using SQL and Quick Base (SaaS) as
 data sources.  
 
-This application is currently in development.
+This application has been retired.
 
 ## Get Started
 
